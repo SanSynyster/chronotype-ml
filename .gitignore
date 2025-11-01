@@ -6,5 +6,6 @@ venv/
 .idea/
 .vscode/
 .ipynb_checkpoints/
-data/*.xlsx
-data/*.csv
+
+data/**/*
+!data/README.md
