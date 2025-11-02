@@ -6,6 +6,8 @@ venv/
 .idea/
 .vscode/
 .ipynb_checkpoints/
-
+# in .gitignore
+reports/**
+!reports/.gitkeep
 data/**/*
 !data/README.md
