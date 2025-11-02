@@ -1,3 +1,8 @@
-pandas
-numpy
-matplotlib
+numpy>=1.26,<3
+pandas==2.2.2
+matplotlib>=3.8,<3.10
+scikit-learn==1.4.*
+mne==1.7.*           # add when we process EEG/ERP
+# pretty logs + excel
+tqdm>=4.66
+openpyxl>=3.1

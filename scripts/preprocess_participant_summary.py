@@ -6,16 +6,62 @@ import numpy as np
 import pandas as pd
 import logging
 import sys
+from tqdm import tqdm
 
 LOGGER = logging.getLogger("chronotype")
-def setup_logging(level: str = "INFO") -> None:
+
+PRETTY = False
+
+LEVEL_EMOJI = {
+    logging.DEBUG: "🐞",
+    logging.INFO: "✅",
+    logging.WARNING: "⚠️",
+    logging.ERROR: "❌",
+    logging.CRITICAL: "💥",
+}
+
+class EmojiFormatter(logging.Formatter):
+    def format(self, record: logging.LogRecord) -> str:
+        emoji = LEVEL_EMOJI.get(record.levelno, "")
+        record.msg = f"{emoji} {record.msg}"
+        return super().format(record)
+
+def setup_logging(level: str = "INFO", pretty: bool = False) -> None:
+    import os
+    from logging.handlers import RotatingFileHandler
+    global PRETTY
+    PRETTY = bool(pretty)
     numeric = getattr(logging, str(level).upper(), logging.INFO)
-    logging.basicConfig(
-        level=numeric,
-        format="%(asctime)s | %(levelname)s | %(message)s",
-        handlers=[logging.StreamHandler(sys.stdout)],
-    )
-    LOGGER.debug("Logger initialised with level: %s", level)
+    fmt = "%(asctime)s | %(levelname)s | %(message)s"
+    if PRETTY:
+        formatter = EmojiFormatter(fmt)
+    else:
+        formatter = logging.Formatter(fmt)
+
+    # Create logs directory if it doesn't exist
+    logs_dir = Path("logs")
+    logs_dir.mkdir(parents=True, exist_ok=True)
+    logfile = logs_dir / "run.log"
+
+    # Stream handler (console)
+    stream_handler = logging.StreamHandler(sys.stdout)
+    stream_handler.setFormatter(formatter)
+
+    # Rotating file handler
+    file_handler = RotatingFileHandler(str(logfile), maxBytes=1_048_576, backupCount=3, encoding="utf-8")
+    file_handler.setFormatter(formatter)
+
+    root = logging.getLogger()
+    root.handlers.clear()
+    root.setLevel(numeric)
+    root.addHandler(stream_handler)
+    root.addHandler(file_handler)
+
+    # Reduce log noise from external libraries
+    for noisy in ["pandas", "matplotlib", "urllib3", "numexpr"]:
+        logging.getLogger(noisy).setLevel(logging.WARNING)
+
+    LOGGER.info("Logging initialized → console + logs/run.log (level=%s, pretty=%s)", level, PRETTY)
 
 # ---------- Utilities ----------
 def clean_col(name: str) -> str:
@@ -29,7 +75,7 @@ def inspect_file(path: Path) -> None:
         LOGGER.error(f"Not found: {path}")
         return
     xls = pd.ExcelFile(path)
-    LOGGER.info(f"=== {path} ===")
+    LOGGER.info(f"📄 === {path} ===")
     LOGGER.info(f"Sheets: {xls.sheet_names}")
     sheet = xls.sheet_names[0]
     df = pd.read_excel(xls, sheet_name=sheet)
@@ -45,7 +91,7 @@ def load_summary_xlsx(path: Path) -> pd.DataFrame:
     xls = pd.ExcelFile(path)
     sheet = xls.sheet_names[0]
     df = pd.read_excel(xls, sheet_name=sheet)
-    LOGGER.info("Loaded %s (sheet=%s) with shape %s", path, sheet, df.shape)
+    LOGGER.info("📥 Loaded %s (sheet=%s) with shape %s", path, sheet, df.shape)
     LOGGER.debug("Original columns: %s", list(df.columns))
     df.columns = [clean_col(c) for c in df.columns]
     LOGGER.debug("Cleaned columns: %s", list(df.columns))
@@ -58,7 +104,7 @@ def drop_known_noise(df: pd.DataFrame) -> pd.DataFrame:
             removed.append(col)
             df = df.drop(columns=[col])
     if removed:
-        LOGGER.info("Dropped noise columns: %s", removed)
+        LOGGER.info("🧹 Dropped noise columns: %s", removed)
     else:
         LOGGER.debug("No noise columns to drop.")
     return df
@@ -109,7 +155,7 @@ def mean_bins(df: pd.DataFrame, cols: list[str], which=(1,2)) -> pd.Series:
     return df[chosen].astype(float).mean(axis=1)
 
 def compute_derived_features(df: pd.DataFrame) -> pd.DataFrame:
-    LOGGER.info("Computing derived ERP/RT features …")
+    LOGGER.info("🧠 Computing derived ERP/RT features …")
     out = df.copy()
 
     # ERP contrasts
@@ -142,7 +188,7 @@ def compute_derived_features(df: pd.DataFrame) -> pd.DataFrame:
     else:
         out["delta_rt"] = np.nan
 
-    LOGGER.info("Derived columns added: %s", [c for c in ["delta_frn_fcz","delta_p300_pz","delta_rt"] if c in out.columns])
+    LOGGER.info("➕ Derived columns added: %s", [c for c in ["delta_frn_fcz","delta_p300_pz","delta_rt"] if c in out.columns])
     return out
 
 def zscore(df: pd.DataFrame, protect: set[str]) -> pd.DataFrame:
@@ -150,7 +196,8 @@ def zscore(df: pd.DataFrame, protect: set[str]) -> pd.DataFrame:
     out = df.copy()
     numeric = out.select_dtypes(include=["number"]).columns.tolist()
     to_scale = [c for c in numeric if c not in protect]
-    for c in to_scale:
+    iter_cols = tqdm(to_scale, desc="🔄 Z-scoring", unit="col") if PRETTY else to_scale
+    for c in iter_cols:
         mu = out[c].mean()
         sd = out[c].std(ddof=0)
         if pd.notnull(sd) and sd != 0:
@@ -164,14 +211,15 @@ def zscore(df: pd.DataFrame, protect: set[str]) -> pd.DataFrame:
 # ---------- Commands ----------
 def cmd_inspect(args):
     LOGGER.info("Running INSPECT on %d file(s)…", len(args.files))
-    for f in args.files:
+    files_iter = tqdm(args.files, desc="🔎 Inspecting", unit="file") if PRETTY else args.files
+    for f in files_iter:
         inspect_file(Path(f))
 
 def cmd_preprocess(args):
     src = Path(args.input)
     out_clean = Path(args.out_clean)
     out_z = Path(args.out_z)
-    LOGGER.info("Running PREPROCESS: input=%s, out_clean=%s, out_z=%s", src, out_clean, out_z)
+    LOGGER.info("🚀 Running PREPROCESS: input=%s, out_clean=%s, out_z=%s", src, out_clean, out_z)
 
     if not src.exists():
         raise FileNotFoundError(f"Input not found: {src.resolve()}")
@@ -198,11 +246,11 @@ def cmd_preprocess(args):
 
     out_clean.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(out_clean, index=False)
-    LOGGER.info(f"Saved clean table: {out_clean}")
+    LOGGER.info(f"💾 Saved clean table: {out_clean}")
 
     df_z = zscore(df, protect={"chronotype_binary"})
     df_z.to_csv(out_z, index=False)
-    LOGGER.info(f"Saved z-scored features: {out_z}")
+    LOGGER.info(f"💾 Saved z-scored features: {out_z}")
 
     LOGGER.info("Label counts: %s", df["chronotype_binary"].value_counts(dropna=False).to_dict())
     LOGGER.info("Delta columns present: %s", [c for c in ["delta_frn_fcz","delta_p300_pz","delta_rt"] if c in df.columns])
@@ -225,11 +273,12 @@ def cmd_qc(args):
     desc = df.select_dtypes(include=["number"]).describe().T
     desc_path = out_dir / "descriptives_numeric.csv"
     desc.to_csv(desc_path)
-    LOGGER.info(f"Saved: {desc_path}")
+    LOGGER.info(f"📑 Saved: {desc_path}")
 
     # 2) Histograms for key contrasts
     hist_cols = [c for c in ["delta_frn_fcz", "delta_p300_pz", "delta_rt"] if c in df.columns]
-    for col in hist_cols:
+    hist_iter = tqdm(hist_cols, desc="📊 Histograms", unit="fig") if PRETTY else hist_cols
+    for col in hist_iter:
         plt.figure()
         df[col].plot(kind="hist", bins=20, edgecolor="black")
         plt.title(col)
@@ -237,7 +286,7 @@ def cmd_qc(args):
         plt.tight_layout()
         plt.savefig(out_dir / f"hist_{col}.png", dpi=150)
         plt.close()
-        LOGGER.info(f"Saved: {out_dir / f'hist_{col}.png'}")
+        LOGGER.info(f"🖼️ Saved: {out_dir / f'hist_{col}.png'}")
 
     # 3) Correlation heatmap (numeric)
     num = df.select_dtypes(include=["number"])
@@ -252,17 +301,18 @@ def cmd_qc(args):
         plt.tight_layout()
         plt.savefig(out_dir / "corr_heatmap.png", dpi=150)
         plt.close()
-        LOGGER.info(f"Saved: {out_dir / 'corr_heatmap.png'}")
+        LOGGER.info(f"🌡️ Saved: {out_dir / 'corr_heatmap.png'}")
 
     # 4) Group-wise QC: E(1) vs M(0)
     if "chronotype_binary" in df.columns:
         g = df.groupby("chronotype_binary")
         group_desc = g[hist_cols].agg(["mean","std","median","count"])
         group_desc.to_csv(out_dir / "group_descriptives.csv")
-        LOGGER.info(f"Saved: {out_dir / 'group_descriptives.csv'}")
+        LOGGER.info(f"📑 Saved: {out_dir / 'group_descriptives.csv'}")
 
         # Boxplots per feature by group
-        for col in hist_cols:
+        box_iter = tqdm(hist_cols, desc="📦 Boxplots", unit="fig") if PRETTY else hist_cols
+        for col in box_iter:
             plt.figure()
             data = [df.loc[df["chronotype_binary"]==0, col].dropna(),
                     df.loc[df["chronotype_binary"]==1, col].dropna()]
@@ -271,11 +321,12 @@ def cmd_qc(args):
             plt.tight_layout()
             plt.savefig(out_dir / f"box_{col}_by_chronotype.png", dpi=150)
             plt.close()
-            LOGGER.info(f"Saved: {out_dir / f'box_{col}_by_chronotype.png'}")
+            LOGGER.info(f"🖼️ Saved: {out_dir / f'box_{col}_by_chronotype.png'}")
 
         # t-tests + Cohen's d
         rows = []
-        for col in hist_cols:
+        test_iter = tqdm(hist_cols, desc="🧪 Group tests", unit="feat") if PRETTY else hist_cols
+        for col in test_iter:
             m = df.loc[df["chronotype_binary"]==0, col].dropna()
             e = df.loc[df["chronotype_binary"]==1, col].dropna()
             if len(m) >= 3 and len(e) >= 3:
@@ -286,13 +337,16 @@ def cmd_qc(args):
                 rows.append({"feature": col, "n_M": len(m), "n_E": len(e), "mean_M": m.mean(), "mean_E": e.mean(), "t": t, "p": p, "cohens_d_E_minus_M": d})
         if rows:
             pd.DataFrame(rows).to_csv(out_dir / "group_tests.csv", index=False)
-            LOGGER.info(f"Saved: {out_dir / 'group_tests.csv'}")
+            LOGGER.info(f"📈 Saved: {out_dir / 'group_tests.csv'}")
 
 # ---------- Main ----------
 def main():
     parser = argparse.ArgumentParser(description="Chronotype preprocessing utilities")
     parser.add_argument("--log-level", default="INFO", choices=["DEBUG","INFO","WARNING","ERROR","CRITICAL"], help="Logging verbosity")
-    sub = parser.add_subparsers(dest="cmd", required=True)
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("--pretty", dest="pretty", action="store_true", default=True, help="Enable emojis and progress bars (default)")
+    group.add_argument("--no-pretty", dest="pretty", action="store_false", help="Disable emojis and progress bars")
+    sub = parser.add_subparsers(dest="cmd", required=False)
 
     p_inspect = sub.add_parser("inspect", help="Inspect one or more Excel files")
     p_inspect.add_argument("files", nargs="+", help="Paths to .xlsx files")
@@ -309,10 +363,70 @@ def main():
     p_qc.add_argument("--out_dir", default="reports/qc", help="Directory to write QC outputs")
     p_qc.set_defaults(func=cmd_qc)
 
+    # Composite command: run (preprocess then QC)
+    from argparse import ArgumentDefaultsHelpFormatter
+    p_run = sub.add_parser(
+        "run",
+        help="Run preprocess then QC in one go",
+        formatter_class=ArgumentDefaultsHelpFormatter,
+    )
+    # Inputs/outputs mirroring preprocess and qc
+    p_run.add_argument("--input", default="data/raw/participant_summary.xlsx", help="Path to participant_summary.xlsx")
+    p_run.add_argument("--out_clean", default="data/participant_summary_clean.csv", help="Cleaned table CSV")
+    p_run.add_argument("--out_z", default="data/participant_features_zscored.csv", help="Z-scored features CSV")
+    p_run.add_argument("--qc_out_dir", default="reports/qc", help="Directory to write QC outputs")
+    p_run.add_argument("--no-qc", action="store_true", help="Skip QC step")
+    p_run.add_argument("--inspect", action="store_true", help="Also run an initial inspect of the input file")
+    p_run.set_defaults(func=cmd_run)
+
     args = parser.parse_args()
-    setup_logging(args.log_level)
-    LOGGER.info("Command selected: %s", args.cmd)
-    args.func(args)
+    setup_logging(args.log_level, args.pretty)
+
+    # Default to the composite 'run' command if no subcommand is given
+    if not getattr(args, "cmd", None):
+      LOGGER.info("No subcommand provided; defaulting to 'run'.")
+      # Reparse with 'run' as the default command using existing defaults
+      args = argparse.Namespace(
+          cmd="run",
+          input="data/raw/participant_summary.xlsx",
+          out_clean="data/participant_summary_clean.csv",
+          out_z="data/participant_features_zscored.csv",
+          qc_out_dir="reports/qc",
+          no_qc=False,
+          inspect=False,
+      )
+      # Ensure logging remains configured; then call cmd_run
+      LOGGER.info("Command selected: %s", args.cmd)
+      cmd_run(args)
+    else:
+      LOGGER.info("Command selected: %s", args.cmd)
+      args.func(args)
+
+from types import SimpleNamespace
+
+def cmd_run(args):
+    # Optional initial inspect
+    if args.inspect:
+        LOGGER.info("🔎 Running initial INSPECT …")
+        cmd_inspect(SimpleNamespace(files=[args.input]))
+
+    # Preprocess
+    LOGGER.info("🏗️ Running PREPROCESS phase …")
+    cmd_preprocess(SimpleNamespace(
+        input=args.input,
+        out_clean=args.out_clean,
+        out_z=args.out_z,
+    ))
+
+    # QC (unless disabled)
+    if not args.no_qc:
+        LOGGER.info("🧪 Running QC phase …")
+        cmd_qc(SimpleNamespace(
+            input_csv=args.out_clean,
+            out_dir=args.qc_out_dir,
+        ))
+    else:
+        LOGGER.info("⏭️ QC step skipped by --no-qc")
 
 if __name__ == "__main__":
     main()

@@ -11,3 +11,6 @@ reports/**
 !reports/.gitkeep
 data/**/*
 !data/README.md
+# logs
+logs/
+*.log
