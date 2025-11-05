@@ -14,3 +14,22 @@ data/**/*
 # logs
 logs/
 *.log
+models/
+
+# Large and generated files
+*.csv
+*.png
+*.json
+*.joblib
+*.zip
+*.h5
+*.npy
+*.npz
+*.pkl
+*.sav
+
+outputs/
+checkpoints/
+artifacts/
+cache/
+tmp/
