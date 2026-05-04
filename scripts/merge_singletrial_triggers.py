@@ -185,7 +185,7 @@ def load_means_and_triggers(means_path: Path, triggers_path: Path) -> pd.DataFra
         ] if col in merged.columns
     ]
     other_cols = [c for c in merged.columns if c not in desired_order]
-    merged = merged[desired_order + other_cols]
+    merged = merged[desired_order + other_cols]\
 
     # Small QC
     missing = merged["feedback_valence"].isna().sum()
