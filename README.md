@@ -2,6 +2,61 @@
 
 A machine learning project exploring whether risky decision-making behavior can be predicted from behavioral, contextual, and EEG-derived features.
 
+## Current Clean Workflow
+
+The active workflow has been reset around leakage-aware modelling. Legacy scripts, old generated datasets, reports, logs, and saved models were moved to `archive/legacy/` so the working tree now focuses on the new pipeline.
+
+Active locations:
+
+- `data/raw/` contains original source files.
+- `data/clean/` contains newly generated clean modelling datasets.
+- `scripts/` contains only the new leakage-aware scripts.
+- `reports/clean/` contains new model evaluation outputs.
+- `models/clean/` is reserved for new saved models.
+
+Build clean datasets:
+
+```bash
+python scripts/build_clean_risky_choice.py
+python scripts/build_clean_chronotype.py
+```
+
+Build and evaluate literature-guided feature packs:
+
+```bash
+python scripts/run_literature_feature_packs.py
+```
+
+Permutation-test chronotype packs:
+
+```bash
+python scripts/run_chronotype_permutation_tests.py --permutations 200
+```
+
+Analyze which features drive the significant chronotype model:
+
+```bash
+python scripts/run_chronotype_importance.py --repeats 50
+```
+
+The literature-guided packs compare compact feature groups instead of one large mixed feature table:
+
+- Risky choice: `value_only`, `history_only`, `value_history`, `prev_eeg`, `all_clean`
+- Chronotype: `demo_only`, `behavior_core`, `frn_core`, `p300_core`, `compact_combined`, `all_literature`
+
+Permutation testing compares observed balanced accuracy against shuffled-label performance. This is required for chronotype because the dataset has only 39 participants.
+
+Feature importance uses held-out fold permutation importance on original engineered columns, so the output stays interpretable.
+
+Train clean baselines:
+
+```bash
+python scripts/train_clean_baseline.py --data data/clean/risky_choice_prechoice.csv --target risky-choice --group-col participant_id
+python scripts/train_clean_baseline.py --data data/clean/chronotype_participant.csv --target Chronotype --group-col ""
+```
+
+Important modelling rule: risky-choice features use same-trial pre-choice value/context only plus lagged previous-trial history. Same-trial outcome, correctness, score, response time, feedback, and EEG response features are excluded as predictors.
+
 ---
 
 ## 🎯 Project Objective
