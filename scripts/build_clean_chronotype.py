@@ -75,6 +75,10 @@ def add_trial_features(df: pd.DataFrame) -> pd.DataFrame:
     for col in ["Option1", "Option2", "ResponseTime", "Trial", "Block", "global_trial_index", "risky-choice"]:
         if col in out.columns:
             out[col] = pd.to_numeric(out[col], errors="coerce")
+    sort_cols = [c for c in ["participant_id", "global_trial_index", "Block", "Trial"] if c in out.columns]
+    if sort_cols and "feedback-condition" in out.columns:
+        out = out.sort_values(sort_cols, na_position="last").copy()
+        out["prev_feedback_condition"] = out.groupby("participant_id")["feedback-condition"].shift(1)
     if {"Option1", "Option2"}.issubset(out.columns):
         out["OptionDiff"] = out["Option1"] - out["Option2"]
         out["AbsOptionDiff"] = out["OptionDiff"].abs()
@@ -115,13 +119,16 @@ def build_participant_row(pid: object, g: pd.DataFrame, eeg_cols: list[str]) -> 
                 row[f"{frame_name}_{col}_mean"] = vals.mean()
                 row[f"{frame_name}_{col}_std"] = vals.std()
 
-    if "feedback-condition" in g.columns:
-        cond = g["feedback-condition"].map(normalize_condition)
+    if "prev_feedback_condition" in g.columns:
+        cond = g["prev_feedback_condition"].map(normalize_condition)
         condition_names = ["gain_correct", "gain_error", "loss_correct", "loss_error"]
+        free_cond = cond.loc[free.index] if not free.empty else pd.Series(dtype=object)
         for condition in condition_names:
             frame = g.loc[cond.eq(condition)]
+            free_frame = free.loc[free_cond.eq(condition)] if not free.empty else free
             row[f"{condition}_n"] = int(frame.shape[0])
-            row[f"{condition}_risky_rate"] = mean_numeric(frame, "risky-choice")
+            row[f"{condition}_free_n"] = int(free_frame.shape[0])
+            row[f"{condition}_risky_rate"] = mean_numeric(free_frame, "risky-choice")
             row[f"{condition}_rt_mean"] = mean_numeric(frame, "ResponseTime")
 
         gain_error_rt = row.get("gain_error_rt_mean", np.nan)
@@ -286,6 +293,7 @@ def build_dataset(input_path: Path) -> tuple[pd.DataFrame, dict]:
         "columns": int(out.shape[1]),
         "target": "Chronotype",
         "unit_of_analysis": "participant",
+        "behavior_condition_rule": "Behavioural adaptation features use previous-trial feedback-condition; ERP condition contrasts use current trial feedback-condition.",
         "eeg_columns_detected": eeg_cols,
         "feature_columns": [c for c in out.columns if c != "Chronotype"],
     }
