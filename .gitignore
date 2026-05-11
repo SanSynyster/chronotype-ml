@@ -1,5 +1,6 @@
 __pycache__/
 *.pyc
+.DS_Store
 .env
 env/
 venv/
@@ -33,3 +34,11 @@ checkpoints/
 artifacts/
 cache/
 tmp/
+
+# Archived generated artifacts kept locally, not published
+archive/legacy/data_merged/
+archive/legacy/data_processed/
+archive/legacy/logs/
+archive/legacy/models_ml_baselines/
+archive/legacy/reports_*/
+archive/legacy/*.csv
