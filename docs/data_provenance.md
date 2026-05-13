@@ -1,6 +1,6 @@
 # Data Provenance
 
-Generated: `2026-05-11T22:20:22.856833+00:00`
+Generated: `2026-05-13T20:39:05.927702+00:00`
 Executed commands: `True`
 
 ## Raw Inputs
@@ -19,7 +19,8 @@ Executed commands: `True`
 3. `/Users/sahabtaali/chronotype_ml/env/bin/python scripts/build_clean_risky_choice.py --include-prev-eeg --write-packs`
 4. `/Users/sahabtaali/chronotype_ml/env/bin/python scripts/build_clean_chronotype.py --write-packs`
 5. `/Users/sahabtaali/chronotype_ml/env/bin/python scripts/build_compact_chronotype.py`
-6. `/Users/sahabtaali/chronotype_ml/env/bin/python scripts/build_chronotype_sensitivity.py`
+6. `/Users/sahabtaali/chronotype_ml/env/bin/python scripts/build_compact_performance_chronotype.py`
+7. `/Users/sahabtaali/chronotype_ml/env/bin/python scripts/build_chronotype_sensitivity.py`
 
 ## Outputs
 
@@ -30,7 +31,8 @@ Executed commands: `True`
 | `data/clean/risky_choice_prechoice.csv` | True | 10669 | 55 | 4985566 |
 | `data/clean/chronotype_participant.csv` | True | 39 | 173 | 118896 |
 | `data/clean/chronotype_compact_12.csv` | True | 39 | 14 | 9810 |
-| `data/clean/sensitivity/manifest.json` | True |  |  | 1260 |
+| `data/clean/chronotype_compact_performance.csv` | True | 39 | 14 | 9792 |
+| `data/clean/sensitivity/manifest.json` | True |  |  | 2238 |
 
 ## Notes
 
@@ -39,4 +41,5 @@ Executed commands: `True`
 - All final data is linked through the ERPset column shared with participant_summary.
 - Primary chronotype labels come from participant_summary / all final data metadata, not the raw behavioural Chronotype column.
 - MEQ/MCTQ fields are not exported because their side-by-side workbook table order is unvalidated.
+- The performance-informed compact model is exploratory and kept separate from the a priori theory-driven compact model.
 - Active scripts build leakage-aware modelling datasets from the raw-derived ML-ready feature table.

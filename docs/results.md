@@ -1,6 +1,6 @@
 # Current Results
 
-This document summarizes the current active raw-to-clean results. Generated CSV/JSON reports are ignored by git, so this file is the tracked public result summary.
+This document summarizes the current active raw-to-clean results using chronotype labels from `all final data.xlsx` as the primary source. Generated CSV/JSON reports are ignored by git, so this file is the tracked public result summary.
 
 ## Provenance And Labels
 
@@ -12,7 +12,7 @@ The current pipeline rebuilds modelling tables from local raw files using active
 - `scripts/build_clean_chronotype.py` uses previous-trial feedback for behavioral adaptation features and current-trial feedback for feedback-locked ERP contrasts.
 - `scripts/rebuild_from_raw.py --execute` runs the full active rebuild and writes `docs/data_provenance.md`.
 
-Primary chronotype labels come from `participant_summary.xlsx` / `all final data.xlsx`. The metadata link is complete for all `39` participants.
+Primary chronotype labels come from `all final data.xlsx` via the `ERPset` link. The raw behavioral `Chronotype` column disagrees for participants `1027` and `1036`, so those participants are tracked as label-conflict sensitivity cases rather than manually overridden.
 
 Label/QC snapshot:
 
@@ -21,9 +21,8 @@ Label/QC snapshot:
 | Participants | 39 |
 | Primary chronotype counts | 20 Morning / 19 Evening |
 | Metadata links missing | 0 |
-| Mean summary-to-behaviour match distance | 0.0147 |
-| Max summary-to-behaviour match distance | 0.0687 |
-| Raw-behaviour label conflicts | 2 participants: `1027`, `1036` |
+| Raw-behavior label conflicts | 2 (`1027`, `1036`) |
+| Manual chronotype overrides | None |
 | MEQ/MCTQ status | Not exported; side-by-side table order is unvalidated |
 
 Raw-derived table snapshot:
@@ -33,7 +32,8 @@ Raw-derived table snapshot:
 | `data/processed/ml_ready_features.csv` | 14,352 | 40 | 39 participants, behaviour trimmed to 368 rows each |
 | `data/clean/risky_choice_prechoice.csv` | 10,669 | 55 | free-choice rows only |
 | `data/clean/chronotype_participant.csv` | 39 | 173 | one row per participant |
-| `data/clean/chronotype_compact_12.csv` | 39 | 14 | 12 features plus ID/target |
+| `data/clean/chronotype_compact_12.csv` | 39 | 14 | theory-driven compact table |
+| `data/clean/chronotype_compact_performance.csv` | 39 | 14 | exploratory performance-informed compact table |
 
 EEG/trigger QC: participant `1013` has one missing EEG trial after raw loading and low trigger/behaviour valence agreement (`0.839`). Other participants have complete EEG trial coverage and high trigger agreement.
 
@@ -51,15 +51,29 @@ Best feature-pack leaderboard entries from 5-fold stratified CV:
 | `compact_combined` | Random Forest | 0.808 | 0.814 | 0.806 | 0.838 | 47 |
 | `behavior_core` | Random Forest | 0.783 | 0.789 | 0.780 | 0.792 | 19 |
 | `compact_12` | Logistic Regression | 0.692 | 0.693 | 0.689 | 0.738 | 12 |
-| `frn_core` | Random Forest | 0.667 | 0.664 | 0.651 | 0.692 | 16 |
+| `compact_performance` | Logistic Regression | 0.692 | 0.693 | 0.685 | 0.721 | 12 |
 | `p300_core` | Logistic Regression | 0.658 | 0.664 | 0.651 | 0.688 | 16 |
-| `behavior_core` | Logistic Regression | 0.633 | 0.639 | 0.617 | 0.771 | 19 |
+| `frn_core` | Random Forest | 0.667 | 0.664 | 0.651 | 0.692 | 16 |
 
-Interpretation: the high-dimensional Random Forest results are exploratory. The more defensible compact result is the 12-feature Logistic Regression model, because it uses a small theory-driven feature set relative to `n = 39`.
+Interpretation: using `all final data.xlsx` labels restores the stronger chronotype signal. High-dimensional Random Forest results remain exploratory, but the theory-driven compact Logistic Regression is above chance in permutation testing on the full dataset.
 
-## Compact 12-Feature Chronotype Model
+## Larger Exploratory Random Forest Models
 
-The journal-oriented compact model uses 12 theory-driven predictors. Repeated 5-fold stratified CV, 100 repeats, Logistic Regression:
+The two larger feature sets were also validated with repeated CV and 1000-label permutation tests using Random Forest. These models are exploratory because the number of predictors is high relative to `n = 39`, but they test whether broader multivariate structure is informative.
+
+| Feature set | Features | Dataset | Repeated-CV BA Mean | Permutation Observed BA | Permutation p-value |
+| --- | ---: | --- | ---: | ---: | ---: |
+| `all_literature` | 171 | Full all-final-label dataset | 0.783 | 0.833 | 0.0010 |
+| `compact_combined` | 47 | Full all-final-label dataset | 0.776 | 0.808 | 0.0010 |
+| `compact_combined` | 47 | Exclude `1013` | 0.780 | 0.742 | 0.0060 |
+| `compact_combined` | 47 | Exclude label conflicts `1027`, `1036` | 0.769 | 0.750 | 0.0130 |
+| `compact_combined` | 47 | Exclude all flagged `1013`, `1027`, `1036` | 0.748 | 0.650 | 0.1019 |
+
+Interpretation: the larger Random Forest models are strongly above chance on the full all-final-label dataset. They remain significant when excluding either the EEG-QC case or the two label-conflict cases, but not when all three flagged participants are excluded together. These results should still be considered exploratory because Random Forest can capitalize on high-dimensional feature patterns in small samples.
+
+## Theory-Driven Compact 12-Feature Model
+
+The theory-driven compact model uses 12 behavioral/ERP predictors. Repeated 5-fold stratified CV, 100 repeats, Logistic Regression:
 
 | Metric | Mean | SD | 95% Interval |
 | --- | ---: | ---: | ---: |
@@ -70,40 +84,70 @@ The journal-oriented compact model uses 12 theory-driven predictors. Repeated 5-
 
 1000-label permutation test, fixed 5-fold stratified CV, Logistic Regression:
 
-| Observed balanced accuracy | Null mean | Null SD | Null 95th percentile | p-value |
-| ---: | ---: | ---: | ---: | ---: |
-| 0.692 | 0.496 | 0.103 | 0.667 | 0.0340 |
+| Dataset | Rows | Observed BA | Null mean | Null 95th percentile | p-value |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Full all-final-label dataset | 39 | 0.692 | 0.496 | 0.667 | 0.0340 |
+| Exclude `1013` EEG/trigger QC case | 38 | 0.658 | 0.495 | 0.658 | 0.0529 |
+| Exclude label conflicts `1027`, `1036` | 37 | 0.533 | 0.504 | 0.667 | 0.3816 |
+| Exclude all flagged `1013`, `1027`, `1036` | 36 | 0.675 | 0.511 | 0.683 | 0.0669 |
 
-Sensitivity analyses for the compact 12-feature Logistic Regression model:
+Interpretation: the theory-driven compact model is statistically significant in the full all-final-label dataset. Sensitivity analyses are mixed, especially when excluding the two participants whose raw behavioral labels disagree with `all final data.xlsx`, so this remains pilot evidence rather than a validated classifier.
 
-| Dataset | Rows | Repeated-CV Balanced Accuracy Mean | Permutation Observed BA | Permutation p-value |
-| --- | ---: | ---: | ---: | ---: |
-| Full primary dataset | 39 | 0.666 | 0.692 | 0.0340 |
-| Exclude `1013` EEG/trigger QC case | 38 | 0.669 | 0.658 | 0.0529 |
-| Exclude label conflicts `1027`, `1036` | 37 | 0.634 | 0.533 | 0.3816 |
-| Exclude all flagged participants | 36 | 0.639 | 0.675 | 0.0669 |
+## Performance-Informed Compact Model
 
-Interpretation: the compact model is significant in the full primary dataset but sensitivity-dependent. The result should be framed as promising pilot evidence, not as a robust validated classifier.
+The performance-informed compact model is exploratory and uses 12 features that repeatedly appeared useful across feature-pack performance, group statistics, and held-out importance. It is not a replacement for the theory-driven compact model.
+
+Features:
+
+- `free_risky_rate`
+- `gain_correct_risky_rate`
+- `loss_error_risky_rate`
+- `risk_after_loss_error_minus_gain_correct`
+- `risky_late_minus_early`
+- `Fz_FRN_error_minus_correct`
+- `FCz_FRN_error_minus_correct`
+- `Fz_FRN_loss_error_minus_gain_correct`
+- `FCz_FRN_loss_error_minus_gain_correct`
+- `Pz_P300_loss_minus_gain`
+- `POz_P300_loss_minus_gain`
+- `CPz_P300_error_minus_correct`
+
+Repeated 5-fold stratified CV, 100 repeats, Logistic Regression:
+
+| Metric | Mean | SD | 95% Interval |
+| --- | ---: | ---: | ---: |
+| Accuracy | 0.682 | 0.144 | 0.375-0.875 |
+| Balanced accuracy | 0.682 | 0.145 | 0.375-0.875 |
+| Macro F1 | 0.672 | 0.151 | 0.365-0.873 |
+| ROC AUC | 0.742 | 0.165 | 0.417-1.000 |
+
+1000-label permutation test, fixed 5-fold stratified CV, Logistic Regression:
+
+| Dataset | Rows | Observed BA | Null mean | Null 95th percentile | p-value |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Full all-final-label dataset | 39 | 0.692 | 0.492 | 0.650 | 0.0240 |
+
+Interpretation: the performance-informed model is exploratory and significant in the full all-final-label dataset. It is not a replacement for the theory-driven compact model because its feature set was partly informed by current-dataset results.
 
 ## Feature Importance
 
-Top held-out permutation-importance features for `compact_combined` + Logistic Regression after correcting behavioral adaptation features:
+Top held-out permutation-importance features for the theory-driven `compact_12` + Logistic Regression model:
 
 | Feature | Mean Balanced-Accuracy Drop |
 | --- | ---: |
-| `Fz_FRN_error_minus_correct` | 0.0408 |
-| `Fz_FRN_loss_error_minus_gain_correct` | 0.0267 |
-| `POz_P300_loss_minus_gain` | 0.0217 |
-| `gain_error_rt_mean` | 0.0183 |
-| `CPz_P300_mean` | 0.0117 |
-| `parietal_eeg_mean` | 0.0100 |
-| `FCz_FRN_loss_error_minus_gain_correct` | 0.0100 |
+| `Pz_P300_loss_minus_gain` | 0.1028 |
+| `loss_error_risky_rate` | 0.0425 |
+| `Fz_FRN_loss_error_minus_gain_correct` | 0.0183 |
+| `FCz_FRN_error_minus_correct` | 0.0111 |
+| `Fz_FRN_error_minus_correct` | 0.0100 |
+| `POz_P300_loss_minus_gain` | 0.0075 |
+| `gain_correct_risky_rate` | 0.0044 |
 
-Interpretation: importance is unstable because fold test sets are small, but the dominant signal remains physiologically plausible: FRN error/feedback contrasts and posterior P300 features.
+Interpretation: the most consistent compact-model contributor is posterior P300 loss-gain contrast, followed by loss-error risky-choice behavior. Feature importance remains unstable because fold test sets are small.
 
 ## Classical Group Statistics
 
-Morning-vs-Evening tests for theory-driven features show the largest effects in posterior P300 loss-gain contrasts and risky-choice rates after previous feedback:
+Morning-vs-Evening tests for theory-driven features using all-final labels:
 
 | Feature | Evening Mean | Morning Mean | Cohen's d | Welch p | FDR p |
 | --- | ---: | ---: | ---: | ---: | ---: |
@@ -114,9 +158,7 @@ Morning-vs-Evening tests for theory-driven features show the largest effects in 
 | `gain_correct_risky_rate` | 0.552 | 0.423 | 0.765 | 0.0231 | 0.0553 |
 | `Fz_FRN_error_minus_correct` | -2.895 | -2.023 | -0.601 | 0.0681 | 0.1363 |
 
-Sensitivity: P300 effects remain directionally large after excluding flagged participants, but FDR significance is sample-sensitive. After excluding all flagged participants, `Pz_P300_loss_minus_gain` has FDR p `0.0531` and `POz_P300_loss_minus_gain` has FDR p `0.0614`.
-
-Interpretation: the classical statistics provide the clearest physiological signal, especially for P300 loss-gain contrasts. These should be emphasized alongside the sensitivity-dependent ML results.
+Interpretation: the clearest physiological signal is posterior P300 loss-gain differences, which survive FDR correction in the full all-final-label dataset. This should still be framed as pilot evidence requiring replication.
 
 ## Risky Choice
 
@@ -139,10 +181,9 @@ Interpretation: risky-choice prediction remains modest. Previous-trial and rolli
 ## Limitations
 
 - Chronotype has only 39 participants, so findings are pilot-level.
-- The strongest chronotype leaderboard results use too many features for the sample size and should be treated as exploratory.
-- The compact model has wide repeated-CV uncertainty and sensitivity-dependent permutation support.
+- The raw behavioural chronotype column conflicts with `all final data.xlsx` for participants `1027` and `1036`; sensitivity analyses should disclose this.
+- Compact ML evidence is significant in the full all-final-label dataset but not robust across all flagged-participant exclusions.
 - There is no external validation cohort.
-- Participant `1013` has an EEG/trigger alignment issue after block 10 that should be disclosed or handled in sensitivity analyses.
-- Primary metadata labels conflict with raw behavioural labels for participants `1027` and `1036`.
+- Participant `1013` has an EEG/trigger alignment issue after block 10 that materially affects sensitivity results.
 - MEQ/MCTQ values are not exported because their side-by-side workbook table order is not independently validated.
 - Raw data are local and not committed; generated data/reports are ignored and summarized here.

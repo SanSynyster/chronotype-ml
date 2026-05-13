@@ -72,6 +72,7 @@ def main() -> None:
         ROOT / "data/clean/risky_choice_prechoice.csv",
         ROOT / "data/clean/chronotype_participant.csv",
         ROOT / "data/clean/chronotype_compact_12.csv",
+        ROOT / "data/clean/chronotype_compact_performance.csv",
         ROOT / "data/clean/sensitivity/manifest.json",
     ]
 
@@ -81,6 +82,7 @@ def main() -> None:
         [args.python, "scripts/build_clean_risky_choice.py", "--include-prev-eeg", "--write-packs"],
         [args.python, "scripts/build_clean_chronotype.py", "--write-packs"],
         [args.python, "scripts/build_compact_chronotype.py"],
+        [args.python, "scripts/build_compact_performance_chronotype.py"],
         [args.python, "scripts/build_chronotype_sensitivity.py"],
     ]
 
@@ -97,6 +99,7 @@ def main() -> None:
             "All final data is linked through the ERPset column shared with participant_summary.",
             "Primary chronotype labels come from participant_summary / all final data metadata, not the raw behavioural Chronotype column.",
             "MEQ/MCTQ fields are not exported because their side-by-side workbook table order is unvalidated.",
+            "The performance-informed compact model is exploratory and kept separate from the a priori theory-driven compact model.",
             "Active scripts build leakage-aware modelling datasets from the raw-derived ML-ready feature table.",
         ],
     }

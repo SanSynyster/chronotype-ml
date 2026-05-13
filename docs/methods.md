@@ -4,7 +4,7 @@
 
 The primary analysis predicts participant chronotype, Morning vs Evening, from participant-level summaries of risky decision-making behavior and feedback-locked ERP contrasts. Trial-level risky-choice prediction is treated as a secondary analysis.
 
-Primary chronotype labels are taken from `participant_summary.xlsx` / `all final data.xlsx`. Because those workbooks do not contain explicit `UserID` values, `scripts/link_raw_metadata.py` maps them to participants by matching previous-feedback behavioural aggregates recomputed from `raw_behavioral_trials.xlsx`; `all final data.xlsx` is then linked through the shared `ERPset` column. Raw behavioural chronotype labels are retained for QC, not used as the primary target.
+Primary chronotype labels are taken from `all final data.xlsx`, linked through the shared `ERPset` column after mapping `participant_summary.xlsx` rows to `UserID`. Because the metadata workbooks do not contain explicit `UserID` values, `scripts/link_raw_metadata.py` maps them to participants by matching previous-feedback behavioural aggregates recomputed from `raw_behavioral_trials.xlsx`. The raw behavioural `Chronotype` column conflicts with `all final data.xlsx` for participants `1027` and `1036`; these are retained under the `all final data.xlsx` labels and handled in sensitivity analyses.
 
 ## Feature Engineering
 
@@ -30,7 +30,9 @@ Chronotype models are evaluated with stratified cross-validation, repeated cross
 
 The manuscript-oriented compact chronotype model uses 12 theory-driven predictors to reduce overfitting risk relative to the broader 47-feature pilot model.
 
-Sensitivity analyses exclude participant `1013`, participants with raw-behaviour/metadata label conflicts (`1027`, `1036`), and all flagged participants together.
+A second exploratory performance-informed compact model uses 12 features selected from recurrent signals in the current dataset's feature-pack performance, group statistics, and held-out importance. This model is kept separate from the a priori compact model because its feature set is partially data-driven.
+
+Sensitivity analyses exclude participant `1013`, who has an EEG/trigger QC issue, the two raw-behaviour/metadata label-conflict participants `1027` and `1036`, and all three flagged participants together.
 
 ## Statistical Reporting
 

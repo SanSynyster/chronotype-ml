@@ -10,9 +10,10 @@ The current codebase is organized around clean, reproducible modelling scripts. 
 ## Key Findings
 
 - The active pipeline now rebuilds from local raw behaviour, EEG single-trial means/triggers, and linked participant metadata.
-- Primary chronotype labels come from `participant_summary.xlsx` / `all final data.xlsx`; raw behavioural labels are retained for QC.
-- The 12-feature compact Logistic Regression model reached repeated-CV balanced accuracy mean `0.666` and 1000-permutation `p = 0.0340` in the full primary dataset, but sensitivity analyses weaken this evidence.
-- The clearest physiological signal is in posterior P300 loss-gain contrasts; FRN feedback/error contrasts also contribute to exploratory models.
+- Primary chronotype labels come from linked `all final data.xlsx` metadata; raw behavioural chronotype labels conflict for `1027` and `1036` and are handled as sensitivity cases.
+- The theory-driven compact Logistic Regression reached repeated-CV balanced accuracy mean `0.666` and 1000-permutation `p = 0.0340` on the full all-final-label dataset.
+- Larger exploratory Random Forest models are above chance; the 47-feature `compact_combined` model reached repeated-CV balanced accuracy mean `0.776` and 1000-permutation `p = 0.0010`.
+- The clearest physiological signal is posterior P300 loss-gain contrast, which survives FDR correction in the full all-final-label dataset.
 - Risky-choice prediction was modest: the best clean Logistic Regression packs reached balanced accuracy about `0.587` and ROC AUC about `0.62` under participant-grouped CV.
 - Same-trial leakage features such as `ChoiceMade`, `CorrectChoice`, `CurrentScore`, same-trial feedback, and same-trial feedback-locked EEG are excluded from risky-choice predictors.
 
@@ -48,6 +49,7 @@ Generated data, reports, and model artifacts are intentionally ignored. Raw data
 - `scripts/run_chronotype_importance.py`: focused importance analysis for the best chronotype model.
 - `scripts/rebuild_from_raw.py`: raw-to-clean orchestration and provenance wrapper.
 - `scripts/build_compact_chronotype.py`: theory-driven 12-feature chronotype model table.
+- `scripts/build_compact_performance_chronotype.py`: exploratory performance-informed compact chronotype model table.
 - `scripts/repeated_cv_clean.py`: repeated stratified CV with confidence intervals.
 - `scripts/group_stats_chronotype.py`: Morning-vs-Evening statistics with effect sizes.
 - `scripts/qc_report_clean.py`: clean dataset QC summaries.
@@ -99,6 +101,7 @@ Run manuscript-level support analyses:
 
 ```bash
 python scripts/build_compact_chronotype.py
+python scripts/build_compact_performance_chronotype.py
 python scripts/repeated_cv_clean.py --data data/clean/chronotype_compact_12.csv --target Chronotype --model logreg --repeats 100
 python scripts/permutation_test_clean.py --data data/clean/chronotype_compact_12.csv --target Chronotype --group-col "" --model logreg --permutations 1000
 python scripts/group_stats_chronotype.py
@@ -140,9 +143,10 @@ Chronotype packs:
 
 - Small participant sample, `n = 39`, limits generalizability.
 - Participant `1013` has an EEG/trigger agreement issue after block 10 and one missing EEG trial in the raw-derived table.
-- Raw behavioural chronotype labels conflict with the primary metadata labels for participants `1027` and `1036`.
+- Raw behavioral chronotype labels conflict with `all final data.xlsx` for participants `1027` and `1036`.
 - MEQ/MCTQ values are not exported because their workbook table order is not independently validated.
-- Compact chronotype ML evidence is sensitivity-dependent after excluding flagged participants.
+- Compact chronotype ML evidence is promising but sensitivity to flagged-participant exclusions should be treated as pilot/exploratory.
+- Larger Random Forest chronotype models are encouraging but exploratory because feature dimensionality remains high relative to `n = 39`.
 - Report CSV/JSON outputs are ignored and summarized in `docs/results.md` instead of committed directly.
 - No external validation cohort is available.
 - Feature importance is unstable because chronotype fold test sets are small.

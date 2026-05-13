@@ -31,7 +31,6 @@ SUMMARY_COLUMNS = [
     "risk taking after loss error only free trials",
 ]
 
-
 def normalize_chronotype(value: object) -> str | float:
     label = str(value).strip().lower()
     if label in {"e", "evening", "eveningness"}:
