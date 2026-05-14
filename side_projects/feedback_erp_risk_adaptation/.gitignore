@@ -1,0 +1,5 @@
+# Keep generated side-project artifacts local.
+data/*
+!data/.gitkeep
+reports/*
+!reports/.gitkeep
