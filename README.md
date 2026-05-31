@@ -1,6 +1,12 @@
 # Chronotype ML: EEG and Behavioral Decision Modelling
 
-This repository contains a leakage-aware machine-learning workflow for EEG and behavioral decision-making data. The project studies two related questions:
+Research Contributors
+
+- Sahab Taali
+- Mahsima Hajiaboo
+- Dr Sommayye Heysiattalab
+
+This repository contains a leakage-aware machine-learning workflow for EEG and behavioral decision-making data developed as part of a collaborative chronotype and cognitive neuroscience research project. The project studies two related questions:
 
 - Can chronotype, Morning vs Evening, be predicted from participant-level behavioral and ERP features?
 - Can trial-level risky choice be predicted from pre-choice values and previous-trial history?
@@ -145,7 +151,7 @@ Chronotype packs:
 - Participant `1013` has an EEG/trigger agreement issue after block 10 and one missing EEG trial in the raw-derived table.
 - Raw behavioral chronotype labels conflict with `all final data.xlsx` for participants `1027` and `1036`.
 - MEQ/MCTQ values are not exported because their workbook table order is not independently validated.
-- Compact chronotype ML evidence is promising but sensitivity to flagged-participant exclusions should be treated as pilot/exploratory.
+- Current findings should be interpreted in the context of the available sample size and ongoing validation analyses, including sensitivity analyses involving flagged participants.
 - Larger Random Forest chronotype models are encouraging but exploratory because feature dimensionality remains high relative to `n = 39`.
 - Report CSV/JSON outputs are ignored and summarized in `docs/results.md` instead of committed directly.
 - No external validation cohort is available.
@@ -167,4 +173,10 @@ Chronotype packs:
 
 ## Status
 
-This is suitable as a public research/portfolio repository. Treat the chronotype result as a promising pilot finding, not a deployed or clinically validated predictor.
+This repository supports an ongoing collaborative research project investigating chronotype, feedback processing, and risky decision-making using behavioural and EEG measures. The project integrates cognitive neuroscience, behavioural analysis, and interpretable machine learning approaches to investigate chronotype-related behavioural and neural signatures. Current results provide evidence for meaningful chronotype-associated differences in feedback processing and form the basis for ongoing methodological development, validation, and future publication.
+
+## Citation
+
+If you use this repository, analyses, or derived methods, please acknowledge the project contributors:
+
+Taali, S., Hajiaboo, M., & Heysiattalab, S. Chronotype ML: EEG and Behavioral Decision Modelling.
