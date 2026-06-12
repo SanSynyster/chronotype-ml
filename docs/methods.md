@@ -28,14 +28,18 @@ Risky-choice features use only same-trial pre-choice values plus previous-trial 
 
 Chronotype models are evaluated with stratified cross-validation, repeated cross-validation, and label-permutation testing. Risky-choice models use participant-grouped cross-validation to test generalization to held-out participants.
 
-The manuscript-oriented compact chronotype model uses 12 theory-driven predictors to reduce overfitting risk relative to the broader 47-feature pilot model.
+The manuscript-oriented compact chronotype model uses 12 theory-driven predictors to reduce overfitting risk relative to the broader 47-feature exploratory model.
 
 A second exploratory performance-informed compact model uses 12 features selected from recurrent signals in the current dataset's feature-pack performance, group statistics, and held-out importance. This model is kept separate from the a priori compact model because its feature set is partially data-driven.
 
 Sensitivity analyses exclude participant `1013`, who has an EEG/trigger QC issue, the two raw-behaviour/metadata label-conflict participants `1027` and `1036`, and all three flagged participants together.
 
+## Analysis Hierarchy
+
+The primary analysis is the classical Morning-vs-Evening group comparison of theory-driven behavioral and ERP features, with the posterior P300 loss-minus-gain contrast as the pre-specified neural hypothesis. Machine-learning classification of chronotype is a secondary, exploratory analysis reported as converging evidence. Trial-level risky-choice prediction is a secondary task.
+
 ## Statistical Reporting
 
-Classical Morning-vs-Evening group comparisons are reported for theory-driven features with effect sizes and FDR-adjusted p-values.
+Classical Morning-vs-Evening group comparisons are reported for theory-driven features with Cohen's d, Welch t-test p-values, nonparametric Mann-Whitney p-values, and Benjamini-Hochberg FDR-adjusted p-values across the theory-driven feature family.
 
-For manuscript reporting, model performance should emphasize repeated-CV mean and uncertainty, permutation-test p-values, and classical effect sizes rather than a single best split.
+For the exploratory classifier, model performance is reported as repeated-CV mean and uncertainty (95% interval) and label-permutation p-values. Permutation p-values across the five pre-specified literature feature packs are FDR-corrected as a family; the theory-driven `compact_12` model is reported separately as a single pre-specified classifier with its uncorrected permutation p-value. Single best-split numbers are used only for ranking and are not reported as primary evidence. The metadata-to-participant linkage uses optimal one-to-one assignment with reported match-distance and match-margin QC.

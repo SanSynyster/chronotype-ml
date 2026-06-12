@@ -2,6 +2,14 @@
 
 This document summarizes the current active raw-to-clean results using chronotype labels from `all final data.xlsx` as the primary source. Generated CSV/JSON reports are ignored by git, so this file is the tracked public result summary.
 
+## Headline
+
+- **Primary finding (confirmatory-style, neural):** posterior P300 loss-minus-gain amplitude differs between Morning and Evening chronotypes. `Pz_P300_loss_minus_gain` (Cohen's d = -1.04, Welch p = 0.0028, FDR p = 0.034) and `POz_P300_loss_minus_gain` (d = -0.92, Welch p = 0.0076, FDR p = 0.045) are the only features that survive FDR correction across the theory-driven feature set, and both are corroborated by Mann-Whitney tests.
+- **Exploratory finding (machine learning):** chronotype is classifiable above chance on the full dataset by a theory-driven 12-feature logistic model, but this evidence does not survive multiple-comparison correction across feature packs and is not robust to label-conflict exclusions. It is reported as converging support, not a validated classifier.
+- **Secondary task (risky choice):** weakly predictable under leakage-safe, participant-grouped CV; previous-trial history carries most of the signal.
+
+All findings are from a single cohort of 39 participants and require independent replication.
+
 ## Provenance And Labels
 
 The current pipeline rebuilds modelling tables from local raw files using active scripts:
@@ -12,7 +20,9 @@ The current pipeline rebuilds modelling tables from local raw files using active
 - `scripts/build_clean_chronotype.py` uses previous-trial feedback for behavioral adaptation features and current-trial feedback for feedback-locked ERP contrasts.
 - `scripts/rebuild_from_raw.py --execute` runs the full active rebuild and writes `docs/data_provenance.md`.
 
-Primary chronotype labels come from `all final data.xlsx` via the `ERPset` link. The raw behavioral `Chronotype` column disagrees for participants `1027` and `1036`, so those participants are tracked as label-conflict sensitivity cases rather than manually overridden.
+Primary chronotype labels come from `all final data.xlsx` via the `ERPset` link. The `participant_summary.xlsx` to `UserID` linkage uses an optimal one-to-one (Hungarian) assignment over standardized previous-feedback behavioural aggregates, which guarantees a bijection; the smallest assignment margin (0.157) is large relative to typical match distances (~0.013), and only participant `1010` is flagged as a comparatively distant (but still unambiguous) match.
+
+The two metadata sources agree with each other on every participant: the `participant_summary.xlsx` chronotype column matches the `all final data.xlsx` label for all 39 participants. Only the raw behavioral-trials `Chronotype` column disagrees, and only for participants `1027` and `1036`. Because two independent metadata sources corroborate the primary labels and only the raw behavioural column is the outlier, the primary labels are retained and `1027`/`1036` are tracked as label-conflict sensitivity cases rather than manually overridden.
 
 Label/QC snapshot:
 
@@ -57,6 +67,8 @@ Best feature-pack leaderboard entries from 5-fold stratified CV:
 
 Interpretation: using `all final data.xlsx` labels restores the stronger chronotype signal. High-dimensional Random Forest results remain exploratory, but the theory-driven compact Logistic Regression is above chance in permutation testing on the full dataset.
 
+Multiple-comparison note: across the five pre-specified literature feature packs (`demo_only`, `behavior_core`, `frn_core`, `p300_core`, `compact_combined`), no pack survives Benjamini-Hochberg FDR correction at the family level (best raw permutation p = 0.0509 for `p300_core`, FDR p = 0.175; see `reports/clean/permutation_tests/leaderboard.md`). The theory-driven `compact_12` model is treated as a single pre-specified primary classifier and reported with its uncorrected permutation p-value; its corrected significance across the broader pack family would not hold. The classifier evidence is therefore exploratory and secondary to the neural group difference.
+
 ## Larger Exploratory Random Forest Models
 
 The two larger feature sets were also validated with repeated CV and 1000-label permutation tests using Random Forest. These models are exploratory because the number of predictors is high relative to `n = 39`, but they test whether broader multivariate structure is informative.
@@ -91,7 +103,7 @@ The theory-driven compact model uses 12 behavioral/ERP predictors. Repeated 5-fo
 | Exclude label conflicts `1027`, `1036` | 37 | 0.533 | 0.504 | 0.667 | 0.3816 |
 | Exclude all flagged `1013`, `1027`, `1036` | 36 | 0.675 | 0.511 | 0.683 | 0.0669 |
 
-Interpretation: the theory-driven compact model is statistically significant in the full all-final-label dataset. Sensitivity analyses are mixed, especially when excluding the two participants whose raw behavioral labels disagree with `all final data.xlsx`, so this remains pilot evidence rather than a validated classifier.
+Interpretation: the theory-driven compact model is above chance in the full all-final-label dataset under its single pre-specified test, but the effect does not survive FDR correction across the feature-pack family and sensitivity analyses are mixed, especially when excluding the two participants whose raw behavioral labels disagree with `all final data.xlsx`. It is therefore reported as exploratory, converging support rather than a validated classifier.
 
 ## Performance-Informed Compact Model
 
@@ -158,7 +170,7 @@ Morning-vs-Evening tests for theory-driven features using all-final labels:
 | `gain_correct_risky_rate` | 0.552 | 0.423 | 0.765 | 0.0231 | 0.0553 |
 | `Fz_FRN_error_minus_correct` | -2.895 | -2.023 | -0.601 | 0.0681 | 0.1363 |
 
-Interpretation: the clearest physiological signal is posterior P300 loss-gain differences, which survive FDR correction in the full all-final-label dataset. This should still be framed as pilot evidence requiring replication.
+Interpretation: the clearest physiological signal is posterior P300 loss-gain differences, which survive FDR correction in the full all-final-label dataset and are the primary finding of this report. As a single-cohort result it still requires independent replication.
 
 ## Risky Choice
 
@@ -180,7 +192,7 @@ Interpretation: risky-choice prediction remains modest. Previous-trial and rolli
 
 ## Limitations
 
-- Chronotype has only 39 participants, so findings are pilot-level.
+- Chronotype has only 39 participants, so all findings are preliminary and single-cohort.
 - The raw behavioural chronotype column conflicts with `all final data.xlsx` for participants `1027` and `1036`; sensitivity analyses should disclose this.
 - Compact ML evidence is significant in the full all-final-label dataset but not robust across all flagged-participant exclusions.
 - There is no external validation cohort.

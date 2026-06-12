@@ -1,6 +1,7 @@
 # Limitations
 
-- The chronotype analysis has only 39 participants, so all predictive findings are pilot-level.
+- The chronotype analysis has only 39 participants from a single cohort, so all predictive findings are preliminary and require independent replication.
+- The chronotype classifier does not survive FDR correction across the family of feature packs; the predictive ML is reported as exploratory, converging support for the neural group difference, which is the primary finding.
 - The compact chronotype model must be externally validated before making generalizable claims.
 - ERP features are window-level summaries and may miss peak latency, time-frequency, or trial-quality effects.
 - The active raw-to-clean path is now implemented in active scripts, but participant `1013` has a known EEG/trigger agreement issue after block 10 and one missing EEG trial.

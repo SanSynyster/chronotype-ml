@@ -9,6 +9,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 
@@ -26,9 +27,40 @@ def run(cmd: list[str]) -> None:
     subprocess.run(cmd, check=True)
 
 
-def write_leaderboard(outdir: Path) -> None:
+def add_fdr(df: pd.DataFrame, p_col: str = "p_value") -> pd.DataFrame:
+    """Add Benjamini-Hochberg FDR-adjusted p-values across the feature packs.
+
+    Each pack is one hypothesis test in a family, so the leaderboard p-values
+    must be corrected for the number of packs evaluated before any pack's
+    significance is interpreted.
+    """
+    df = df.copy()
+    p = df[p_col].to_numpy(dtype=float)
+    n = len(p)
+    order = np.argsort(p)
+    ranks = np.empty(n, dtype=int)
+    ranks[order] = np.arange(1, n + 1)
+    adjusted = p * n / ranks
+    # Enforce monotonicity of BH-adjusted values (step-up), then clip to 1.
+    adj_sorted = adjusted[order]
+    adj_sorted = np.minimum.accumulate(adj_sorted[::-1])[::-1]
+    out = np.empty(n, dtype=float)
+    out[order] = np.clip(adj_sorted, 0, 1)
+    df["p_value_fdr_bh"] = out
+    df["significant_fdr_05"] = df["p_value_fdr_bh"] < 0.05
+    return df
+
+
+def write_leaderboard(outdir: Path, pack_stems: list[str]) -> None:
+    # Restrict the FDR family to exactly the packs run in this invocation.
+    # Globbing the whole directory would fold in stale results and sensitivity
+    # variants of the same model, which are not independent hypotheses and would
+    # inflate the multiple-comparison family.
     rows = []
-    for summary_path in sorted(outdir.glob("chronotype_*/logreg/summary.json")):
+    for stem in pack_stems:
+        summary_path = outdir / stem / "logreg" / "summary.json"
+        if not summary_path.exists():
+            continue
         summary = json.loads(summary_path.read_text(encoding="utf-8"))
         rows.append({
             "pack": summary_path.parent.parent.name.replace("chronotype_", ""),
@@ -44,6 +76,7 @@ def write_leaderboard(outdir: Path) -> None:
     if not rows:
         return
     df = pd.DataFrame(rows).sort_values("observed_balanced_accuracy", ascending=False)
+    df = add_fdr(df, p_col="p_value")
     outdir.mkdir(parents=True, exist_ok=True)
     df.to_csv(outdir / "leaderboard.csv", index=False)
 
@@ -68,10 +101,12 @@ def main() -> None:
     parser.add_argument("--packs", default=",".join(DEFAULT_PACKS), help="Comma-separated CSV filenames under data/clean.")
     args = parser.parse_args()
 
+    pack_stems = []
     for pack_name in [p.strip() for p in args.packs.split(",") if p.strip()]:
         path = Path("data/clean") / pack_name
         if not path.exists():
             raise FileNotFoundError(path)
+        pack_stems.append(path.stem)
         run([
             args.python,
             "scripts/permutation_test_clean.py",
@@ -89,7 +124,7 @@ def main() -> None:
             args.outdir,
         ])
 
-    write_leaderboard(Path(args.outdir))
+    write_leaderboard(Path(args.outdir), pack_stems)
 
 
 if __name__ == "__main__":

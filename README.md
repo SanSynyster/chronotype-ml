@@ -15,13 +15,12 @@ The current codebase is organized around clean, reproducible modelling scripts. 
 
 ## Key Findings
 
-- The active pipeline now rebuilds from local raw behaviour, EEG single-trial means/triggers, and linked participant metadata.
-- Primary chronotype labels come from linked `all final data.xlsx` metadata; raw behavioural chronotype labels conflict for `1027` and `1036` and are handled as sensitivity cases.
-- The theory-driven compact Logistic Regression reached repeated-CV balanced accuracy mean `0.666` and 1000-permutation `p = 0.0340` on the full all-final-label dataset.
-- Larger exploratory Random Forest models are above chance; the 47-feature `compact_combined` model reached repeated-CV balanced accuracy mean `0.776` and 1000-permutation `p = 0.0010`.
-- The clearest physiological signal is posterior P300 loss-gain contrast, which survives FDR correction in the full all-final-label dataset.
-- Risky-choice prediction was modest: the best clean Logistic Regression packs reached balanced accuracy about `0.587` and ROC AUC about `0.62` under participant-grouped CV.
-- Same-trial leakage features such as `ChoiceMade`, `CorrectChoice`, `CurrentScore`, same-trial feedback, and same-trial feedback-locked EEG are excluded from risky-choice predictors.
+- **Primary result (neural):** Morning and Evening chronotypes differ in feedback-related posterior **P300** amplitude. The parietal/posterior P300 loss-minus-gain contrast separates the groups with large effect sizes (`Pz`: Cohen's d = `-1.04`, Welch p = `0.0028`, FDR p = `0.034`; `POz`: d = `-0.92`, Welch p = `0.0076`, FDR p = `0.045`), and the effect is corroborated by nonparametric tests (Mann-Whitney p = `0.005` and `0.002`). These two contrasts are the only features that survive FDR correction across the theory-driven feature set.
+- **Supporting (behavioral):** Evening types show higher risky-choice rates, with medium-to-large uncorrected effects (e.g. `loss_error_risky_rate` d = `0.81`, `free_risky_rate` d = `0.80`) that do not survive FDR.
+- **Exploratory (machine learning):** A theory-driven 12-feature Logistic Regression classifies chronotype above chance on the full dataset (repeated-CV balanced accuracy `0.666`; single-family permutation p = `0.0340`). This evidence is exploratory: it does **not** survive FDR correction across the family of feature packs (corrected p ≈ `0.11`-`0.17`), and it is not robust to excluding the two label-conflict participants. It is reported as converging support for the neural finding, not as a validated classifier.
+- **Exploratory (high-dimensional ML):** Larger Random Forest models (47-171 features on 39 participants) score higher in nested-free CV but are reported only as exploratory because feature dimensionality is high relative to sample size.
+- **Secondary task (risky choice):** Under leakage-safe, participant-grouped CV, trial-level risky choice is weakly predictable (balanced accuracy ≈ `0.587`, ROC AUC ≈ `0.62`); same-trial outcome/feedback/feedback-locked-EEG features are excluded as predictors. Previous-trial history carries most of the signal.
+- **Labels:** Primary chronotype labels come from linked `all final data.xlsx` metadata. Two independent metadata sources (`participant_summary.xlsx` and `all final data.xlsx`) agree on every participant; only the raw behavioural-trials column disagrees for `1027` and `1036`, which are tracked as sensitivity cases. The metadata-to-participant linkage uses an optimal one-to-one assignment with margin-based QC.
 
 See `docs/results.md` for result tables and interpretation.
 
