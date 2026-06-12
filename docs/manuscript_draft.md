@@ -1,11 +1,15 @@
 # Chronotype and Feedback Processing: Posterior P300 Differences Between Morning and Evening Types
 
-**Draft manuscript.** This is an assembled working draft built from the tracked
-analysis docs and figures. Bracketed `[CITATION]` and `[AUTHOR INPUT]` markers
-flag where domain references or co-author decisions are still required. Numbers
-are pulled from `docs/results.md` and the scripts in `scripts/`.
-
 Authors: Sahab Taali, Mahsima Hajiaboo, Dr Sommayye Heysiattalab.
+
+> **Cover note for co-authors (delete before submission).** This is the first
+> complete draft, for your revision and comments. All statistics, effect sizes,
+> and figures are final and reproducible from the repository. Two kinds of gaps
+> remain, both marked inline in **bold brackets**: `[CITATION]` where a domain
+> reference is needed, and `[AUTHOR INPUT]` where only the team has the
+> information (recruitment, EEG acquisition, ethics, journal choice). A
+> consolidated checklist is at the end. To comment: open `paper.html` in Word
+> (File > Open) or import it into Google Docs, then use tracked changes.
 
 ---
 

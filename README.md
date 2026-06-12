@@ -172,6 +172,7 @@ Chronotype packs:
 ## Manuscript Support Docs
 
 - `docs/manuscript_draft.md`: assembled IMRaD working draft with figure callouts and an author-input checklist.
+- `docs/paper.html`: self-contained first-draft paper (figures embedded) for co-authors to open in Word or import to Google Docs and comment. Rebuild with `python scripts/build_paper.py`.
 - `docs/figures/`: manuscript figures (PDF + PNG) and a figure-by-figure README.
 - `docs/results.md`: current tracked result summary.
 - `docs/methods.md`: methods draft for manuscript development.
