@@ -168,6 +168,8 @@ Chronotype packs:
 
 ## Manuscript Support Docs
 
+- `docs/manuscript_draft.md`: assembled IMRaD working draft with figure callouts and an author-input checklist.
+- `docs/figures/`: manuscript figures (PDF + PNG) and a figure-by-figure README.
 - `docs/results.md`: current tracked result summary.
 - `docs/methods.md`: methods draft for manuscript development.
 - `docs/data_provenance.md`: generated provenance plan/record for raw-to-clean reconstruction.
