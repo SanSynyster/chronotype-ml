@@ -161,16 +161,44 @@ Interpretation: the most consistent compact-model contributor is posterior P300 
 
 Morning-vs-Evening tests for theory-driven features using all-final labels:
 
-| Feature | Evening Mean | Morning Mean | Cohen's d | Welch p | FDR p |
+| Feature | Cohen's d | d 95% CI | Hedges g | Welch p | FDR p |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| `Pz_P300_loss_minus_gain` | -0.963 | 0.308 | -1.045 | 0.0028 | 0.0341 |
-| `POz_P300_loss_minus_gain` | -0.465 | 0.553 | -0.919 | 0.0076 | 0.0454 |
-| `loss_error_risky_rate` | 0.634 | 0.530 | 0.813 | 0.0160 | 0.0547 |
-| `free_risky_rate` | 0.583 | 0.477 | 0.797 | 0.0182 | 0.0547 |
-| `gain_correct_risky_rate` | 0.552 | 0.423 | 0.765 | 0.0231 | 0.0553 |
-| `Fz_FRN_error_minus_correct` | -2.895 | -2.023 | -0.601 | 0.0681 | 0.1363 |
+| `Pz_P300_loss_minus_gain` | -1.045 | [-1.63, -0.59] | -1.024 | 0.0028 | 0.0341 |
+| `POz_P300_loss_minus_gain` | -0.919 | [-1.55, -0.39] | -0.901 | 0.0076 | 0.0454 |
+| `loss_error_risky_rate` | 0.813 | [0.21, 1.52] | 0.797 | 0.0160 | 0.0547 |
+| `free_risky_rate` | 0.797 | [0.22, 1.44] | 0.781 | 0.0182 | 0.0547 |
+| `gain_correct_risky_rate` | 0.765 | [0.18, 1.43] | 0.749 | 0.0231 | 0.0553 |
+| `Fz_FRN_error_minus_correct` | -0.601 | [-1.50, 0.02] | -0.589 | 0.0681 | 0.1363 |
+
+Effect-size CIs are percentile bootstrap (10,000 resamples). Hedges g is the small-sample bias-corrected estimate. Only the two posterior P300 contrasts have d CIs that exclude zero and survive FDR; the behavioral contrasts are medium-to-large but their CIs include small effects and they do not survive FDR.
 
 Interpretation: the clearest physiological signal is posterior P300 loss-gain differences, which survive FDR correction in the full all-final-label dataset and are the primary finding of this report. As a single-cohort result it still requires independent replication.
+
+## Sensitivity Matrix
+
+The same four participant-exclusion scenarios are applied to both the secondary exploratory classifier and the primary neural group difference (`scripts/sensitivity_matrix.py`, full table in `reports/clean/sensitivity_matrix/`).
+
+Secondary classifier (compact_12 logistic regression), repeated-CV balanced accuracy and 1000-label permutation p:
+
+| Scenario | n | Repeated-CV BA | Permutation BA | Permutation p |
+| --- | ---: | ---: | ---: | ---: |
+| full | 39 | 0.666 | 0.692 | 0.034 |
+| exclude `1013` | 38 | 0.669 | 0.658 | 0.053 |
+| exclude label conflicts `1027`,`1036` | 37 | 0.634 | 0.533 | 0.382 |
+| exclude all flagged | 36 | 0.639 | 0.675 | 0.067 |
+
+Primary neural group difference (posterior P300 loss-minus-gain):
+
+| Scenario | n | Feature | Cohen's d | d 95% CI | Welch p |
+| --- | ---: | --- | ---: | ---: | ---: |
+| full | 39 | `Pz_P300_loss_minus_gain` | -1.045 | [-1.63, -0.59] | 0.0028 |
+| exclude `1013` | 38 | `Pz_P300_loss_minus_gain` | -1.067 | [-1.66, -0.61] | 0.0024 |
+| exclude label conflicts | 37 | `Pz_P300_loss_minus_gain` | -1.004 | [-1.59, -0.54] | 0.0051 |
+| exclude all flagged | 36 | `Pz_P300_loss_minus_gain` | -1.025 | [-1.62, -0.54] | 0.0044 |
+| full | 39 | `POz_P300_loss_minus_gain` | -0.919 | [-1.55, -0.39] | 0.0076 |
+| exclude all flagged | 36 | `POz_P300_loss_minus_gain` | -0.911 | [-1.56, -0.36] | 0.0102 |
+
+Interpretation: the two headline claims behave very differently under participant exclusions. The classifier is fragile, losing significance when the two label-conflict participants are removed. The posterior P300 group difference is essentially invariant: across every exclusion the effect stays near d = -1.0 with Welch p < 0.011 and a d CI that excludes zero. The robustness of the neural effect, contrasted with the fragility of the classifier, is why the P300 group difference is reported as the primary finding and the classifier as exploratory support.
 
 ## Risky Choice
 
@@ -188,7 +216,16 @@ Best feature-pack leaderboard entries:
 | `value_history` | Logistic Regression | 0.586 | 0.592 | 0.585 | 0.623 | 39 |
 | `prev_eeg` | Random Forest | 0.575 | 0.582 | 0.573 | 0.614 | 50 |
 
-Interpretation: risky-choice prediction remains modest. Previous-trial and rolling history features carry most of the signal; previous-trial EEG does not materially improve over history/value features in the current representation.
+Naive baselines for context (`scripts/risky_choice_baseline.py`):
+
+| Baseline | Balanced Accuracy | Accuracy | Note |
+| --- | ---: | ---: | --- |
+| Majority class | 0.500 | 0.529 | base rate 0.529 risky |
+| Persistence (previous choice) | 0.554 | 0.556 | choice autocorrelation |
+| Best leakage-safe model (grouped CV) | 0.587 | 0.592 | generalizes to held-out participants |
+| Participant-mean oracle | 0.604 | 0.610 | peeks at held-out participant; ceiling only |
+
+Interpretation: risky-choice prediction is modest but meaningfully above its trivial references. Under participant-grouped CV the model beats both the majority-class (0.500 BA) and previous-choice persistence (0.554 BA) baselines, and it approaches the participant-mean oracle ceiling (0.604 BA) without ever seeing the held-out participant's own data. Previous-trial and rolling history features carry most of the signal; previous-trial EEG does not materially improve over history/value features in the current representation.
 
 ## Limitations
 

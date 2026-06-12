@@ -34,6 +34,10 @@ A second exploratory performance-informed compact model uses 12 features selecte
 
 Sensitivity analyses exclude participant `1013`, who has an EEG/trigger QC issue, the two raw-behaviour/metadata label-conflict participants `1027` and `1036`, and all three flagged participants together.
 
+## Sample and Power
+
+The analysed sample is 39 participants (19 Evening, 20 Morning). For a two-group comparison with this allocation, the minimum effect detectable with 80% power at a two-sided alpha of 0.05 is Cohen's d of approximately 0.90 (normal approximation, d = (z_{1-alpha/2} + z_{1-beta}) * sqrt(1/n1 + 1/n2)). The study is therefore powered to detect only large between-group effects: estimated power is about 0.90 for the observed posterior P300 effect (d approximately 1.0) but only about 0.35 for a medium effect (d = 0.5). Null or weak results for medium-sized effects, including most behavioral and FRN contrasts, are consequently inconclusive rather than evidence of absence.
+
 ## Analysis Hierarchy
 
 The primary analysis is the classical Morning-vs-Evening group comparison of theory-driven behavioral and ERP features, with the posterior P300 loss-minus-gain contrast as the pre-specified neural hypothesis. Machine-learning classification of chronotype is a secondary, exploratory analysis reported as converging evidence. Trial-level risky-choice prediction is a secondary task.
