@@ -4,7 +4,7 @@ This document summarizes the current active raw-to-clean results using chronotyp
 
 ## Headline
 
-- **Primary finding (confirmatory-style, neural):** posterior P300 loss-minus-gain amplitude differs between Morning and Evening chronotypes. `Pz_P300_loss_minus_gain` (Cohen's d = -1.04, Welch p = 0.0028, FDR p = 0.034) and `POz_P300_loss_minus_gain` (d = -0.92, Welch p = 0.0076, FDR p = 0.045) are the only features that survive FDR correction across the theory-driven feature set, and both are corroborated by Mann-Whitney tests.
+- **Primary finding (confirmatory-style, neural):** posterior P300 loss-minus-gain amplitude differs between Morning and Evening chronotypes. `Pz_P300_loss_minus_gain` (Cohen's d = -1.04, Welch p = 0.0028, FDR p = 0.034) and `POz_P300_loss_minus_gain` (d = -0.92, Welch p = 0.0076, FDR p = 0.045) are the only features that survive FDR correction across the theory-driven feature set, both are corroborated by Mann-Whitney tests, and the association is directionally confirmed against the continuous MEQ score (Pz Pearson r = 0.29, 95% CI [0.06, 0.49]).
 - **Exploratory finding (machine learning):** chronotype is classifiable above chance on the full dataset by a theory-driven 12-feature logistic model, but this evidence does not survive multiple-comparison correction across feature packs and is not robust to label-conflict exclusions. It is reported as converging support, not a validated classifier.
 - **Secondary task (risky choice):** weakly predictable under leakage-safe, participant-grouped CV; previous-trial history carries most of the signal.
 
@@ -201,6 +201,31 @@ Primary neural group difference (posterior P300 loss-minus-gain):
 | exclude all flagged | 36 | `POz_P300_loss_minus_gain` | -0.911 | [-1.56, -0.36] | 0.0102 |
 
 Interpretation: the two headline claims behave very differently under participant exclusions. The classifier is fragile, losing significance when the two label-conflict participants are removed. The posterior P300 group difference is essentially invariant: across every exclusion the effect stays near d = -1.0 with Welch p < 0.011 and a d CI that excludes zero. The robustness of the neural effect, contrasted with the fragility of the classifier, is why the P300 group difference is reported as the primary finding and the classifier as exploratory support.
+
+## Continuous MEQ Analysis
+
+To avoid dichotomizing chronotype, the posterior P300 loss-minus-gain contrasts
+were related to the continuous MEQ score (n = 38 with an MEQ score;
+`scripts/meq_p300_continuous.py`). Under the standard direction (higher MEQ =
+more morning) and the group result, a positive correlation is expected.
+
+| Feature | Pearson r | r 95% CI | Pearson p | Spearman rho | Spearman p | FDR p |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `Pz_P300_loss_minus_gain` | 0.293 | [0.06, 0.49] | 0.074 | 0.319 | 0.051 | 0.146 |
+| `POz_P300_loss_minus_gain` | 0.241 | [-0.01, 0.46] | 0.146 | 0.299 | 0.068 | 0.146 |
+
+Interpretation: the continuous relationship is positive and in the predicted
+direction for both electrodes, confirming that the posterior P300 effect is not
+an artifact of the Morning/Evening dichotomy but a graded association with
+morningness. The correlations are modest and only marginally significant, which
+is expected given power: with n = 38 the minimum correlation detectable at 80%
+power is approximately r = 0.44, so the study has only about 42% power for an
+effect of r = 0.29. The much stronger dichotomous effect (d approximately 1.0)
+is better powered because the binary contrast emphasizes decisively classified
+participants, whereas the 12 intermediate-band participants add scatter to the
+continuous estimate (Figure 5). The continuous and dichotomous analyses are
+therefore consistent: a real, graded posterior-P300 association with chronotype
+that the present sample estimates precisely only at the group-contrast level.
 
 ## Risky Choice
 

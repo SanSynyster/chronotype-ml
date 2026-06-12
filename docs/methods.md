@@ -60,4 +60,6 @@ The primary analysis is the classical Morning-vs-Evening group comparison of the
 
 Classical Morning-vs-Evening group comparisons are reported for theory-driven features with Cohen's d, Welch t-test p-values, nonparametric Mann-Whitney p-values, and Benjamini-Hochberg FDR-adjusted p-values across the theory-driven feature family.
 
+To avoid dichotomizing chronotype, the posterior P300 contrasts were additionally related to the continuous MEQ score with Pearson correlations (percentile-bootstrap 95% CIs), Spearman correlations, and OLS slopes (`scripts/meq_p300_continuous.py`). This continuous analysis is interpreted alongside its power: with n = 38 the minimum correlation detectable at 80% power is approximately r = 0.44.
+
 For the exploratory classifier, model performance is reported as repeated-CV mean and uncertainty (95% interval) and label-permutation p-values. Permutation p-values across the five pre-specified literature feature packs are FDR-corrected as a family; the theory-driven `compact_12` model is reported separately as a single pre-specified classifier with its uncorrected permutation p-value. Single best-split numbers are used only for ranking and are not reported as primary evidence. The metadata-to-participant linkage uses optimal one-to-one assignment with reported match-distance and match-margin QC.

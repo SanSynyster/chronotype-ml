@@ -165,6 +165,45 @@ def fig4_risky(leaderboard_csv: Path, baseline_json: Path, outdir: Path) -> None
     save(fig, outdir, "fig4_risky_choice_baselines")
 
 
+def fig5_meq_continuous(participant_csv: Path, meq_csv: Path, corr_csv: Path, outdir: Path) -> None:
+    if not (meq_csv.exists() and corr_csv.exists()):
+        print(f"Skipping fig5 (missing {meq_csv} or {corr_csv}); run validate_meq_labels.py and meq_p300_continuous.py")
+        return
+    part = pd.read_csv(participant_csv)
+    meq = pd.read_csv(meq_csv)[["UserID", "meq"]]
+    corr = pd.read_csv(corr_csv).set_index("feature")
+    df = part.merge(meq, left_on="participant_id", right_on="UserID", how="inner")
+
+    feats = ["Pz_P300_loss_minus_gain", "POz_P300_loss_minus_gain"]
+    titles = ["Pz P300 (loss - gain)", "POz P300 (loss - gain)"]
+    fig, axes = plt.subplots(1, 2, figsize=(8.6, 4.4))
+    for ax, feat, title in zip(axes, feats, titles):
+        sub = df[["meq", feat, "Chronotype"]].dropna()
+        x = sub["meq"].to_numpy(float)
+        y = sub[feat].to_numpy(float)
+        for label, color in (("Evening", EVENING_C), ("Morning", MORNING_C)):
+            msk = sub["Chronotype"].eq(label).to_numpy()
+            ax.scatter(x[msk], y[msk], color=color, alpha=0.75, s=30, edgecolor="white", linewidth=0.5, label=label)
+        b1, b0 = np.polyfit(x, y, 1)
+        xs = np.linspace(x.min(), x.max(), 50)
+        ax.plot(xs, b0 + b1 * xs, color=GREY, lw=2)
+        ax.axvspan(42, 58, color="grey", alpha=0.08, zorder=0)
+        ax.axhline(0, color=GREY, lw=0.7, ls=":")
+        r = corr.loc[feat, "pearson_r"]
+        lo = corr.loc[feat, "pearson_ci95_low"]
+        hi = corr.loc[feat, "pearson_ci95_high"]
+        rho = corr.loc[feat, "spearman_rho"]
+        ax.set_title(title)
+        ax.set_xlabel("MEQ score (higher = morning)")
+        ax.annotate(f"r = {r:.2f} [{lo:.2f}, {hi:.2f}]\n" + r"$\rho$" + f" = {rho:.2f}",
+                    xy=(0.03, 0.97), xycoords="axes fraction", fontsize=9, va="top", ha="left",
+                    bbox=dict(boxstyle="round,pad=0.3", fc="white", ec=GREY, alpha=0.85))
+    axes[0].set_ylabel("Amplitude contrast (z)")
+    axes[1].legend(loc="lower right", frameon=False, fontsize=9)
+    fig.suptitle("Posterior P300 scales with continuous MEQ (intermediate band shaded)", fontweight="bold")
+    save(fig, outdir, "fig5_meq_continuous_p300")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Generate manuscript figures.")
     parser.add_argument("--outdir", default="docs/figures")
@@ -179,6 +218,9 @@ def main() -> None:
     fig3_importance(Path("reports/clean/feature_importance/chronotype_compact_12/logreg/importance_summary.csv"), outdir)
     fig4_risky(Path("reports/clean/literature_packs/leaderboard.csv"),
                Path("reports/clean/risky_choice_baseline/summary.json"), outdir)
+    fig5_meq_continuous(Path("data/clean/chronotype_participant.csv"),
+                        Path("data/processed/participant_meq_scores.csv"),
+                        Path("reports/clean/meq_p300/meq_p300_correlations.csv"), outdir)
 
 
 if __name__ == "__main__":

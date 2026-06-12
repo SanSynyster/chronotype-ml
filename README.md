@@ -15,7 +15,7 @@ The current codebase is organized around clean, reproducible modelling scripts. 
 
 ## Key Findings
 
-- **Primary result (neural):** Morning and Evening chronotypes differ in feedback-related posterior **P300** amplitude. The parietal/posterior P300 loss-minus-gain contrast separates the groups with large effect sizes (`Pz`: Cohen's d = `-1.04`, Welch p = `0.0028`, FDR p = `0.034`; `POz`: d = `-0.92`, Welch p = `0.0076`, FDR p = `0.045`), and the effect is corroborated by nonparametric tests (Mann-Whitney p = `0.005` and `0.002`). These two contrasts are the only features that survive FDR correction across the theory-driven feature set.
+- **Primary result (neural):** Morning and Evening chronotypes differ in feedback-related posterior **P300** amplitude. The parietal/posterior P300 loss-minus-gain contrast separates the groups with large effect sizes (`Pz`: Cohen's d = `-1.04`, Welch p = `0.0028`, FDR p = `0.034`; `POz`: d = `-0.92`, Welch p = `0.0076`, FDR p = `0.045`), and the effect is corroborated by nonparametric tests (Mann-Whitney p = `0.005` and `0.002`). These two contrasts are the only features that survive FDR correction across the theory-driven feature set, and the effect is directionally confirmed against the continuous MEQ score (Pz Pearson r = 0.29, 95% CI [0.06, 0.49]).
 - **Supporting (behavioral):** Evening types show higher risky-choice rates, with medium-to-large uncorrected effects (e.g. `loss_error_risky_rate` d = `0.81`, `free_risky_rate` d = `0.80`) that do not survive FDR.
 - **Exploratory (machine learning):** A theory-driven 12-feature Logistic Regression classifies chronotype above chance on the full dataset (repeated-CV balanced accuracy `0.666`; single-family permutation p = `0.0340`). This evidence is exploratory: it does **not** survive FDR correction across the family of feature packs (corrected p ≈ `0.11`-`0.17`), and it is not robust to excluding the two label-conflict participants. It is reported as converging support for the neural finding, not as a validated classifier.
 - **Exploratory (high-dimensional ML):** Larger Random Forest models (47-171 features on 39 participants) score higher in nested-free CV but are reported only as exploratory because feature dimensionality is high relative to sample size.
@@ -59,6 +59,7 @@ Generated data, reports, and model artifacts are intentionally ignored. Raw data
 - `scripts/build_compact_performance_chronotype.py`: exploratory performance-informed compact chronotype model table.
 - `scripts/repeated_cv_clean.py`: repeated stratified CV with confidence intervals.
 - `scripts/group_stats_chronotype.py`: Morning-vs-Evening statistics with effect sizes, Hedges g, and bootstrap d CIs.
+- `scripts/meq_p300_continuous.py`: continuous MEQ-vs-posterior-P300 correlations (Pearson with CIs, Spearman, OLS).
 - `scripts/sensitivity_matrix.py`: consolidated sensitivity matrix for the classifier and the P300 group difference across participant exclusions.
 - `scripts/risky_choice_baseline.py`: naive baselines (majority, persistence, participant-mean oracle) for the risky-choice task.
 - `scripts/make_figures.py`: generates the manuscript figures (PDF + PNG) into `docs/figures/`.

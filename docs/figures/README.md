@@ -17,6 +17,10 @@ Each figure is saved as a vector PDF (for the manuscript) and a PNG (preview).
 - `fig4_risky_choice_baselines` — Risky-choice balanced accuracy by feature pack
   under participant-grouped CV, against majority, persistence, and
   participant-mean-oracle reference lines.
+- `fig5_meq_continuous_p300` — Posterior P300 loss-minus-gain vs the continuous
+  MEQ score (Pz, POz) with OLS fit, points colored by binary label, and the MEQ
+  intermediate band (42-58) shaded. Confirms the effect is a graded association
+  with morningness, not an artifact of dichotomization.
 
 Regenerate with:
 

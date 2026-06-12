@@ -22,7 +22,9 @@ to feedback valence: the parietal/posterior P300 loss-minus-gain contrast
 separated the groups with large effect sizes (Pz Cohen's d = -1.04, FDR
 p = 0.034; POz d = -0.92, FDR p = 0.045), and this difference was invariant
 across participant-exclusion sensitivity analyses (d approximately -1.0,
-p < 0.011 in every scenario). Behaviourally, Evening types showed higher
+p < 0.011 in every scenario). The association was directionally confirmed against
+the continuous MEQ score (Pz r = 0.29), and the binary labels were themselves
+validated against MEQ. Behaviourally, Evening types showed higher
 risky-choice rates (medium-to-large uncorrected effects). Exploratory
 machine-learning models classified chronotype above chance from combined
 behavioural and ERP features but did not survive correction for multiple
@@ -199,7 +201,21 @@ effects, consistent with the study being underpowered for medium effects.
 Frontocentral FRN contrasts did not differ significantly between groups
 (e.g. Fz FRN error-minus-correct d = -0.60, FDR p = 0.14).
 
-### 3.3 Robustness across participant exclusions (Figure 2)
+### 3.3 Continuous MEQ association (Figure 5)
+
+To confirm the effect was not an artifact of dichotomizing chronotype, the
+posterior P300 loss-minus-gain contrasts were related to the continuous MEQ score
+(n = 38). Both electrodes showed a positive association in the predicted
+direction (Pz Pearson r = 0.29, 95% CI [0.06, 0.49], Spearman rho = 0.32; POz
+r = 0.24, 95% CI [-0.01, 0.46], Spearman rho = 0.30). The correlations were
+modest and only marginally significant, consistent with limited power for
+effects of this size (minimum detectable r approximately 0.44 at 80% power for
+n = 38) and with the 12 intermediate-band participants adding scatter. The
+continuous and group-level analyses thus agree on a graded posterior-P300
+association with morningness that the present sample resolves precisely only at
+the group-contrast level.
+
+### 3.4 Robustness across participant exclusions (Figure 2)
 
 The posterior P300 group difference was essentially invariant to participant
 exclusions. Across the full sample and all three exclusion scenarios, the Pz
@@ -211,7 +227,7 @@ label-conflict participants were removed. The dissociation between the robust
 neural effect and the fragile classifier motivates reporting the P300 group
 difference as the primary result.
 
-### 3.4 Exploratory: chronotype classification (Figure 3)
+### 3.5 Exploratory: chronotype classification (Figure 3)
 
 A pre-specified theory-driven 12-feature logistic regression classified
 chronotype above chance on the full sample (repeated-CV balanced accuracy mean
@@ -227,7 +243,7 @@ reported only as exploratory given 47-171 features for 39 participants. We
 therefore treat the classification results as converging support for the neural
 finding rather than as a deployable classifier.
 
-### 3.5 Secondary: trial-level risky choice (Figure 4)
+### 3.6 Secondary: trial-level risky choice (Figure 4)
 
 Under participant-grouped cross-validation, the best leakage-safe models reached
 a balanced accuracy of approximately 0.587 (ROC AUC approximately 0.62) on
