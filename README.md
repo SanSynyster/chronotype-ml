@@ -59,6 +59,7 @@ Generated data, reports, and model artifacts are intentionally ignored. Raw data
 - `scripts/group_stats_chronotype.py`: Morning-vs-Evening statistics with effect sizes, Hedges g, and bootstrap d CIs.
 - `scripts/sensitivity_matrix.py`: consolidated sensitivity matrix for the classifier and the P300 group difference across participant exclusions.
 - `scripts/risky_choice_baseline.py`: naive baselines (majority, persistence, participant-mean oracle) for the risky-choice task.
+- `scripts/make_figures.py`: generates the manuscript figures (PDF + PNG) into `docs/figures/`.
 - `scripts/qc_report_clean.py`: clean dataset QC summaries.
 
 ## Setup

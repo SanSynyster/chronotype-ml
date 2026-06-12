@@ -20,6 +20,9 @@ models/
 # Large and generated files
 *.csv
 *.png
+# but keep tracked manuscript figures (vector PDFs track anyway)
+!docs/figures/
+!docs/figures/*.png
 *.json
 *.joblib
 *.zip
