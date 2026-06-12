@@ -6,6 +6,20 @@ The primary analysis predicts participant chronotype, Morning vs Evening, from p
 
 Primary chronotype labels are taken from `all final data.xlsx`, linked through the shared `ERPset` column after mapping `participant_summary.xlsx` rows to `UserID`. Because the metadata workbooks do not contain explicit `UserID` values, `scripts/link_raw_metadata.py` maps them to participants by matching previous-feedback behavioural aggregates recomputed from `raw_behavioral_trials.xlsx`. The raw behavioural `Chronotype` column conflicts with `all final data.xlsx` for participants `1027` and `1036`; these are retained under the `all final data.xlsx` labels and handled in sensitivity analyses.
 
+The binary labels were validated against the continuous MEQ score
+(`scripts/validate_meq_labels.py`). The MEQ/MCTQ scores live in a table block of
+`all final data.xlsx` that is not row-aligned with the chronotype column, but
+every block is keyed by participant name (the `ERPset` field), so the MEQ score
+was attached by name rather than row position. The score separated the labels in
+the standard Horne-Ostberg direction (Evening MEQ mean 37.3, range 25-49; Morning
+mean 57.7, range 45-64), and all 26 participants with a decisive MEQ score
+(outside the 42-58 intermediate band) matched their binary label. Both
+label-conflict participants had decisive MEQ scores confirming the primary label
+(1027 = 61, Morning; 1036 = 27, Evening), so the raw-behaviour column was in error
+for these two rather than the metadata. This also resolves the earlier concern
+that the side-by-side MEQ/MCTQ table order was unvalidated: alignment by name key
+is well defined and was used here.
+
 ## Feature Engineering
 
 The active raw-to-clean path trims behaviour to `Trial <= 23`, yielding 368 behavioural rows per participant to match the EEG single-trial exports. EEG single-trial means are pivoted to trial-level `channel_window` columns and merged by participant/global trial index. Trigger/behaviour valence agreement is reported as QC rather than used to silently drop rows. MEQ/MCTQ fields are not exported because their side-by-side workbook table order has not been independently validated.

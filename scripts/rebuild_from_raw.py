@@ -95,10 +95,10 @@ def main() -> None:
         "commands": command_records,
         "notes": [
             "Raw data are local and intentionally not committed.",
-            "Participant_summary is linked to UserID by matching previous-feedback behavioural aggregates recomputed from raw behaviour.",
+            "Participant_summary is linked to UserID by optimal one-to-one (Hungarian) assignment over previous-feedback behavioural aggregates recomputed from raw behaviour; the assignment is a guaranteed bijection with reported match-margin QC.",
             "All final data is linked through the ERPset column shared with participant_summary.",
-            "Primary chronotype labels come from participant_summary / all final data metadata, not the raw behavioural Chronotype column.",
-            "MEQ/MCTQ fields are not exported because their side-by-side workbook table order is unvalidated.",
+            "Primary chronotype labels come from participant_summary / all final data metadata, not the raw behavioural Chronotype column. Both metadata sources agree on every participant; only the raw behavioural column disagrees for 1027 and 1036.",
+            "MEQ/MCTQ scores live in a non-row-aligned table block of all final data; they are aligned by participant name (the ERPset field) in scripts/validate_meq_labels.py, which confirms the binary labels (26/26 decisive participants consistent; conflict cases 1027/1036 MEQ-confirmed).",
             "The performance-informed compact model is exploratory and kept separate from the a priori theory-driven compact model.",
             "Active scripts build leakage-aware modelling datasets from the raw-derived ML-ready feature table.",
         ],

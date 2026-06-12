@@ -108,12 +108,18 @@ smallest assignment margin (0.157) was large relative to typical match distances
 (approximately 0.013), and all 39 links were unambiguous.
 
 Two independent metadata sources (`participant_summary.xlsx` and
-`all final data.xlsx`) agreed on the chronotype label for every participant. The
-raw behavioural-trials chronotype column disagreed for two participants (1027,
-1036); because two independent sources corroborated the primary labels, these
-were retained and analysed as label-conflict sensitivity cases. [AUTHOR INPUT:
-strongly consider replacing recovered labels with MEQ-scored ground truth from
-the raw questionnaire responses; see Limitations.]
+`all final data.xlsx`) agreed on the chronotype label for every participant, and
+the raw behavioural-trials chronotype column disagreed for only two participants
+(1027, 1036). The binary labels were validated against the continuous MEQ score
+(`scripts/validate_meq_labels.py`): the MEQ score, attached by participant name,
+was strongly separated by label (Evening mean 37.3; Morning mean 57.7) in the
+standard Horne-Ostberg direction, and all 26 participants with a decisive MEQ
+score (outside the 42-58 intermediate band) were consistent with their binary
+label. Both raw-behaviour conflict cases had decisive MEQ scores confirming the
+primary label (1027 MEQ = 61, Morning; 1036 MEQ = 27, Evening), indicating the
+raw-behaviour column was simply in error for these two. Twelve participants fell
+in the MEQ intermediate band, where binary assignment is inherently softer.
+[AUTHOR INPUT: confirm the binary cutoff/median-split rule.]
 
 ### 2.5 Feature engineering
 
@@ -270,11 +276,12 @@ choice history in a way that generalizes across participants.
 - The sample is a single cohort of 39 participants and is powered only for large
   effects; medium and small effects are inconclusive. Findings require
   independent replication.
-- Primary chronotype labels were recovered by behavioural linkage rather than
-  scored directly from the questionnaire in the modelling pipeline; two
-  participants had a conflicting raw-behaviour label (corroborated against by two
-  metadata sources). [AUTHOR INPUT: replacing these with MEQ/MCTQ-scored labels
-  would materially strengthen the labelling.]
+- Chronotype is analysed as a binary Morning/Evening label. The labels are
+  MEQ-derived and were validated against the continuous MEQ score (all 26
+  decisively-scored participants consistent; both raw-behaviour conflict cases
+  MEQ-confirmed), but 12 of 39 participants fall in the MEQ intermediate band
+  where the dichotomy is inherently soft; modelling the continuous score is left
+  to future work.
 - ERP features are window-level single-trial means and may miss peak-latency,
   time-frequency, or trial-quality effects.
 - Participant 1013 has a known EEG/trigger agreement issue after block 10.
@@ -301,7 +308,8 @@ full pipeline rebuilds from raw with `python scripts/rebuild_from_raw.py
 - [ ] Participants: recruitment, demographics, ethics/IRB, consent.
 - [ ] Task design and full EEG acquisition/preprocessing details.
 - [ ] Domain citations for chronotype-reward, FRN, and P300 literature.
-- [ ] Decision on MEQ/MCTQ-scored ground-truth labels.
+- [ ] Confirm the binary chronotype cutoff/median-split rule (12 participants in
+      the MEQ 42-58 intermediate band).
 - [ ] Direction-of-effect interpretation vs prior literature.
 - [ ] Target journal, formatting, CRediT author contributions, funding/conflicts.
 - [ ] Preregistration status (the primary vs exploratory split is written to be

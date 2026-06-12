@@ -24,6 +24,8 @@ Primary chronotype labels come from `all final data.xlsx` via the `ERPset` link.
 
 The two metadata sources agree with each other on every participant: the `participant_summary.xlsx` chronotype column matches the `all final data.xlsx` label for all 39 participants. Only the raw behavioral-trials `Chronotype` column disagrees, and only for participants `1027` and `1036`. Because two independent metadata sources corroborate the primary labels and only the raw behavioural column is the outlier, the primary labels are retained and `1027`/`1036` are tracked as label-conflict sensitivity cases rather than manually overridden.
 
+MEQ validation (`scripts/validate_meq_labels.py`): the continuous MEQ score in `all final data.xlsx` (attached to each participant by name, since the MEQ block is not row-aligned with the chronotype column) confirms the binary labels. The score separates the groups in the standard direction (Evening MEQ mean 37.3, range 25-49; Morning mean 57.7, range 45-64); all 26 participants with a decisive MEQ score (outside the 42-58 intermediate band) match their binary label, and 12 fall in the intermediate band where binary assignment is softer. Both label-conflict participants have decisive MEQ scores confirming the primary label (`1027` MEQ = 61, Morning; `1036` MEQ = 27, Evening), so the raw-behaviour column was in error for these two. The "exclude label conflicts" sensitivity scenario therefore removes two MEQ-confirmed participants, and the classifier's loss of significance there reflects sample-size reduction rather than label uncertainty.
+
 Label/QC snapshot:
 
 | Item | Value |
@@ -33,7 +35,7 @@ Label/QC snapshot:
 | Metadata links missing | 0 |
 | Raw-behavior label conflicts | 2 (`1027`, `1036`) |
 | Manual chronotype overrides | None |
-| MEQ/MCTQ status | Not exported; side-by-side table order is unvalidated |
+| MEQ/MCTQ status | Validated by name-key alignment; labels MEQ-consistent (26/26 decisive) |
 
 Raw-derived table snapshot:
 

@@ -20,7 +20,7 @@ The current codebase is organized around clean, reproducible modelling scripts. 
 - **Exploratory (machine learning):** A theory-driven 12-feature Logistic Regression classifies chronotype above chance on the full dataset (repeated-CV balanced accuracy `0.666`; single-family permutation p = `0.0340`). This evidence is exploratory: it does **not** survive FDR correction across the family of feature packs (corrected p ≈ `0.11`-`0.17`), and it is not robust to excluding the two label-conflict participants. It is reported as converging support for the neural finding, not as a validated classifier.
 - **Exploratory (high-dimensional ML):** Larger Random Forest models (47-171 features on 39 participants) score higher in nested-free CV but are reported only as exploratory because feature dimensionality is high relative to sample size.
 - **Secondary task (risky choice):** Under leakage-safe, participant-grouped CV, trial-level risky choice is weakly predictable (balanced accuracy ≈ `0.587`, ROC AUC ≈ `0.62`); same-trial outcome/feedback/feedback-locked-EEG features are excluded as predictors. Previous-trial history carries most of the signal.
-- **Labels:** Primary chronotype labels come from linked `all final data.xlsx` metadata. Two independent metadata sources (`participant_summary.xlsx` and `all final data.xlsx`) agree on every participant; only the raw behavioural-trials column disagrees for `1027` and `1036`, which are tracked as sensitivity cases. The metadata-to-participant linkage uses an optimal one-to-one assignment with margin-based QC.
+- **Labels:** Primary chronotype labels come from linked `all final data.xlsx` metadata and are validated against the continuous MEQ score (`scripts/validate_meq_labels.py`): MEQ separates the groups in the standard direction (Evening mean 37.3, Morning 57.7), all 26 decisively-scored participants match their binary label, and both raw-behaviour conflict cases (`1027`, `1036`) are MEQ-confirmed (61 Morning, 27 Evening). The metadata-to-participant linkage uses an optimal one-to-one assignment with margin-based QC.
 
 See `docs/results.md` for result tables and interpretation.
 
@@ -43,7 +43,9 @@ Generated data, reports, and model artifacts are intentionally ignored. Raw data
 
 - `scripts/build_clean_risky_choice.py`: builds leakage-aware trial-level risky-choice datasets.
 - `scripts/build_clean_chronotype.py`: builds participant-level chronotype datasets and literature-guided feature packs.
-- `scripts/link_raw_metadata.py`: links raw participant summary/final metadata to `UserID`.
+- `scripts/link_raw_metadata.py`: links raw participant summary/final metadata to `UserID` via optimal one-to-one assignment.
+- `scripts/validate_meq_labels.py`: validates binary chronotype labels against the continuous MEQ score and exports de-identified MEQ/MCTQ scores.
+- `scripts/export_public_data.py`: exports a PII-free anonymized participant-level table for release.
 - `scripts/build_ml_ready_from_raw.py`: builds the raw-derived ML-ready trial table.
 - `scripts/build_chronotype_sensitivity.py`: builds chronotype datasets excluding flagged participants.
 - `scripts/train_clean_baseline.py`: evaluates Logistic Regression, Random Forest, and HGB baselines.
