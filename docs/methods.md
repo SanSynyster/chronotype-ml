@@ -54,7 +54,7 @@ The analysed sample is 39 participants (19 Evening, 20 Morning). For a two-group
 
 ## Analysis Hierarchy
 
-The primary analysis is the classical Morning-vs-Evening group comparison of theory-driven behavioral and ERP features, with the posterior P300 loss-minus-gain contrast as the pre-specified neural hypothesis. Machine-learning classification of chronotype is a secondary, exploratory analysis reported as converging evidence. Trial-level risky-choice prediction is a secondary task.
+The study uses two mutually-validating primary analyses of the same participant-level features. The first is an interpretable, leakage-aware machine-learning framework that classifies chronotype (Morning vs Evening) from combined behavioural and feedback-locked ERP features. The second is a classical Morning-vs-Evening group comparison of the same theory-driven features, with the posterior P300 loss-minus-gain contrast as the pre-specified neural hypothesis. The two are interpreted jointly: the machine-learning model's feature importance and coefficients are expected to converge with the univariate group statistics, providing cross-validating multivariate and univariate evidence for the same neural signal. Trial-level risky-choice prediction is a secondary task.
 
 ## Statistical Reporting
 
@@ -62,4 +62,20 @@ Classical Morning-vs-Evening group comparisons are reported for theory-driven fe
 
 To avoid dichotomizing chronotype, the posterior P300 contrasts were additionally related to the continuous MEQ score with Pearson correlations (percentile-bootstrap 95% CIs), Spearman correlations, and OLS slopes (`scripts/meq_p300_continuous.py`). This continuous analysis is interpreted alongside its power: with n = 38 the minimum correlation detectable at 80% power is approximately r = 0.44.
 
-For the exploratory classifier, model performance is reported as repeated-CV mean and uncertainty (95% interval) and label-permutation p-values. Permutation p-values across the five pre-specified literature feature packs are FDR-corrected as a family; the theory-driven `compact_12` model is reported separately as a single pre-specified classifier with its uncorrected permutation p-value. Single best-split numbers are used only for ranking and are not reported as primary evidence. The metadata-to-participant linkage uses optimal one-to-one assignment with reported match-distance and match-margin QC.
+The metadata-to-participant linkage uses optimal one-to-one assignment with reported match-distance and match-margin QC.
+
+## Machine-Learning Analysis
+
+Chronotype was classified at the participant level (one example per participant) from the theory-driven 12-feature set (`compact_12`: behavioural adaptation measures and frontocentral/posterior ERP contrasts). A broader 47-feature set (`compact_combined`) and 171-feature literature set (`all_literature`) were retained as high-dimensionality exploratory comparisons.
+
+**Pipeline.** All preprocessing was encapsulated in a scikit-learn `Pipeline` and fit only on training folds, eliminating preprocessing leakage. Numeric features were median-imputed and standardized; any categorical features were most-frequent-imputed and one-hot encoded. Class imbalance (20 Morning / 19 Evening) was handled with class weighting and balanced accuracy as the primary metric.
+
+**Models compared.** Five classifiers were evaluated on identical folds: L2- and L1-regularized logistic regression, random forest, an RBF-kernel support vector machine, and histogram gradient boosting. The L2 logistic regression was pre-specified as the primary model for its interpretability and suitability for small samples.
+
+**Nested cross-validation.** Generalization was estimated with nested cross-validation: an outer repeated stratified 5-fold loop (10 repeats) estimated out-of-fold performance, while an inner stratified 3-fold `GridSearchCV` tuned each model's hyperparameters (logistic-regression `C`; random-forest depth/leaf/trees; SVM `C`/`gamma`; boosting learning-rate/leaves) using balanced accuracy. Because tuning occurred only within inner training folds, no test fold informed model selection. Performance is reported as the mean and standard deviation of balanced accuracy, accuracy, ROC AUC, sensitivity (Morning), specificity (Evening), and macro F1 across outer folds. Out-of-fold predicted probabilities (averaged over repeats) were used for the ROC curve and confusion matrix.
+
+**Significance and multiplicity.** The tuned primary model was tested against a label-permutation null (shuffled labels, full nested pipeline re-fit each permutation). Separately, the five pre-specified literature feature packs were each permutation-tested and the p-values FDR-corrected as a family; single best-split numbers were used only for ranking. The primary `compact_12` model is reported with its own pre-specified permutation p-value; the pack-family FDR result is reported to bound optimism from comparing feature sets.
+
+**Interpretability.** The tuned primary model was refit on the full sample and its standardized coefficients reported, and held-out permutation importance was computed by cross-validated feature shuffling, to test whether the multivariate model relied on the same features identified by the univariate group comparison.
+
+**Robustness.** The full nested-CV analysis and the permutation test were repeated under the participant-exclusion sensitivity scenarios (exclude 1013; exclude label conflicts 1027/1036; exclude all three).

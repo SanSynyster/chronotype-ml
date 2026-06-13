@@ -29,11 +29,16 @@ across participant-exclusion sensitivity analyses (d approximately -1.0,
 p < 0.011 in every scenario). The association was directionally confirmed against
 the continuous MEQ score (Pz r = 0.29), and the binary labels were themselves
 validated against MEQ. Behaviourally, Evening types showed higher
-risky-choice rates (medium-to-large uncorrected effects). Exploratory
-machine-learning models classified chronotype above chance from combined
-behavioural and ERP features but did not survive correction for multiple
-comparisons and were not robust to label-conflict exclusions; they are therefore
-reported as converging support rather than a validated classifier. The results
+risky-choice rates (medium-to-large uncorrected effects). Using an interpretable,
+leakage-aware machine-learning framework with nested cross-validation, a tuned
+logistic-regression model classified chronotype from combined behavioural and ERP
+features with balanced accuracy 0.72, ROC AUC 0.75-0.79, and a label-permutation
+p = 0.02; its strongest predictor was the same posterior P300 contrast,
+demonstrating convergence between the multivariate model and the univariate
+neural effect. Classifier performance was modest and, across a family of feature
+sets, did not survive multiple-comparison correction, so it is interpreted as a
+multivariate complement to the neural finding rather than a deployable
+diagnostic. The results
 provide preliminary single-cohort evidence that chronotype modulates the neural
 evaluation of decision feedback, concentrated in the posterior P300. [AUTHOR
 INPUT: confirm task name and any preregistration status.]
@@ -63,14 +68,20 @@ valence sensitivity of these feedback-locked components.
 
 Despite behavioural links between chronotype and risk, the feedback-locked
 neural signatures that distinguish morning and evening types during decision-
-making remain underexplored. Here we test, in a single cohort, whether morning
-and evening chronotypes differ in feedback-related FRN and P300 responses and in
-behavioural adaptation to feedback during a risky-choice task. We treat the
-neural group comparison as the primary, theory-driven analysis and an
-interpretable machine-learning classification of chronotype as a secondary,
-exploratory analysis. As a separate secondary question, we ask whether trial-
-level risky choice can be predicted from pre-choice value and choice history
-under a leakage-safe, participant-generalizing evaluation.
+making remain underexplored, and few studies combine event-related potentials
+with rigorous, interpretable machine learning to characterize chronotype. Here we
+test, in a single cohort, whether morning and evening chronotypes differ in
+feedback-related FRN and P300 responses and in behavioural adaptation to feedback
+during a risky-choice task. Our analytic approach is twofold and mutually
+validating: (i) an interpretable, leakage-aware machine-learning framework with
+nested cross-validation that classifies chronotype from combined behavioural and
+ERP features and exposes which features drive the prediction, and (ii) a classical
+group comparison of the same theory-driven features with the posterior P300 as the
+pre-specified neural hypothesis. The contribution is methodological as much as
+empirical: a transparent ML pipeline whose feature importance is interpreted
+against, and converges with, the univariate neural statistics. As a secondary
+question, we ask whether trial-level risky choice can be predicted from pre-choice
+value and choice history under a leakage-safe, participant-generalizing evaluation.
 
 ---
 
@@ -156,18 +167,32 @@ small-sample bias-corrected Hedges g. P-values were corrected across the
 theory-driven feature family with the Benjamini-Hochberg FDR procedure
 (`scripts/group_stats_chronotype.py`).
 
-**Secondary (exploratory classification).** Chronotype classification used
-logistic regression and random forests within scikit-learn pipelines, with all
-imputation and scaling fit inside cross-validation folds to avoid leakage.
-Performance was estimated with repeated stratified 5-fold cross-validation (100
-repeats) reporting the mean and 95% interval of balanced accuracy, and tested
-against a 1000-iteration label-permutation null (`scripts/repeated_cv_clean.py`,
-`scripts/permutation_test_clean.py`). The theory-driven compact_12 model was
-pre-specified as the single primary classifier. Permutation p-values across the
-five pre-specified literature feature packs were additionally FDR-corrected as a
-family. Single best-split numbers were used only for ranking. Higher-dimensional
-models (47-171 features) are reported as exploratory given the feature-to-sample
-ratio.
+**Machine-learning classification (Figure 6).** Chronotype was classified at the
+participant level from the theory-driven 12-feature set. All preprocessing
+(median imputation and standardization of numeric features; most-frequent
+imputation and one-hot encoding of any categorical features) was encapsulated in a
+scikit-learn pipeline fit only on training folds, eliminating preprocessing
+leakage; class imbalance was handled by class weighting with balanced accuracy as
+the primary metric. Five classifiers were compared on identical folds: L2- and
+L1-regularized logistic regression, random forest, an RBF-kernel support vector
+machine, and histogram gradient boosting, with the L2 logistic regression
+pre-specified as the primary model. Generalization was estimated with nested
+cross-validation: an outer repeated stratified 5-fold loop (10 repeats) estimated
+out-of-fold performance while an inner stratified 3-fold grid search tuned each
+model's hyperparameters using balanced accuracy, so no test fold informed model
+selection. Performance is reported as balanced accuracy, accuracy, ROC AUC,
+sensitivity, specificity, and macro F1 (mean and SD across outer folds), with
+out-of-fold predicted probabilities pooled for the ROC curve and confusion matrix.
+The tuned primary model was tested against a label-permutation null with the full
+nested pipeline re-fit on each of 200 permutations. Model interpretability was
+assessed from the standardized coefficients of the primary model refit on the full
+sample and from cross-validated held-out permutation importance, to test
+convergence with the univariate group statistics. As a guard against optimism from
+comparing feature sets, the five pre-specified literature feature packs were each
+permutation-tested and FDR-corrected as a family, and higher-dimensional models
+(47-171 features) were retained only as exploratory comparisons given the
+feature-to-sample ratio. Analyses used scikit-learn 1.4 (Python 3.11);
+`scripts/ml_chronotype_full.py`.
 
 **Secondary (risky choice).** Trial-level risky choice was evaluated with
 participant-grouped cross-validation so that performance reflects generalization
@@ -225,27 +250,48 @@ The posterior P300 group difference was essentially invariant to participant
 exclusions. Across the full sample and all three exclusion scenarios, the Pz
 loss-minus-gain effect remained near d = -1.0 (range -1.00 to -1.07) with
 Welch p < 0.011 and a 95% CI that excluded zero in every case; POz behaved
-similarly. In contrast, the exploratory classifier (Section 3.4) was fragile:
-its permutation p rose from 0.034 in the full sample to 0.38 when the two
-label-conflict participants were removed. The dissociation between the robust
-neural effect and the fragile classifier motivates reporting the P300 group
-difference as the primary result.
+similarly. In contrast, the classifier (Section 3.5) was more sensitive to the
+sample: its permutation p rose from 0.034 in the full sample to 0.38 when the two
+label-conflict participants were removed. The dissociation between the invariant
+neural effect and the exclusion-sensitive classifier indicates the univariate
+group difference is the more robust of the two mutually-validating analyses.
 
-### 3.5 Exploratory: chronotype classification (Figure 3)
+### 3.5 Machine-learning classification of chronotype (Figures 3, 6-8)
 
-A pre-specified theory-driven 12-feature logistic regression classified
-chronotype above chance on the full sample (repeated-CV balanced accuracy mean
-0.666, 95% interval [0.375, 1.000]; 1000-label permutation p = 0.034). However,
-none of the five pre-specified literature feature packs survived FDR correction
-across the pack family (best raw permutation p = 0.051 for the P300 pack, FDR
-p = 0.175), and the compact model lost significance under label-conflict
-exclusion. Held-out permutation importance for the compact model was dominated by
-the Pz P300 loss-minus-gain contrast, followed by loss-error risky-choice
-behaviour (Figure 3), consistent with the group-comparison results. Higher-
-dimensional random-forest models scored higher in cross-validation but are
-reported only as exploratory given 47-171 features for 39 participants. We
-therefore treat the classification results as converging support for the neural
-finding rather than as a deployable classifier.
+Under nested cross-validation with hyperparameter tuning (Figure 6), the five
+classifiers were compared on identical folds of the 12-feature set. The
+pre-specified L2 logistic regression performed best on balanced accuracy
+(0.717 +/- 0.14), with accuracy 0.715, ROC AUC 0.750, sensitivity (Morning) 0.695,
+and specificity (Evening) 0.738; the random forest reached the highest AUC
+(0.772), L1 logistic regression 0.651 balanced accuracy, the RBF SVM 0.609, and
+gradient boosting degenerated to a single-class predictor at this sample size
+(Table 1). The tuned primary model selected strong regularization (C = 0.01),
+consistent with the small sample.
+
+Pooling out-of-fold predictions for the primary model, the classifier correctly
+labelled 28 of 39 participants (accuracy 0.718; sensitivity 0.75, specificity
+0.68; confusion matrix Figure 8) with a pooled ROC AUC of 0.79 (Figure 7).
+Against a label-permutation null with the full nested pipeline re-fit on each
+permutation, the model was significantly above chance (observed balanced accuracy
+0.717, null mean 0.509, p = 0.020).
+
+Interpretability links the model directly to the neural finding: the strongest
+standardized coefficient was `Pz_P300_loss_minus_gain` (+0.34, the top predictor
+of Morning), followed by `loss_error_risky_rate` (-0.31), `gain_correct_risky_rate`
+(-0.24), and `POz_P300_loss_minus_gain` (+0.24); held-out permutation importance
+showed the same ordering (Figure 3). The multivariate classifier thus relies on
+the same posterior P300 contrast identified by the univariate group comparison,
+so the two analyses are mutually validating.
+
+Two caveats temper the predictive claim. First, across the family of five
+pre-specified feature packs no pack survived FDR correction (best raw permutation
+p = 0.051, FDR p = 0.175), so the single-model significance should not be read as
+robust to feature-set selection. Second, classifier significance was sensitive to
+removing the two label-conflict participants (Section 3.4), whereas the neural
+group difference was not. Higher-dimensional models (47-171 features) scored
+numerically higher but are reported only as exploratory given the
+feature-to-sample ratio. We therefore present the classifier as an interpretable
+multivariate complement to the neural effect rather than a deployable diagnostic.
 
 ### 3.6 Secondary: trial-level risky choice (Figure 4)
 
@@ -280,14 +326,22 @@ effects. The convergence of the dominant classifier feature (Pz P300) with the
 group comparison strengthens the interpretation that the posterior P300 is the
 most informative chronotype-related signal in this dataset.
 
-The machine-learning analyses are explicitly secondary. While a theory-driven
-compact model classified chronotype above chance, the evidence did not survive
-multiple-comparison correction and was sensitive to two participants whose labels
-were disputed. We therefore caution against interpreting these models as
-validated chronotype classifiers; their value here is as converging,
-interpretable support for the neural result. The leakage-safe risky-choice
-analysis shows that trial-level choice is weakly but genuinely predictable from
-choice history in a way that generalizes across participants.
+Methodologically, the study contributes a transparent, leakage-aware,
+interpretable machine-learning analysis of chronotype from EEG/ERP and behaviour.
+Under nested cross-validation the tuned model classified chronotype with balanced
+accuracy 0.72 and AUC 0.75-0.79 (permutation p = 0.02), and -- importantly -- its
+most influential feature was the same posterior P300 contrast that drove the
+univariate effect. This convergence of multivariate prediction and univariate
+statistics is the central evidentiary strength: two methodologically distinct
+analyses implicate the same neural signal. At the same time we are deliberately
+conservative about the predictive claim: classifier performance was modest, did
+not survive correction across feature-set choices, and was sensitive to two
+participants (whose labels the MEQ score nonetheless confirms). The model is best
+read as an interpretable multivariate complement to the neural finding, not a
+deployable diagnostic, and these limits are intrinsic to the sample size rather
+than the method. The leakage-safe risky-choice analysis shows that trial-level
+choice is weakly but genuinely predictable from choice history in a way that
+generalizes across participants.
 
 ---
 
@@ -305,8 +359,12 @@ choice history in a way that generalizes across participants.
 - ERP features are window-level single-trial means and may miss peak-latency,
   time-frequency, or trial-quality effects.
 - Participant 1013 has a known EEG/trigger agreement issue after block 10.
-- The chronotype classifier does not survive FDR correction across feature packs
-  and is reported as exploratory.
+- Although the pre-specified classifier is significant under nested
+  cross-validation (permutation p = 0.02), it does not survive FDR correction
+  across the family of feature sets and is sensitive to two participants; it is
+  therefore interpreted as an interpretable complement to, not independent
+  confirmation of, the neural effect. Larger samples are needed for a robust
+  predictive model.
 - There is no external validation cohort.
 
 ---

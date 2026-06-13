@@ -20,6 +20,9 @@ FIGURES = [
     ("fig3_feature_importance.png", "Figure 3. Held-out permutation importance for the compact_12 classifier."),
     ("fig4_risky_choice_baselines.png", "Figure 4. Risky-choice balanced accuracy vs naive baselines."),
     ("fig5_meq_continuous_p300.png", "Figure 5. Posterior P300 vs the continuous MEQ score (intermediate band shaded)."),
+    ("fig6_ml_pipeline.png", "Figure 6. Leakage-aware nested cross-validation machine-learning pipeline."),
+    ("fig7_roc.png", "Figure 7. Chronotype classification ROC (out-of-fold, nested CV)."),
+    ("fig8_confusion_matrix.png", "Figure 8. Out-of-fold confusion matrix for the primary classifier."),
 ]
 
 STYLE = """

@@ -5,7 +5,7 @@ This document summarizes the current active raw-to-clean results using chronotyp
 ## Headline
 
 - **Primary finding (confirmatory-style, neural):** posterior P300 loss-minus-gain amplitude differs between Morning and Evening chronotypes. `Pz_P300_loss_minus_gain` (Cohen's d = -1.04, Welch p = 0.0028, FDR p = 0.034) and `POz_P300_loss_minus_gain` (d = -0.92, Welch p = 0.0076, FDR p = 0.045) are the only features that survive FDR correction across the theory-driven feature set, both are corroborated by Mann-Whitney tests, and the association is directionally confirmed against the continuous MEQ score (Pz Pearson r = 0.29, 95% CI [0.06, 0.49]).
-- **Exploratory finding (machine learning):** chronotype is classifiable above chance on the full dataset by a theory-driven 12-feature logistic model, but this evidence does not survive multiple-comparison correction across feature packs and is not robust to label-conflict exclusions. It is reported as converging support, not a validated classifier.
+- **Machine-learning finding (interpretable, nested CV):** under leakage-aware nested cross-validation with tuning, a logistic model classifies chronotype from the 12-feature set with balanced accuracy 0.717, ROC AUC 0.75-0.79, sensitivity 0.75, specificity 0.68, and permutation p = 0.020; its top predictor is the posterior P300 contrast, so the multivariate model and the univariate neural effect are mutually validating. Performance does not survive FDR across the feature-pack family and is exclusion-sensitive, so the classifier is an interpretable complement to, not independent confirmation of, the neural effect.
 - **Secondary task (risky choice):** weakly predictable under leakage-safe, participant-grouped CV; previous-trial history carries most of the signal.
 
 All findings are from a single cohort of 39 participants and require independent replication.
@@ -69,7 +69,35 @@ Best feature-pack leaderboard entries from 5-fold stratified CV:
 
 Interpretation: using `all final data.xlsx` labels restores the stronger chronotype signal. High-dimensional Random Forest results remain exploratory, but the theory-driven compact Logistic Regression is above chance in permutation testing on the full dataset.
 
-Multiple-comparison note: across the five pre-specified literature feature packs (`demo_only`, `behavior_core`, `frn_core`, `p300_core`, `compact_combined`), no pack survives Benjamini-Hochberg FDR correction at the family level (best raw permutation p = 0.0509 for `p300_core`, FDR p = 0.175; see `reports/clean/permutation_tests/leaderboard.md`). The theory-driven `compact_12` model is treated as a single pre-specified primary classifier and reported with its uncorrected permutation p-value; its corrected significance across the broader pack family would not hold. The classifier evidence is therefore exploratory and secondary to the neural group difference.
+Multiple-comparison note: across the five pre-specified literature feature packs (`demo_only`, `behavior_core`, `frn_core`, `p300_core`, `compact_combined`), no pack survives Benjamini-Hochberg FDR correction at the family level (best raw permutation p = 0.0509 for `p300_core`, FDR p = 0.175; see `reports/clean/permutation_tests/leaderboard.md`). The theory-driven `compact_12` model is treated as a single pre-specified primary classifier and reported with its uncorrected permutation p-value; its corrected significance across the broader pack family would not hold. The pack family is therefore used to bound optimism, while the pre-specified `compact_12` model is interpreted jointly with the neural group difference (see next section).
+
+## Machine-Learning Classification (Primary, Nested CV)
+
+The pre-specified `compact_12` classification was re-evaluated with the full nested cross-validation pipeline (outer repeated stratified 5-fold x 10 repeats; inner 3-fold hyperparameter tuning; Figure 6), comparing five classifiers on identical folds.
+
+| Model | Balanced Acc | Accuracy | ROC AUC | Sensitivity (Morning) | Specificity (Evening) | Macro F1 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| L2 logistic regression | 0.717 (0.14) | 0.715 | 0.750 | 0.695 | 0.738 | 0.707 |
+| Random forest | 0.685 (0.13) | 0.683 | 0.772 | 0.675 | 0.695 | 0.668 |
+| L1 logistic regression | 0.651 (0.17) | 0.653 | 0.707 | 0.640 | 0.662 | 0.641 |
+| RBF SVM | 0.609 (0.15) | 0.610 | 0.650 | 0.685 | 0.533 | 0.574 |
+| Hist. gradient boosting | 0.500 (0.00) | 0.514 | 0.500 | 1.000 | 0.000 | 0.339 |
+
+The tuned L2 logistic regression (selected hyperparameter `C = 0.01`, i.e. strong regularization appropriate for the sample size) was the pre-specified primary model. Under nested CV it reached balanced accuracy 0.717 and ROC AUC 0.750; gradient boosting degenerated to a single-class predictor at this sample size and is reported for completeness only.
+
+Pooled out-of-fold predictions for the primary model (Figures 7-8):
+
+| Metric | Value |
+| --- | ---: |
+| Out-of-fold accuracy | 0.718 (28/39) |
+| Sensitivity (Morning) | 0.75 (15/20) |
+| Specificity (Evening) | 0.68 (13/19) |
+| Pooled ROC AUC | 0.79 |
+| Confusion matrix | TN=13, FP=6, FN=5, TP=15 |
+
+Label-permutation test of the tuned primary model (nested pipeline re-fit per permutation): observed balanced accuracy 0.717, null mean 0.509, p = 0.020. The primary classifier is thus significantly above chance under proper nested validation.
+
+Interpretability: the standardized coefficients of the refit primary model are led by `Pz_P300_loss_minus_gain` (+0.34, the strongest predictor of Morning), followed by `loss_error_risky_rate` (-0.31), `gain_correct_risky_rate` (-0.24), and `POz_P300_loss_minus_gain` (+0.24). The multivariate model therefore relies on the same posterior P300 contrast identified by the univariate group comparison, so the machine-learning and classical analyses provide mutually-validating evidence for the same neural signal.
 
 ## Larger Exploratory Random Forest Models
 

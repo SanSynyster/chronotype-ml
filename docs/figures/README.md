@@ -21,6 +21,12 @@ Each figure is saved as a vector PDF (for the manuscript) and a PNG (preview).
   MEQ score (Pz, POz) with OLS fit, points colored by binary label, and the MEQ
   intermediate band (42-58) shaded. Confirms the effect is a graded association
   with morningness, not an artifact of dichotomization.
+- `fig6_ml_pipeline` — Schematic of the leakage-aware nested cross-validation
+  machine-learning workflow (preprocessing fit inside folds, inner-loop tuning).
+- `fig7_roc` — Out-of-fold ROC curve for the primary chronotype classifier
+  (compact_12 logistic regression; pooled AUC 0.79).
+- `fig8_confusion_matrix` — Out-of-fold confusion matrix for the primary
+  classifier (28/39 correct; sensitivity 0.75, specificity 0.68).
 
 Regenerate with:
 

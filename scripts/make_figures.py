@@ -204,6 +204,80 @@ def fig5_meq_continuous(participant_csv: Path, meq_csv: Path, corr_csv: Path, ou
     save(fig, outdir, "fig5_meq_continuous_p300")
 
 
+def fig6_ml_pipeline(outdir: Path) -> None:
+    """Schematic of the leakage-aware nested-CV ML workflow."""
+    fig, ax = plt.subplots(figsize=(9.2, 4.6))
+    ax.axis("off")
+    steps = [
+        ("Raw EEG +\nbehaviour", "#dfe7f2"),
+        ("Feature\nengineering\n(per participant)", "#dfe7f2"),
+        ("Outer CV split\n(repeated 5-fold)", "#f2e6da"),
+        ("Inner CV\nhyperparameter\ntuning", "#f2e6da"),
+        ("Fit pipeline\n(impute+scale+clf)\non train fold", "#e6f2e6"),
+        ("Evaluate held-out\nfold + permutation", "#e6f2e6"),
+    ]
+    n = len(steps)
+    x0, w, gap, y, h = 0.015, 0.142, 0.018, 0.45, 0.30
+    for i, (label, color) in enumerate(steps):
+        x = x0 + i * (w + gap)
+        ax.add_patch(plt.Rectangle((x, y), w, h, facecolor=color, edgecolor="#444", lw=1.2))
+        ax.text(x + w / 2, y + h / 2, label, ha="center", va="center", fontsize=8.5)
+        if i < n - 1:
+            ax.annotate("", xy=(x + w + gap, y + h / 2), xytext=(x + w, y + h / 2),
+                        arrowprops=dict(arrowstyle="->", lw=1.4, color="#444"))
+    ax.annotate("preprocessing fit inside each fold (no leakage)",
+                xy=(x0 + 4 * (w + gap) + w / 2, y), xytext=(x0 + 4 * (w + gap) + w / 2, y - 0.18),
+                ha="center", fontsize=8, color=ACCENT,
+                arrowprops=dict(arrowstyle="->", color=ACCENT, lw=1.2))
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    ax.set_title("Leakage-aware nested cross-validation pipeline", fontweight="bold")
+    save(fig, outdir, "fig6_ml_pipeline")
+
+
+def fig7_roc(oof_csv: Path, outdir: Path) -> None:
+    from sklearn.metrics import roc_auc_score, roc_curve
+    if not oof_csv.exists():
+        print(f"Skipping fig7 (missing {oof_csv}); run ml_chronotype_full.py")
+        return
+    df = pd.read_csv(oof_csv)
+    y = df["y_true01"].to_numpy()
+    p = df["oof_prob_morning"].to_numpy()
+    fpr, tpr, _ = roc_curve(y, p)
+    auc = roc_auc_score(y, p)
+    fig, ax = plt.subplots(figsize=(5.2, 5.0))
+    ax.plot(fpr, tpr, color=EVENING_C, lw=2.4, label=f"compact_12 logistic (AUC = {auc:.2f})")
+    ax.plot([0, 1], [0, 1], color=GREY, ls=":", lw=1)
+    ax.set_xlabel("False positive rate (1 - specificity)")
+    ax.set_ylabel("True positive rate (sensitivity)")
+    ax.set_title("Chronotype classification ROC\n(out-of-fold, nested CV)", fontweight="bold")
+    ax.legend(loc="lower right", frameon=False, fontsize=9)
+    ax.set_xlim(-0.02, 1.02)
+    ax.set_ylim(-0.02, 1.02)
+    save(fig, outdir, "fig7_roc")
+
+
+def fig8_confusion(summary_json: Path, outdir: Path) -> None:
+    if not summary_json.exists():
+        print(f"Skipping fig8 (missing {summary_json}); run ml_chronotype_full.py")
+        return
+    s = json.loads(summary_json.read_text())
+    cm = np.array(s["confusion_matrix"])
+    labels = s["confusion_matrix_labels"]
+    fig, ax = plt.subplots(figsize=(4.8, 4.4))
+    im = ax.imshow(cm, cmap="Blues")
+    for i in range(cm.shape[0]):
+        for j in range(cm.shape[1]):
+            ax.text(j, i, str(cm[i, j]), ha="center", va="center",
+                    color="white" if cm[i, j] > cm.max() / 2 else "#1a1a1a", fontsize=14)
+    ax.set_xticks([0, 1]); ax.set_yticks([0, 1])
+    ax.set_xticklabels([f"Pred {l}" for l in labels])
+    ax.set_yticklabels([f"True {l}" for l in labels])
+    ax.set_title("Out-of-fold confusion matrix\n(compact_12 logistic)", fontweight="bold")
+    fig.colorbar(im, fraction=0.046, pad=0.04)
+    save(fig, outdir, "fig8_confusion_matrix")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Generate manuscript figures.")
     parser.add_argument("--outdir", default="docs/figures")
@@ -221,6 +295,9 @@ def main() -> None:
     fig5_meq_continuous(Path("data/clean/chronotype_participant.csv"),
                         Path("data/processed/participant_meq_scores.csv"),
                         Path("reports/clean/meq_p300/meq_p300_correlations.csv"), outdir)
+    fig6_ml_pipeline(outdir)
+    fig7_roc(Path("reports/clean/ml_full/oof_predictions_primary.csv"), outdir)
+    fig8_confusion(Path("reports/clean/ml_full/summary.json"), outdir)
 
 
 if __name__ == "__main__":
