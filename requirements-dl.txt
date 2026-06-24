@@ -1,0 +1,13 @@
+# Deep-learning track only (scripts/dl/). Install into a SEPARATE venv (env_dl/),
+# not the pinned MNE-1.7 analysis env in env/. Python 3.11+.
+#   python -m venv env_dl && source env_dl/bin/activate
+#   pip install -r requirements-dl.txt
+torch==2.12.1
+mne==1.12.1
+antio==0.7.0          # only needed for the raw ANT-Neuro .cnt loader (scripts/load_raw_eeg.py)
+scikit-learn==1.9.0
+pandas==3.0.3
+numpy==2.4.6
+scipy==1.18.0
+joblib==1.5.3
+matplotlib==3.11.0

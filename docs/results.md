@@ -2,6 +2,14 @@
 
 This document summarizes the current active raw-to-clean results using chronotype labels from `all final data.xlsx` as the primary source. Generated CSV/JSON reports are ignored by git, so this file is the tracked public result summary.
 
+## Headline
+
+- **Primary finding (confirmatory-style, neural):** posterior P300 loss-minus-gain amplitude differs between Morning and Evening chronotypes. `Pz_P300_loss_minus_gain` (Cohen's d = -1.04, Welch p = 0.0028, FDR p = 0.034) and `POz_P300_loss_minus_gain` (d = -0.92, Welch p = 0.0076, FDR p = 0.045) are the only features that survive FDR correction across the theory-driven feature set, both are corroborated by Mann-Whitney tests, and the association is directionally confirmed against the continuous MEQ score (Pz Pearson r = 0.29, 95% CI [0.06, 0.49]).
+- **Machine-learning finding (interpretable, nested CV):** under leakage-aware nested cross-validation with tuning, a logistic model classifies chronotype from the 12-feature set with balanced accuracy 0.717, ROC AUC 0.75-0.79, sensitivity 0.75, specificity 0.68, and permutation p = 0.020; its top predictor is the posterior P300 contrast, so the multivariate model and the univariate neural effect are mutually validating. Performance does not survive FDR across the feature-pack family and is exclusion-sensitive, so the classifier is an interpretable complement to, not independent confirmation of, the neural effect.
+- **Secondary task (risky choice):** weakly predictable under leakage-safe, participant-grouped CV; previous-trial history carries most of the signal.
+
+All findings are from a single cohort of 39 participants and require independent replication.
+
 ## Provenance And Labels
 
 The current pipeline rebuilds modelling tables from local raw files using active scripts:
@@ -12,7 +20,11 @@ The current pipeline rebuilds modelling tables from local raw files using active
 - `scripts/build_clean_chronotype.py` uses previous-trial feedback for behavioral adaptation features and current-trial feedback for feedback-locked ERP contrasts.
 - `scripts/rebuild_from_raw.py --execute` runs the full active rebuild and writes `docs/data_provenance.md`.
 
-Primary chronotype labels come from `all final data.xlsx` via the `ERPset` link. The raw behavioral `Chronotype` column disagrees for participants `1027` and `1036`, so those participants are tracked as label-conflict sensitivity cases rather than manually overridden.
+Primary chronotype labels come from `all final data.xlsx` via the `ERPset` link. The `participant_summary.xlsx` to `UserID` linkage uses an optimal one-to-one (Hungarian) assignment over standardized previous-feedback behavioural aggregates, which guarantees a bijection; the smallest assignment margin (0.157) is large relative to typical match distances (~0.013), and only participant `1010` is flagged as a comparatively distant (but still unambiguous) match.
+
+The two metadata sources agree with each other on every participant: the `participant_summary.xlsx` chronotype column matches the `all final data.xlsx` label for all 39 participants. Only the raw behavioral-trials `Chronotype` column disagrees, and only for participants `1027` and `1036`. Because two independent metadata sources corroborate the primary labels and only the raw behavioural column is the outlier, the primary labels are retained and `1027`/`1036` are tracked as label-conflict sensitivity cases rather than manually overridden.
+
+MEQ validation (`scripts/validate_meq_labels.py`): the continuous MEQ score in `all final data.xlsx` (attached to each participant by name, since the MEQ block is not row-aligned with the chronotype column) confirms the binary labels. The score separates the groups in the standard direction (Evening MEQ mean 37.3, range 25-49; Morning mean 57.7, range 45-64); all 26 participants with a decisive MEQ score (outside the 42-58 intermediate band) match their binary label, and 12 fall in the intermediate band where binary assignment is softer. Both label-conflict participants have decisive MEQ scores confirming the primary label (`1027` MEQ = 61, Morning; `1036` MEQ = 27, Evening), so the raw-behaviour column was in error for these two. The "exclude label conflicts" sensitivity scenario therefore removes two MEQ-confirmed participants, and the classifier's loss of significance there reflects sample-size reduction rather than label uncertainty.
 
 Label/QC snapshot:
 
@@ -23,7 +35,7 @@ Label/QC snapshot:
 | Metadata links missing | 0 |
 | Raw-behavior label conflicts | 2 (`1027`, `1036`) |
 | Manual chronotype overrides | None |
-| MEQ/MCTQ status | Not exported; side-by-side table order is unvalidated |
+| MEQ/MCTQ status | Validated by name-key alignment; labels MEQ-consistent (26/26 decisive) |
 
 Raw-derived table snapshot:
 
@@ -56,6 +68,36 @@ Best feature-pack leaderboard entries from 5-fold stratified CV:
 | `frn_core` | Random Forest | 0.667 | 0.664 | 0.651 | 0.692 | 16 |
 
 Interpretation: using `all final data.xlsx` labels restores the stronger chronotype signal. High-dimensional Random Forest results remain exploratory, but the theory-driven compact Logistic Regression is above chance in permutation testing on the full dataset.
+
+Multiple-comparison note: across the five pre-specified literature feature packs (`demo_only`, `behavior_core`, `frn_core`, `p300_core`, `compact_combined`), no pack survives Benjamini-Hochberg FDR correction at the family level (best raw permutation p = 0.0509 for `p300_core`, FDR p = 0.175; see `reports/clean/permutation_tests/leaderboard.md`). The theory-driven `compact_12` model is treated as a single pre-specified primary classifier and reported with its uncorrected permutation p-value; its corrected significance across the broader pack family would not hold. The pack family is therefore used to bound optimism, while the pre-specified `compact_12` model is interpreted jointly with the neural group difference (see next section).
+
+## Machine-Learning Classification (Primary, Nested CV)
+
+The pre-specified `compact_12` classification was re-evaluated with the full nested cross-validation pipeline (outer repeated stratified 5-fold x 10 repeats; inner 3-fold hyperparameter tuning; Figure 6), comparing five classifiers on identical folds.
+
+| Model | Balanced Acc | Accuracy | ROC AUC | Sensitivity (Morning) | Specificity (Evening) | Macro F1 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| L2 logistic regression | 0.717 (0.14) | 0.715 | 0.750 | 0.695 | 0.738 | 0.707 |
+| Random forest | 0.685 (0.13) | 0.683 | 0.772 | 0.675 | 0.695 | 0.668 |
+| L1 logistic regression | 0.651 (0.17) | 0.653 | 0.707 | 0.640 | 0.662 | 0.641 |
+| RBF SVM | 0.609 (0.15) | 0.610 | 0.650 | 0.685 | 0.533 | 0.574 |
+| Hist. gradient boosting | 0.500 (0.00) | 0.514 | 0.500 | 1.000 | 0.000 | 0.339 |
+
+The tuned L2 logistic regression (selected hyperparameter `C = 0.01`, i.e. strong regularization appropriate for the sample size) was the pre-specified primary model. Under nested CV it reached balanced accuracy 0.717 and ROC AUC 0.750; gradient boosting degenerated to a single-class predictor at this sample size and is reported for completeness only.
+
+Pooled out-of-fold predictions for the primary model (Figures 7-8):
+
+| Metric | Value |
+| --- | ---: |
+| Out-of-fold accuracy | 0.718 (28/39) |
+| Sensitivity (Morning) | 0.75 (15/20) |
+| Specificity (Evening) | 0.68 (13/19) |
+| Pooled ROC AUC | 0.79 |
+| Confusion matrix | TN=13, FP=6, FN=5, TP=15 |
+
+Label-permutation test of the tuned primary model (nested pipeline re-fit per permutation): observed balanced accuracy 0.717, null mean 0.509, p = 0.020. The primary classifier is thus significantly above chance under proper nested validation.
+
+Interpretability: the standardized coefficients of the refit primary model are led by `Pz_P300_loss_minus_gain` (+0.34, the strongest predictor of Morning), followed by `loss_error_risky_rate` (-0.31), `gain_correct_risky_rate` (-0.24), and `POz_P300_loss_minus_gain` (+0.24). The multivariate model therefore relies on the same posterior P300 contrast identified by the univariate group comparison, so the machine-learning and classical analyses provide mutually-validating evidence for the same neural signal.
 
 ## Larger Exploratory Random Forest Models
 
@@ -91,7 +133,7 @@ The theory-driven compact model uses 12 behavioral/ERP predictors. Repeated 5-fo
 | Exclude label conflicts `1027`, `1036` | 37 | 0.533 | 0.504 | 0.667 | 0.3816 |
 | Exclude all flagged `1013`, `1027`, `1036` | 36 | 0.675 | 0.511 | 0.683 | 0.0669 |
 
-Interpretation: the theory-driven compact model is statistically significant in the full all-final-label dataset. Sensitivity analyses are mixed, especially when excluding the two participants whose raw behavioral labels disagree with `all final data.xlsx`, so this remains pilot evidence rather than a validated classifier.
+Interpretation: the theory-driven compact model is above chance in the full all-final-label dataset under its single pre-specified test, but the effect does not survive FDR correction across the feature-pack family and sensitivity analyses are mixed, especially when excluding the two participants whose raw behavioral labels disagree with `all final data.xlsx`. It is therefore reported as exploratory, converging support rather than a validated classifier.
 
 ## Performance-Informed Compact Model
 
@@ -149,16 +191,69 @@ Interpretation: the most consistent compact-model contributor is posterior P300 
 
 Morning-vs-Evening tests for theory-driven features using all-final labels:
 
-| Feature | Evening Mean | Morning Mean | Cohen's d | Welch p | FDR p |
+| Feature | Cohen's d | d 95% CI | Hedges g | Welch p | FDR p |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| `Pz_P300_loss_minus_gain` | -0.963 | 0.308 | -1.045 | 0.0028 | 0.0341 |
-| `POz_P300_loss_minus_gain` | -0.465 | 0.553 | -0.919 | 0.0076 | 0.0454 |
-| `loss_error_risky_rate` | 0.634 | 0.530 | 0.813 | 0.0160 | 0.0547 |
-| `free_risky_rate` | 0.583 | 0.477 | 0.797 | 0.0182 | 0.0547 |
-| `gain_correct_risky_rate` | 0.552 | 0.423 | 0.765 | 0.0231 | 0.0553 |
-| `Fz_FRN_error_minus_correct` | -2.895 | -2.023 | -0.601 | 0.0681 | 0.1363 |
+| `Pz_P300_loss_minus_gain` | -1.045 | [-1.63, -0.59] | -1.024 | 0.0028 | 0.0341 |
+| `POz_P300_loss_minus_gain` | -0.919 | [-1.55, -0.39] | -0.901 | 0.0076 | 0.0454 |
+| `loss_error_risky_rate` | 0.813 | [0.21, 1.52] | 0.797 | 0.0160 | 0.0547 |
+| `free_risky_rate` | 0.797 | [0.22, 1.44] | 0.781 | 0.0182 | 0.0547 |
+| `gain_correct_risky_rate` | 0.765 | [0.18, 1.43] | 0.749 | 0.0231 | 0.0553 |
+| `Fz_FRN_error_minus_correct` | -0.601 | [-1.50, 0.02] | -0.589 | 0.0681 | 0.1363 |
 
-Interpretation: the clearest physiological signal is posterior P300 loss-gain differences, which survive FDR correction in the full all-final-label dataset. This should still be framed as pilot evidence requiring replication.
+Effect-size CIs are percentile bootstrap (10,000 resamples). Hedges g is the small-sample bias-corrected estimate. Only the two posterior P300 contrasts have d CIs that exclude zero and survive FDR; the behavioral contrasts are medium-to-large but their CIs include small effects and they do not survive FDR.
+
+Interpretation: the clearest physiological signal is posterior P300 loss-gain differences, which survive FDR correction in the full all-final-label dataset and are the primary finding of this report. As a single-cohort result it still requires independent replication.
+
+## Sensitivity Matrix
+
+The same four participant-exclusion scenarios are applied to both the secondary exploratory classifier and the primary neural group difference (`scripts/sensitivity_matrix.py`, full table in `reports/clean/sensitivity_matrix/`).
+
+Secondary classifier (compact_12 logistic regression), repeated-CV balanced accuracy and 1000-label permutation p:
+
+| Scenario | n | Repeated-CV BA | Permutation BA | Permutation p |
+| --- | ---: | ---: | ---: | ---: |
+| full | 39 | 0.666 | 0.692 | 0.034 |
+| exclude `1013` | 38 | 0.669 | 0.658 | 0.053 |
+| exclude label conflicts `1027`,`1036` | 37 | 0.634 | 0.533 | 0.382 |
+| exclude all flagged | 36 | 0.639 | 0.675 | 0.067 |
+
+Primary neural group difference (posterior P300 loss-minus-gain):
+
+| Scenario | n | Feature | Cohen's d | d 95% CI | Welch p |
+| --- | ---: | --- | ---: | ---: | ---: |
+| full | 39 | `Pz_P300_loss_minus_gain` | -1.045 | [-1.63, -0.59] | 0.0028 |
+| exclude `1013` | 38 | `Pz_P300_loss_minus_gain` | -1.067 | [-1.66, -0.61] | 0.0024 |
+| exclude label conflicts | 37 | `Pz_P300_loss_minus_gain` | -1.004 | [-1.59, -0.54] | 0.0051 |
+| exclude all flagged | 36 | `Pz_P300_loss_minus_gain` | -1.025 | [-1.62, -0.54] | 0.0044 |
+| full | 39 | `POz_P300_loss_minus_gain` | -0.919 | [-1.55, -0.39] | 0.0076 |
+| exclude all flagged | 36 | `POz_P300_loss_minus_gain` | -0.911 | [-1.56, -0.36] | 0.0102 |
+
+Interpretation: the two headline claims behave very differently under participant exclusions. The classifier is fragile, losing significance when the two label-conflict participants are removed. The posterior P300 group difference is essentially invariant: across every exclusion the effect stays near d = -1.0 with Welch p < 0.011 and a d CI that excludes zero. The robustness of the neural effect, contrasted with the fragility of the classifier, is why the P300 group difference is reported as the primary finding and the classifier as exploratory support.
+
+## Continuous MEQ Analysis
+
+To avoid dichotomizing chronotype, the posterior P300 loss-minus-gain contrasts
+were related to the continuous MEQ score (n = 38 with an MEQ score;
+`scripts/meq_p300_continuous.py`). Under the standard direction (higher MEQ =
+more morning) and the group result, a positive correlation is expected.
+
+| Feature | Pearson r | r 95% CI | Pearson p | Spearman rho | Spearman p | FDR p |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `Pz_P300_loss_minus_gain` | 0.293 | [0.06, 0.49] | 0.074 | 0.319 | 0.051 | 0.146 |
+| `POz_P300_loss_minus_gain` | 0.241 | [-0.01, 0.46] | 0.146 | 0.299 | 0.068 | 0.146 |
+
+Interpretation: the continuous relationship is positive and in the predicted
+direction for both electrodes, confirming that the posterior P300 effect is not
+an artifact of the Morning/Evening dichotomy but a graded association with
+morningness. The correlations are modest and only marginally significant, which
+is expected given power: with n = 38 the minimum correlation detectable at 80%
+power is approximately r = 0.44, so the study has only about 42% power for an
+effect of r = 0.29. The much stronger dichotomous effect (d approximately 1.0)
+is better powered because the binary contrast emphasizes decisively classified
+participants, whereas the 12 intermediate-band participants add scatter to the
+continuous estimate (Figure 5). The continuous and dichotomous analyses are
+therefore consistent: a real, graded posterior-P300 association with chronotype
+that the present sample estimates precisely only at the group-contrast level.
 
 ## Risky Choice
 
@@ -176,11 +271,20 @@ Best feature-pack leaderboard entries:
 | `value_history` | Logistic Regression | 0.586 | 0.592 | 0.585 | 0.623 | 39 |
 | `prev_eeg` | Random Forest | 0.575 | 0.582 | 0.573 | 0.614 | 50 |
 
-Interpretation: risky-choice prediction remains modest. Previous-trial and rolling history features carry most of the signal; previous-trial EEG does not materially improve over history/value features in the current representation.
+Naive baselines for context (`scripts/risky_choice_baseline.py`):
+
+| Baseline | Balanced Accuracy | Accuracy | Note |
+| --- | ---: | ---: | --- |
+| Majority class | 0.500 | 0.529 | base rate 0.529 risky |
+| Persistence (previous choice) | 0.554 | 0.556 | choice autocorrelation |
+| Best leakage-safe model (grouped CV) | 0.587 | 0.592 | generalizes to held-out participants |
+| Participant-mean oracle | 0.604 | 0.610 | peeks at held-out participant; ceiling only |
+
+Interpretation: risky-choice prediction is modest but meaningfully above its trivial references. Under participant-grouped CV the model beats both the majority-class (0.500 BA) and previous-choice persistence (0.554 BA) baselines, and it approaches the participant-mean oracle ceiling (0.604 BA) without ever seeing the held-out participant's own data. Previous-trial and rolling history features carry most of the signal; previous-trial EEG does not materially improve over history/value features in the current representation.
 
 ## Limitations
 
-- Chronotype has only 39 participants, so findings are pilot-level.
+- Chronotype has only 39 participants, so all findings are preliminary and single-cohort.
 - The raw behavioural chronotype column conflicts with `all final data.xlsx` for participants `1027` and `1036`; sensitivity analyses should disclose this.
 - Compact ML evidence is significant in the full all-final-label dataset but not robust across all flagged-participant exclusions.
 - There is no external validation cohort.

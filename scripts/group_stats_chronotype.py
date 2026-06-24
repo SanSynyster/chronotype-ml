@@ -39,6 +39,40 @@ def cohens_d(a: np.ndarray, b: np.ndarray) -> float:
     return float((np.mean(a) - np.mean(b)) / pooled)
 
 
+def hedges_g(a: np.ndarray, b: np.ndarray) -> float:
+    """Small-sample bias-corrected standardized mean difference.
+
+    At n ~ 39 the Hedges correction shrinks Cohen's d by roughly 2 percent;
+    it is the more honest effect-size estimate to report for this sample.
+    """
+    a = a[~np.isnan(a)]
+    b = b[~np.isnan(b)]
+    d = cohens_d(a, b)
+    if np.isnan(d):
+        return np.nan
+    dof = len(a) + len(b) - 2
+    correction = 1.0 - 3.0 / (4.0 * dof - 1.0)
+    return float(d * correction)
+
+
+def cohens_d_ci(a: np.ndarray, b: np.ndarray, n_boot: int = 10000, seed: int = 42) -> tuple[float, float]:
+    """Percentile bootstrap 95% CI for Cohen's d (resampling within group)."""
+    a = a[~np.isnan(a)]
+    b = b[~np.isnan(b)]
+    if len(a) < 2 or len(b) < 2:
+        return np.nan, np.nan
+    rng = np.random.default_rng(seed)
+    boots = np.empty(n_boot, dtype=float)
+    for i in range(n_boot):
+        ra = a[rng.integers(0, len(a), len(a))]
+        rb = b[rng.integers(0, len(b), len(b))]
+        boots[i] = cohens_d(ra, rb)
+    boots = boots[np.isfinite(boots)]
+    if len(boots) == 0:
+        return np.nan, np.nan
+    return float(np.quantile(boots, 0.025)), float(np.quantile(boots, 0.975))
+
+
 def fdr_bh(pvals: list[float]) -> list[float]:
     p = np.array(pvals, dtype=float)
     order = np.argsort(p)
@@ -74,6 +108,7 @@ def main() -> None:
         else:
             p_t = np.nan
             p_u = np.nan
+        d_low, d_high = cohens_d_ci(evening, morning)
         rows.append({
             "feature": feature,
             "evening_mean": float(np.nanmean(evening)),
@@ -81,6 +116,9 @@ def main() -> None:
             "morning_mean": float(np.nanmean(morning)),
             "morning_sd": float(np.nanstd(morning, ddof=1)),
             "cohens_d_evening_minus_morning": cohens_d(evening, morning),
+            "cohens_d_ci95_low": d_low,
+            "cohens_d_ci95_high": d_high,
+            "hedges_g_evening_minus_morning": hedges_g(evening, morning),
             "welch_p": p_t,
             "mannwhitney_p": p_u,
             "n_evening": int(len(e_clean)),

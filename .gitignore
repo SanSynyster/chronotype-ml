@@ -20,6 +20,9 @@ models/
 # Large and generated files
 *.csv
 *.png
+# but keep tracked manuscript figures (vector PDFs track anyway)
+!docs/figures/
+!docs/figures/*.png
 *.json
 *.joblib
 *.zip
@@ -42,3 +45,4 @@ archive/legacy/logs/
 archive/legacy/models_ml_baselines/
 archive/legacy/reports_*/
 archive/legacy/*.csv
+env_dl/

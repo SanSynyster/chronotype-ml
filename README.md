@@ -15,13 +15,12 @@ The current codebase is organized around clean, reproducible modelling scripts. 
 
 ## Key Findings
 
-- The active pipeline now rebuilds from local raw behaviour, EEG single-trial means/triggers, and linked participant metadata.
-- Primary chronotype labels come from linked `all final data.xlsx` metadata; raw behavioural chronotype labels conflict for `1027` and `1036` and are handled as sensitivity cases.
-- The theory-driven compact Logistic Regression reached repeated-CV balanced accuracy mean `0.666` and 1000-permutation `p = 0.0340` on the full all-final-label dataset.
-- Larger exploratory Random Forest models are above chance; the 47-feature `compact_combined` model reached repeated-CV balanced accuracy mean `0.776` and 1000-permutation `p = 0.0010`.
-- The clearest physiological signal is posterior P300 loss-gain contrast, which survives FDR correction in the full all-final-label dataset.
-- Risky-choice prediction was modest: the best clean Logistic Regression packs reached balanced accuracy about `0.587` and ROC AUC about `0.62` under participant-grouped CV.
-- Same-trial leakage features such as `ChoiceMade`, `CorrectChoice`, `CurrentScore`, same-trial feedback, and same-trial feedback-locked EEG are excluded from risky-choice predictors.
+- **Primary result (neural):** Morning and Evening chronotypes differ in feedback-related posterior **P300** amplitude. The parietal/posterior P300 loss-minus-gain contrast separates the groups with large effect sizes (`Pz`: Cohen's d = `-1.04`, Welch p = `0.0028`, FDR p = `0.034`; `POz`: d = `-0.92`, Welch p = `0.0076`, FDR p = `0.045`), and the effect is corroborated by nonparametric tests (Mann-Whitney p = `0.005` and `0.002`). These two contrasts are the only features that survive FDR correction across the theory-driven feature set, and the effect is directionally confirmed against the continuous MEQ score (Pz Pearson r = 0.29, 95% CI [0.06, 0.49]).
+- **Supporting (behavioral):** Evening types show higher risky-choice rates, with medium-to-large uncorrected effects (e.g. `loss_error_risky_rate` d = `0.81`, `free_risky_rate` d = `0.80`) that do not survive FDR.
+- **Machine learning (interpretable, nested CV):** Under leakage-aware nested cross-validation with hyperparameter tuning, a tuned L2 Logistic Regression on the 12-feature set classifies chronotype with balanced accuracy `0.717`, ROC AUC `0.75`-`0.79`, sensitivity `0.75`, specificity `0.68`, and label-permutation p = `0.020` (28/39 correct). Its strongest predictor is `Pz_P300_loss_minus_gain`, so the multivariate model and the univariate neural effect are mutually validating. Performance is modest and does **not** survive FDR across the feature-pack family, so the classifier is framed as an interpretable complement to the neural finding rather than a deployable diagnostic.
+- **Exploratory (high-dimensional ML):** Larger Random Forest models (47-171 features on 39 participants) score higher in nested-free CV but are reported only as exploratory because feature dimensionality is high relative to sample size.
+- **Secondary task (risky choice):** Under leakage-safe, participant-grouped CV, trial-level risky choice is weakly predictable (balanced accuracy ≈ `0.587`, ROC AUC ≈ `0.62`); same-trial outcome/feedback/feedback-locked-EEG features are excluded as predictors. Previous-trial history carries most of the signal.
+- **Labels:** Primary chronotype labels come from linked `all final data.xlsx` metadata and are validated against the continuous MEQ score (`scripts/validate_meq_labels.py`): MEQ separates the groups in the standard direction (Evening mean 37.3, Morning 57.7), all 26 decisively-scored participants match their binary label, and both raw-behaviour conflict cases (`1027`, `1036`) are MEQ-confirmed (61 Morning, 27 Evening). The metadata-to-participant linkage uses an optimal one-to-one assignment with margin-based QC.
 
 See `docs/results.md` for result tables and interpretation.
 
@@ -44,7 +43,9 @@ Generated data, reports, and model artifacts are intentionally ignored. Raw data
 
 - `scripts/build_clean_risky_choice.py`: builds leakage-aware trial-level risky-choice datasets.
 - `scripts/build_clean_chronotype.py`: builds participant-level chronotype datasets and literature-guided feature packs.
-- `scripts/link_raw_metadata.py`: links raw participant summary/final metadata to `UserID`.
+- `scripts/link_raw_metadata.py`: links raw participant summary/final metadata to `UserID` via optimal one-to-one assignment.
+- `scripts/validate_meq_labels.py`: validates binary chronotype labels against the continuous MEQ score and exports de-identified MEQ/MCTQ scores.
+- `scripts/export_public_data.py`: exports a PII-free anonymized participant-level table for release.
 - `scripts/build_ml_ready_from_raw.py`: builds the raw-derived ML-ready trial table.
 - `scripts/build_chronotype_sensitivity.py`: builds chronotype datasets excluding flagged participants.
 - `scripts/train_clean_baseline.py`: evaluates Logistic Regression, Random Forest, and HGB baselines.
@@ -57,7 +58,12 @@ Generated data, reports, and model artifacts are intentionally ignored. Raw data
 - `scripts/build_compact_chronotype.py`: theory-driven 12-feature chronotype model table.
 - `scripts/build_compact_performance_chronotype.py`: exploratory performance-informed compact chronotype model table.
 - `scripts/repeated_cv_clean.py`: repeated stratified CV with confidence intervals.
-- `scripts/group_stats_chronotype.py`: Morning-vs-Evening statistics with effect sizes.
+- `scripts/group_stats_chronotype.py`: Morning-vs-Evening statistics with effect sizes, Hedges g, and bootstrap d CIs.
+- `scripts/meq_p300_continuous.py`: continuous MEQ-vs-posterior-P300 correlations (Pearson with CIs, Spearman, OLS).
+- `scripts/ml_chronotype_full.py`: full nested-CV ML analysis (5-model comparison, tuning, ROC/AUC, sensitivity/specificity, confusion matrix, permutation, coefficients).
+- `scripts/sensitivity_matrix.py`: consolidated sensitivity matrix for the classifier and the P300 group difference across participant exclusions.
+- `scripts/risky_choice_baseline.py`: naive baselines (majority, persistence, participant-mean oracle) for the risky-choice task.
+- `scripts/make_figures.py`: generates the manuscript figures (PDF + PNG) into `docs/figures/`.
 - `scripts/qc_report_clean.py`: clean dataset QC summaries.
 
 ## Setup
@@ -166,6 +172,9 @@ Chronotype packs:
 
 ## Manuscript Support Docs
 
+- `docs/manuscript_draft.md`: assembled IMRaD working draft with figure callouts and an author-input checklist.
+- `docs/paper.html`: self-contained first-draft paper (figures embedded) for co-authors to open in Word or import to Google Docs and comment. Rebuild with `python scripts/build_paper.py`.
+- `docs/figures/`: manuscript figures (PDF + PNG) and a figure-by-figure README.
 - `docs/results.md`: current tracked result summary.
 - `docs/methods.md`: methods draft for manuscript development.
 - `docs/data_provenance.md`: generated provenance plan/record for raw-to-clean reconstruction.

@@ -16,6 +16,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from scipy.optimize import linear_sum_assignment
 
 
 SUMMARY_COLUMNS = [
@@ -82,27 +83,51 @@ def match_summary_to_behavior(summary: pd.DataFrame, derived: pd.DataFrame) -> t
     scale = np.nanstd(np.vstack([left, right]), axis=0)
     scale[~np.isfinite(scale) | (scale == 0)] = 1.0
     distances = np.sqrt(np.nanmean(((left[:, None, :] - right[None, :, :]) / scale) ** 2, axis=2))
-    best = distances.argmin(axis=1)
+
+    # Optimal one-to-one assignment (Hungarian) instead of greedy per-row argmin.
+    # This guarantees a bijection between summary rows and UserIDs, so no two
+    # summary rows can be linked to the same participant.
+    row_ind, col_ind = linear_sum_assignment(distances)
+    assigned = dict(zip(row_ind.tolist(), col_ind.tolist()))
 
     rows: list[dict[str, object]] = []
-    for idx, match_idx in enumerate(best):
+    for idx in range(distances.shape[0]):
+        match_idx = assigned[idx]
         diffs = np.abs(left[idx] - right[match_idx])
+        # Margin: how much closer the assigned match is than the next-best
+        # candidate. Small margins flag ambiguous (potentially wrong) links.
+        row_distances = np.sort(distances[idx])
+        margin = float(row_distances[1] - row_distances[0]) if len(row_distances) > 1 else float("nan")
         rows.append({
             "summary_row": idx + 1,
             "UserID": int(derived.iloc[match_idx]["UserID"]),
             "match_distance": float(distances[idx, match_idx]),
             "match_max_abs_diff": float(np.nanmax(diffs)),
+            "match_margin": margin,
+            "is_optimal_for_row": bool(match_idx == int(np.argmin(distances[idx]))),
             "summary_chronotype": normalize_chronotype(summary.iloc[idx].get("chronotype")),
             "summary_erpset": summary.iloc[idx].get("    ERPset"),
         })
 
     mapping = pd.DataFrame(rows)
+    if mapping["UserID"].nunique() != mapping.shape[0]:
+        raise ValueError("Linkage is not one-to-one: duplicate UserID assignments detected.")
     qc = {
         "rows": int(mapping.shape[0]),
         "unique_user_ids": int(mapping["UserID"].nunique()),
+        "is_bijection": bool(mapping["UserID"].nunique() == mapping.shape[0]),
         "mean_match_distance": float(mapping["match_distance"].mean()),
         "max_match_distance": float(mapping["match_distance"].max()),
         "max_abs_diff": float(mapping["match_max_abs_diff"].max()),
+        "min_match_margin": float(mapping["match_margin"].min()),
+        "rows_assigned_non_greedy": int((~mapping["is_optimal_for_row"]).sum()),
+        # Rows whose assigned distance is large relative to the cohort, or whose
+        # margin to the next-best candidate is small, are ambiguous links.
+        "ambiguous_links": mapping.loc[
+            (mapping["match_distance"] > mapping["match_distance"].median() * 3)
+            | (mapping["match_margin"] < mapping["match_margin"].median() * 0.25),
+            ["summary_row", "UserID", "match_distance", "match_margin", "match_max_abs_diff"],
+        ].to_dict("records"),
     }
     return mapping, qc
 
