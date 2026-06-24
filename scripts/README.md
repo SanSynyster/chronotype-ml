@@ -48,3 +48,12 @@ Permutation outputs are written under `reports/clean/permutation_tests/`.
 Feature-importance outputs are written under `reports/clean/feature_importance/`.
 
 The old scripts and generated artifacts are archived under `archive/legacy/`.
+
+## Deep-learning & computational strand
+
+The `scripts/dl/` subfolder holds the deep-learning / computational-modelling work (causal
+GRU sequence model, EEGNet on single-trial EEG, asymmetric reinforcement-learning model,
+multimodal behaviour+ERP fusion, continuous-MEQ regression, and a robustness battery). It
+runs in its own `env_dl/` virtualenv (`requirements-dl.txt`) to keep the pinned analysis env
+untouched. Headline: fused behaviour + validated ERP P300/FRN predicts chronotype at AUC
+`0.797` (p = `0.004`). See `scripts/dl/README.md` and `docs/{methodology,results,discussion}_dl.md`.

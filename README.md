@@ -20,6 +20,7 @@ The current codebase is organized around clean, reproducible modelling scripts. 
 - **Machine learning (interpretable, nested CV):** Under leakage-aware nested cross-validation with hyperparameter tuning, a tuned L2 Logistic Regression on the 12-feature set classifies chronotype with balanced accuracy `0.717`, ROC AUC `0.75`-`0.79`, sensitivity `0.75`, specificity `0.68`, and label-permutation p = `0.020` (28/39 correct). Its strongest predictor is `Pz_P300_loss_minus_gain`, so the multivariate model and the univariate neural effect are mutually validating. Performance is modest and does **not** survive FDR across the feature-pack family, so the classifier is framed as an interpretable complement to the neural finding rather than a deployable diagnostic.
 - **Exploratory (high-dimensional ML):** Larger Random Forest models (47-171 features on 39 participants) score higher in nested-free CV but are reported only as exploratory because feature dimensionality is high relative to sample size.
 - **Secondary task (risky choice):** Under leakage-safe, participant-grouped CV, trial-level risky choice is weakly predictable (balanced accuracy ≈ `0.587`, ROC AUC ≈ `0.62`); same-trial outcome/feedback/feedback-locked-EEG features are excluded as predictors. Previous-trial history carries most of the signal.
+- **Deep-learning & computational strand (`scripts/dl/`):** A causal GRU on the trial sequence beats the risky-choice baseline (balanced accuracy `0.603`, AUC `0.647`) *without* hand-engineered history features. Its out-of-fold behavioral embedding predicts chronotype (nested-LOO AUC `0.713`, permutation p = `0.027`), the validated ERP P300/FRN features predict it independently (AUC `0.668`, p = `0.032`), and **fusing the two is super-additive (AUC `0.797`, p = `0.004`, bootstrap 95% CI [`0.64`, `0.92`])**, also predicting the continuous MEQ score (fused r = `0.344`, p = `0.027`). An asymmetric reinforcement-learning model gives the mechanism (Evening types learn more from gains, α_gain p = `0.040`; choose less consistently, β–MEQ r = `0.36`, p = `0.027`) but does not itself predict chronotype (AUC `0.53`). End-to-end **EEGNet** decodes single-trial feedback valence cross-subject (AUC `0.641`) but does **not** recover chronotype from learned single-trial features at n = 39 — an honest negative; the validated ERP features, not learned ones, are what add. The fused result is robust to participant exclusions and leave-one-subject-out. See `docs/methodology_dl.md`, `docs/results_dl.md`, `docs/discussion_dl.md`, and `scripts/dl/README.md`.
 - **Labels:** Primary chronotype labels come from linked `all final data.xlsx` metadata and are validated against the continuous MEQ score (`scripts/validate_meq_labels.py`): MEQ separates the groups in the standard direction (Evening mean 37.3, Morning 57.7), all 26 decisively-scored participants match their binary label, and both raw-behaviour conflict cases (`1027`, `1036`) are MEQ-confirmed (61 Morning, 27 Evening). The metadata-to-participant linkage uses an optimal one-to-one assignment with margin-based QC.
 
 See `docs/results.md` for result tables and interpretation.
@@ -32,9 +33,12 @@ chronotype_ml/
 ├── data/raw/                      # local raw data, ignored by git
 ├── data/clean/                    # generated clean datasets, ignored by git
 ├── docs/results.md                # tracked summary of current results
+├── docs/{methodology,results,discussion}_dl.md  # deep-learning/computational write-up
 ├── reports/clean/                 # generated evaluation reports, ignored by git
 ├── scripts/                       # active clean pipeline
-└── requirements.txt
+├── scripts/dl/                    # deep-learning & computational strand (separate env_dl)
+├── requirements.txt
+└── requirements-dl.txt            # deps for the scripts/dl/ track
 ```
 
 Generated data, reports, and model artifacts are intentionally ignored. Raw data is not committed.
@@ -65,6 +69,7 @@ Generated data, reports, and model artifacts are intentionally ignored. Raw data
 - `scripts/risky_choice_baseline.py`: naive baselines (majority, persistence, participant-mean oracle) for the risky-choice task.
 - `scripts/make_figures.py`: generates the manuscript figures (PDF + PNG) into `docs/figures/`.
 - `scripts/qc_report_clean.py`: clean dataset QC summaries.
+- `scripts/dl/`: deep-learning & computational strand (GRU sequence model, EEGNet, RL model, multimodal fusion, continuous-MEQ regression, robustness battery). Runs in a separate `env_dl/` venv; see `scripts/dl/README.md` and `requirements-dl.txt`.
 
 ## Setup
 
