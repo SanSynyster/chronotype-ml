@@ -45,18 +45,36 @@ def _nested_scores(X, y, max_pca):
                              method="decision_function", n_jobs=1)
 
 
-def evaluate(emb: pd.DataFrame, permutations: int = 1000, jobs: int = -1,
-             label: str = "embedding") -> dict:
-    """emb: DataFrame with participant_id + numeric feature columns."""
+def _prepare(emb: pd.DataFrame):
+    """Merge embedding with chronotype/MEQ labels; return X, y, data, max_pca."""
     feats = [c for c in emb.columns if c != "participant_id"]
     lab = pd.read_csv(CHRONO)[["participant_id", "Chronotype"]]
     meq = pd.read_csv(MEQ)[["UserID", "meq"]]
     data = emb.merge(lab, on="participant_id").merge(
         meq, left_on="participant_id", right_on="UserID", how="left")
-
     X = data[feats].to_numpy()
     y = (data["Chronotype"].str.lower() == "evening").astype(int).to_numpy()
-    max_pca = min(X.shape[1], X.shape[0] - 2)
+    # Cap PCA so it stays valid inside the inner 4-fold CV of the outer LOO:
+    # smallest inner-train ~ 0.75 * (n_samples - 1).
+    inner_min = int(0.75 * (X.shape[0] - 1)) - 1
+    max_pca = max(2, min(X.shape[1], inner_min))
+    return X, y, data, max_pca
+
+
+def nested_auc(emb: pd.DataFrame) -> dict:
+    """Fast nested-LOO point estimate (no permutation). Returns AUC/BA + OOF scores."""
+    X, y, data, max_pca = _prepare(emb)
+    obs = _nested_scores(X, y, max_pca)
+    return {"roc_auc": float(roc_auc_score(y, obs)),
+            "balanced_accuracy": float(balanced_accuracy_score(y, (obs >= 0.0).astype(int))),
+            "oof": pd.DataFrame({"participant_id": data["participant_id"],
+                                 "y": y, "score": obs})}
+
+
+def evaluate(emb: pd.DataFrame, permutations: int = 1000, jobs: int = -1,
+             label: str = "embedding") -> dict:
+    """emb: DataFrame with participant_id + numeric feature columns."""
+    X, y, data, max_pca = _prepare(emb)
 
     obs = _nested_scores(X, y, max_pca)
     obs_auc = float(roc_auc_score(y, obs))
