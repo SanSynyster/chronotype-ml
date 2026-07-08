@@ -1,85 +1,76 @@
-# Chronotype Paper — Tasks for the Team
+# Chronotype Paper — Remaining Tasks for the Team
 
-*For Mahsima and Dr Heysiattalab. The analyses, figures, and a full draft are
-complete and on the shared branch (PR #3); open `docs/paper.docx` (working draft,
-shows what still needs filling) or `docs/paper_submission.docx` (clean version) in
-Word for tracked-changes comments. The items below are the things only the team can
-provide or decide. **Bold = hard blocker: the paper cannot be submitted without it.**
-Please reply per numbered item or edit directly in the Word file.*
-
----
-
-## A. Ethics and participants (**hard blockers**)
-
-1. **Ethics/IRB:** approving committee name, protocol/approval number, and a
-   written-informed-consent statement.
-2. **Recruitment:** how and where participants were recruited, and over what period.
-3. **Sample flow:** how many were screened → enrolled → excluded (and why) to reach
-   the final N = 39.
-4. **Demographics:** age (mean, SD, range) and sex/gender, ideally split by
-   chronotype group (Morning vs Evening).
-5. **Inclusion/exclusion criteria** (e.g., neurological/psychiatric history,
-   medication, shift work, handedness, vision).
-
-## B. Task design (needed for Methods)
-
-6. Confirm the structure: number of **blocks and trials** (we have 16 × 24 — please
-   confirm), the box **magnitudes** (we have {5, 25}), and the **free vs forced**
-   trial split.
-7. **Timing:** stimulus/choice window, feedback duration, inter-trial interval.
-8. **Response mapping** (which key = left/right box), any **practice** trials, and
-   how the running score / any **payment or incentive** worked.
-9. **Task origin:** was the paradigm adapted from a published task? If so, the
-   citation to include.
-
-## C. EEG acquisition and preprocessing (**hard blockers**)
-
-10. **Amplifier/system** (we have ANT Neuro — confirm model), cap/electrode type.
-11. **Channels and montage** (confirm 64-channel, 10–20), **online reference** and
-    **ground** locations, **sampling rate** (confirm 250 Hz), any online filters,
-    impedance target.
-12. **Preprocessing** (done on your side in EEGLAB/ERPLAB): filter band (high/low/
-    notch), offline re-referencing, ICA/artifact-rejection method and criteria,
-    epoch window, baseline interval.
-13. **Final trial counts** after rejection (overall, and per condition if easy), and
-    confirmation of feedback trigger codes 50/60/70/80 =
-    Gain-Correct/Gain-Error/Loss-Correct/Loss-Error.
-
-## D. Chronotype measurement (**hard blocker on item 14**)
-
-14. **Which questionnaire(s)** and version (MEQ — Horne & Östberg? — and/or MCTQ),
-    when administered, and the **exact rule** used to assign the binary Morning vs
-    Evening label (median split? standard Horne–Östberg cut-offs?). *12 of 39 fall
-    in the MEQ 42–58 intermediate band, so this rule matters.*
-15. If a **translated MEQ** was used, the validation/norms reference for that version.
-
-## E. Authorship, funding, data (needed at submission)
-
-16. **Preregistration** status (none / OSF link). The draft's primary-vs-exploratory
-    split is written to be preregistration-friendly.
-17. **CRediT contributions** per author; **funding/grant** numbers; **conflicts of
-    interest**; **corresponding author** and affiliations.
-18. **Data availability:** are we clear to post the de-identified participant-level
-    table (39 rows, no PII) to a public repository with a DOI, with raw EEG
-    available on request? Any constraints from the ethics approval?
-
-## F. Scientific review by the team (please read and mark up the draft)
-
-19. **Title:** confirm or revise. Current working title: *"Chronotype Differences
-    in Feedback-Related P300 and Risky-Choice Dynamics."*
-20. **Direction-of-effect (Discussion §4.2):** confirm/sharpen the link between the
-    posterior-P300 result and the specific prior chronotype–reward findings you want
-    to foreground; add any preferred citations (one `[AUTHOR INPUT]` marker there).
-21. **Interpretation check:** confirm the framing (ERP finding primary; behaviour/
-    fusion convergent; RL exploratory) matches how you want the contribution read.
-22. **Data-linkage method (Methods §2.4):** please sanity-check the description of
-    how metadata was matched to behavioural files — reviewers will scrutinize it.
+*For Mahsima, Dr Heysiattalab, and Dr Zarean. A full draft, analyses, figures, and
+references are complete and on the shared branch (PR #3); open `docs/paper.docx`
+(working draft) or `docs/paper_submission.docx` (clean version) in Word for
+tracked-changes comments. Most Methods details have now been sourced from the team's
+2025 paper (Hajiaboo et al., Int. J. Psychophysiology) on the same cohort. The list
+below is what still needs the team.*
 
 ---
 
-### Not blocking the team (handled on the analysis/writing side)
-- Filling Methods once A–D arrive; final consistency pass.
-- Optional: a supplementary validation table/figure for the metadata-to-behaviour
-  linkage (can be produced on request).
-- Converting the finalized draft to the journal's **LaTeX** template.
-- Cover letter (first draft exists in `docs/cover_letter.md`).
+## Context (please read first)
+
+This manuscript uses the **same 39-participant cohort** as the already-published
+**Hajiaboo, Zarean & Heysieattalab (2025)**, *The effect of chronotype in risky
+decision making: An ERP study* (Int. J. Psychophysiology, 217, 113258). To avoid any
+overlap/contradiction problem, the paper is being **repositioned as a computational
+follow-up** that cites and builds on the 2025 paper: the behavioural and FRN results
+are treated as previously established, and the new contribution is the posterior-P300
+loss-minus-gain contrast plus the computational strand (sequence modelling,
+brain–behaviour combination, continuous-MEQ prediction, leakage-safe evaluation).
+
+## Already resolved (no action needed)
+
+- Same 39-participant subset as the 2025 paper ✓
+- Ethics: University of Tabriz committee, **IR.TABRIZU.REC.1403.130** (registered
+  under M. Zarean); written informed consent ✓
+- Participants, task, EEG acquisition + preprocessing, MEQ/MCTQ, and the binary
+  cutoff (MEQ ≤ 41 evening / ≥ 59 morning) — taken from the 2025 paper ✓
+- Demographics from the repository dataset: N = 39 (20 Morning, 19 Evening); age
+  22.3 ± 3.0 (18–31); 20 M / 19 F ✓
+- **Authorship:** Taali (first; computational lead), Hajiaboo, Heysiattalab, **Zarean
+  (last)**; **corresponding author: Dr Heysiattalab** ✓ *(please confirm the order of
+  the middle two.)*
+- Data: raw subject data will **not** be shared publicly; statement set to
+  "available from the corresponding author on reasonable request" ✓
+- Target journal: **Psychophysiology** (a same-cohort follow-up in a sister journal
+  is fine provided the 2025 paper is disclosed in the cover letter) ✓
+- A sex/age imbalance across groups was found and handled: the primary Pz P300 effect
+  survives adjustment for sex and age; POz attenuates and is partly age-related
+  (reported in Results and Limitations) ✓
+
+---
+
+## Still needed from the team
+
+### From Mahsima — measurement details to reconcile the two papers
+These let us state clearly that our analyses differ from, rather than contradict, the
+2025 paper.
+
+1. **FRN measurement in the 2025 paper:** exact time window (ms), electrodes, whether
+   it was a difference wave or raw mean amplitude, and the baseline used.
+2. **P300 measurement in the 2025 paper:** window and electrodes, and whether the
+   **loss-minus-gain contrast** was ever tested (the 2025 paper reports no P300 main
+   effect / no MEQ–P300 correlation, so we need to show our contrast is a different,
+   more sensitive test).
+3. **Shared pipeline?** Are our single-trial ERP exports (`Pz_P300`, `POz_P300`, etc.)
+   produced from the **same EEGLAB/ERPLAB pipeline and epochs** as the 2025 paper?
+4. **Keep vs supplement:** how much of the behavioural/FRN material do you want kept
+   as a short "prior-work / within-cohort" paragraph versus moved to the supplement?
+
+### From Dr Heysiattalab / Dr Zarean — confirmations
+5. Confirm the **repositioning** as a computational follow-up citing the 2025 paper.
+6. Confirm **author order** (middle two) and provide **CRediT** roles.
+7. **Funding/grants** and **conflicts of interest**.
+
+### From Sahab (self) — to action
+8. Locate and send the **OSF preregistration** link so the manuscript's
+   primary/confirmatory/exploratory labels can be aligned to what was preregistered,
+   and the prereg cited. (Check whether the P300 was preregistered or whether the
+   prereg covered the FRN/behavioural hypotheses of the 2025 paper.)
+
+---
+
+*Everything else — ethics, participants, task, EEG acquisition/preprocessing, MEQ
+cutoff, demographics, corresponding author, data-availability wording — is resolved.*
