@@ -34,14 +34,15 @@ FIGS = {
         "Figure 2. Posterior P300 loss-minus-gain amplitude versus the continuous "
         "MEQ score."),
     3: ("fig_main_3_fusion.png",
-        "Figure 3. Chronotype decoding from behavioural choice dynamics (GRU), from "
-        "validated ERP contrasts, and their super-additive fusion."),
+        "Figure 3. Chronotype separation from behavioural choice dynamics (GRU), "
+        "from validated ERP contrasts, and from their combination, with out-of-fold "
+        "scores related to the continuous MEQ score."),
     4: ("fig_main_4_single_trial_coupling.png",
-        "Figure 4. Single-trial feedback P300 to next-trial risk coupling by "
+        "Figure 4. Single-trial feedback P300 to next-trial risky-choice coupling by "
         "chronotype (overall and valence-resolved)."),
     5: ("fig_main_5_roc_pipeline.png",
-        "Figure 5. Leakage-safe, permutation-clean evaluation pipeline and "
-        "out-of-fold classifier ROC."),
+        "Figure 5. Participant-generalizing evaluation pipeline and out-of-fold "
+        "classifier ROC."),
 }
 
 # fallback to the original per-analysis figures if the consolidated set is absent
