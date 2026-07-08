@@ -78,13 +78,15 @@ risky decision-making, EEG, multimodal fusion, individual differences.
 
 Chronotype describes stable inter-individual variation in the diurnal timing of
 sleep, alertness, and performance, commonly indexed by the Morningness-Eveningness
-Questionnaire (MEQ) and the Munich ChronoType Questionnaire (MCTQ) [CITATION:
-Horne & Ostberg 1976; Roenneberg et al.]. It is more than a sleep-timing
+Questionnaire (MEQ) and the Munich ChronoType Questionnaire (MCTQ; Horne &
+Ostberg, 1976; Roenneberg et al., 2003). It is more than a sleep-timing
 preference: chronotype is embedded in circadian physiology and has been linked to
-broad differences in affect, cognition, and self-regulation [CITATION]. Of
+broad differences in affect, cognition, and self-regulation (Adan et al., 2012). Of
 particular relevance to decision-making, evening-type individuals are frequently
 reported to show greater reward sensitivity, higher impulsivity, and more
-risk-taking than morning types [CITATION], a profile that plausibly reflects
+risk-taking than morning types (Adan et al., 2012) [AUTHOR INPUT: add the specific
+chronotype reward-sensitivity/impulsivity/risk empirical citations the team
+prefers], a profile that plausibly reflects
 differences in how the outcomes of choices — gains and losses — are evaluated. Yet
 most evidence for this link is behavioural or trait-questionnaire based, and the
 *neural* processing of decision feedback in morning versus evening types remains
@@ -95,9 +97,10 @@ potentials (ERPs) that dissociate distinct evaluative processes. The
 feedback-related negativity (FRN), a frontocentral deflection peaking ~250-300 ms
 after outcome onset, is sensitive to outcome valence and has been interpreted as a
 reward-prediction-error signal arising from midbrain-to-medial-frontal projections
-[CITATION: Miltner et al.; Holroyd & Coles]. The feedback P300, a later
+(Holroyd & Coles, 2002; Miltner et al., 1997). The feedback P300, a later
 parietal/posterior positivity, scales with the motivational salience and subjective
-significance of outcomes and the allocation of attention to them [CITATION]. Because
+significance of outcomes and the allocation of attention to them (Polich, 2007).
+Because
 these components separate the rapid valence-coding and the later salience-weighting
 of feedback, they provide a principled window onto *how* individuals neurally
 evaluate gains and losses. If chronotype reflects differences in outcome
@@ -292,7 +295,7 @@ chronotype group-level offset on each parameter, sampled with NUTS
 
 ### 2.9 EEG deep learning (EEGNet)
 
-EEGNet (Lawhern et al., 2018) [CITATION], a compact convolutional network, was
+EEGNet (Lawhern et al., 2018), a compact convolutional network, was
 applied to the cleaned single-trial epochs (64 × 251). It was trained cross-subject
 (GroupKFold over participants) to decode single-trial feedback **valence**
 (loss vs gain) — a chronotype-agnostic positive control — with per-channel z-scoring
@@ -535,9 +538,9 @@ chronotype at chance under permutation (mean AUC 0.426, p = 0.61; contrast AUC
 0.389, p = 0.71); a permutation-null density-ratio Bayes factor was only weakly
 informative (BF01 ≈ 1.2), because the observed AUCs fell slightly below chance,
 so the non-significant permutation test is the clearer statement of the null.
-[AUTHOR INPUT: the Bayes-factor sanity run recomputed the positive-control
-valence AUC as 0.59 vs the pipeline's 0.64 — reconcile the two runs (seed/epoch
-subset) before submission; the manuscript reports the established 0.64.]
+(The positive-control valence AUC of 0.64 is from the canonical EEGNet run
+[30 training epochs, 5-fold participant-grouped CV] that generated the embeddings
+used here; a separate 2-epoch/2-fold sanity run gave 0.59 and is not used.)
 
 ### 3.12 The chronotype effect is trait-level, not a single-trial coupling (Figure 10)
 
@@ -583,7 +586,7 @@ negative loss-minus-gain P300 contrast at parietal/posterior sites, a large effe
 sensitivity analyses and across a 72-cell window specification curve, and was
 directionally corroborated against the continuous MEQ. Because the posterior P300
 scales with the motivational salience and subjective significance of outcomes
-[CITATION], this pattern is consistent with chronotype-related differences in how
+(Polich, 2007), this pattern is consistent with chronotype-related differences in how
 the relative salience of losses and gains is neurally weighted during feedback:
 evening types, who behaviourally took more risks, showed the P300 signature of
 comparatively down-weighting losses relative to gains [AUTHOR INPUT: connect the
@@ -592,7 +595,7 @@ wishes to foreground]. That the frontocentral FRN did not distinguish the groups
 with Bayes factors giving moderate evidence for the null at central sites — further
 localises the chronotype difference to the later, salience-weighting stage of
 feedback processing rather than the earlier valence/prediction-error stage indexed
-by the FRN [CITATION].
+by the FRN (Holroyd & Coles, 2002).
 
 ### 4.3 Brain–behaviour convergence: the super-additive fusion
 
@@ -603,7 +606,7 @@ them raised decoding to AUC 0.797 and roughly doubled the correlation with the
 continuous MEQ (to −0.42). Had the two modalities indexed the same latent variable,
 fusion would have been redundant; instead, how choices evolve over many trials and
 the immediate neural evaluation of each outcome appear to capture partly independent,
-complementary facets of the same chronotype difference [REF]. This cross-modal
+complementary facets of the same chronotype difference. This cross-modal
 convergence is precisely the evidence that strengthens an individual-differences
 claim beyond a single-modality classifier, and it is consistent with the
 interpretable group-comparison result: the multivariate classifier's most
@@ -622,7 +625,7 @@ To move from prediction toward mechanism, an asymmetric reinforcement-learning m
 offered a candidate account — greater gain-driven learning and lower choice
 consistency in evening types — that would fit a profile of stronger approach/reward
 sensitivity and weaker loss-avoidance, consistent with circadian/dopaminergic
-modulation of reward learning [REF]. However, we treat this account as **exploratory
+modulation of reward learning (Webb et al., 2009). However, we treat this account as **exploratory
 and weakly identified**: the maximum-likelihood parameter contrasts did not survive
 a hierarchical partial-pooling refit, and the per-participant estimates were poorly
 identified in this hidden-sign paradigm (weak MLE-to-hierarchical agreement). The
@@ -718,6 +721,31 @@ Raw data are held locally and not committed. [AUTHOR INPUT: decide what to share
 release; specify a repository/DOI and a contact for raw data requests.] The
 full pipeline rebuilds from raw with `python scripts/rebuild_from_raw.py
 --execute`; figures are regenerated with `python scripts/make_figures.py`.
+
+---
+
+## References
+
+*DOI-verified APA-7 list; source `references.bib` / `docs/references_apa7.md`.
+Markers marked `[AUTHOR INPUT]` still need team-supplied domain citations.*
+
+Adan, A., Archer, S. N., Hidalgo, M. P., Di Milia, L., Natale, V., & Randler, C. (2012). Circadian typology: A comprehensive review. *Chronobiology International, 29*(9), 1153–1175. https://doi.org/10.3109/07420528.2012.719971
+
+Holroyd, C. B., & Coles, M. G. H. (2002). The neural basis of human error processing: Reinforcement learning, dopamine, and the error-related negativity. *Psychological Review, 109*(4), 679–709. https://doi.org/10.1037/0033-295X.109.4.679
+
+Horne, J. A., & Ostberg, O. (1976). A self-assessment questionnaire to determine morningness-eveningness in human circadian rhythms. *International Journal of Chronobiology, 4*, 97–110.
+
+Keil, A., Debener, S., Gratton, G., Junghöfer, M., Kappenman, E. S., Luck, S. J., Luu, P., Miller, G. A., & Yee, C. M. (2014). Committee report: Publication guidelines and recommendations for studies using electroencephalography and magnetoencephalography. *Psychophysiology, 51*(1), 1–21. https://doi.org/10.1111/psyp.12147
+
+Lawhern, V. J., Solon, A. J., Waytowich, N. R., Gordon, S. M., Hung, C. P., & Lance, B. J. (2018). EEGNet: A compact convolutional neural network for EEG-based brain-computer interfaces. *Journal of Neural Engineering, 15*(5), 056013. https://doi.org/10.1088/1741-2552/aace8c
+
+Miltner, W. H. R., Braun, C. H., & Coles, M. G. H. (1997). Event-related brain potentials following incorrect feedback in a time-estimation task: Evidence for a generic neural system for error detection. *Journal of Cognitive Neuroscience, 9*(6), 788–798. https://doi.org/10.1162/jocn.1997.9.6.788
+
+Polich, J. (2007). Updating P300: An integrative theory of P3a and P3b. *Clinical Neurophysiology, 118*(10), 2128–2148. https://doi.org/10.1016/j.clinph.2007.04.019
+
+Roenneberg, T., Wirz-Justice, A., & Merrow, M. (2003). Life between clocks: Daily temporal patterns of human chronotypes. *Journal of Biological Rhythms, 18*(1), 80–90. https://doi.org/10.1177/0748730402239679
+
+Webb, I. C., Baltazar, R. M., Wang, X., Pitchers, K. K., Coolen, L. M., & Lehman, M. N. (2009). Diurnal variations in natural and drug reward, mesolimbic tyrosine hydroxylase, and clock gene expression in the male rat. *Journal of Biological Rhythms, 24*(6), 465–476. https://doi.org/10.1177/0748730409346657
 
 ---
 
