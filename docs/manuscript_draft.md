@@ -5,32 +5,20 @@ Authors: Sahab Taali, Mahsima Hajiaboo, Dr Sommayye Heysiattalab.
 Target journal: **Psychophysiology**.
 
 > **Cover note for co-authors (delete before submission).** This is the
-> **integrated** draft that merges the ERP group-difference work and the
-> computational/deep-learning strand into a single paper (superseding the earlier
-> two-paper plan). All statistics, effect sizes, and figures are final and
-> reproducible from the repository. Three kinds of inline markers remain:
-> `[CITATION]`/`[REF]` where a domain reference is needed (being filled by task
-> G-CITE → `docs/citation_candidates.md`), `[AUTHOR INPUT]` where only the team
-> has the information (see `docs/coauthor_request.md`), and `[PENDING GPT: …]`
-> where a parallel analysis is still landing (Bayes factors, P300 specification
-> curve, hierarchical RL). To comment: open `paper.html` in Word (File > Open) or
-> import it into Google Docs, then use tracked changes.
-
-> **Section integration map (delete before submission).** How the four source
-> docs fold into this one manuscript:
-> - **Abstract / Intro** — integrated below (ERP + computational framing).
-> - **Methods** — merge `methods.md` (ERP/behaviour, §2.1–2.6 here) with
->   `methodology_dl.md` §5–8 as new subsections 2.7 (GRU sequence model + embedding),
->   2.8 (asymmetric RL model), 2.9 (EEGNet), 2.10 (chronotype-decoding evaluator +
->   fusion + continuous-MEQ), 2.11 (single-trial P300→risk coupling, C-A).
-> - **Results** — existing §3.1–3.6 (P300, behaviour, MEQ, robustness, classifier,
->   risky-choice) + new §3.7 GRU decoding, §3.8 super-additive fusion (**headline**),
->   §3.9 continuous-MEQ prediction, §3.10 RL mechanism, §3.11 EEGNet honest negative,
->   §3.12 single-trial coupling (C-A null → trait-level localisation).
-> - **Discussion** — merge with `discussion_dl.md` §2–5; drop its §8 two-paper
->   recommendation.
-> - **Supplementary** — exploratory high-dimensional ML, risky-choice baselines,
->   robustness battery tables, spec curve (G-E), hierarchical RL (G-D).
+> **integrated** draft merging the ERP group-difference work and the
+> computational/deep-learning strand into one paper (superseding the earlier
+> two-paper plan). All analyses are complete and integrated (Intro, Methods
+> §2.1–2.11, Results §3.1–3.12, Discussion §4.1–4.7, References); all statistics
+> match their source artifacts (`reports/clean/statcheck/report.md`, 30/30). Nine
+> DOI-verified citations are inserted; the only remaining inline markers are
+> `[AUTHOR INPUT]` — information only the team holds (ethics/IRB, recruitment,
+> EEG acquisition + preprocessing, task details, MEQ cutoff, preregistration,
+> CRediT/funding, data availability), all itemized in `docs/coauthor_request.md`,
+> plus one request for team-preferred chronotype-reward empirical citations. To
+> comment: open `docs/paper.docx` in Word (tracked changes) — it is regenerated
+> from this file with `python scripts/build_paper.py`. Supplementary material is
+> in `docs/supplementary.md`; consolidated main figures are
+> `docs/figures/fig_main_*`.
 
 ---
 
