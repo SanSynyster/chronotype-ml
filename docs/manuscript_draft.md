@@ -76,39 +76,68 @@ risky decision-making, EEG, multimodal fusion, individual differences.
 
 ## 1. Introduction
 
-Chronotype describes stable inter-individual variation in the timing of sleep,
-alertness, and activity, commonly assessed with the Morningness-Eveningness
+Chronotype describes stable inter-individual variation in the diurnal timing of
+sleep, alertness, and performance, commonly indexed by the Morningness-Eveningness
 Questionnaire (MEQ) and the Munich ChronoType Questionnaire (MCTQ) [CITATION:
-Horne & Ostberg 1976; Roenneberg et al.]. Beyond sleep timing, chronotype has
-been associated with differences in reward processing, impulsivity, and risky
-decision-making, with evening types frequently reported to show greater reward
-sensitivity and risk-taking [CITATION].
+Horne & Ostberg 1976; Roenneberg et al.]. It is more than a sleep-timing
+preference: chronotype is embedded in circadian physiology and has been linked to
+broad differences in affect, cognition, and self-regulation [CITATION]. Of
+particular relevance to decision-making, evening-type individuals are frequently
+reported to show greater reward sensitivity, higher impulsivity, and more
+risk-taking than morning types [CITATION], a profile that plausibly reflects
+differences in how the outcomes of choices — gains and losses — are evaluated. Yet
+most evidence for this link is behavioural or trait-questionnaire based, and the
+*neural* processing of decision feedback in morning versus evening types remains
+poorly characterized.
 
 Feedback during value-based decisions elicits well-characterized event-related
-potentials. The feedback-related negativity (FRN), a frontocentral component
-peaking around 250-300 ms, is sensitive to outcome valence and reward prediction
-error [CITATION: Miltner et al.; Holroyd & Coles]. The P300, a later
-parietal/posterior positivity, indexes motivational salience and the allocation
-of attention to outcomes [CITATION]. If chronotype reflects differences in how
-gains and losses are neurally evaluated, those differences should appear in the
-valence sensitivity of these feedback-locked components.
+potentials (ERPs) that dissociate distinct evaluative processes. The
+feedback-related negativity (FRN), a frontocentral deflection peaking ~250-300 ms
+after outcome onset, is sensitive to outcome valence and has been interpreted as a
+reward-prediction-error signal arising from midbrain-to-medial-frontal projections
+[CITATION: Miltner et al.; Holroyd & Coles]. The feedback P300, a later
+parietal/posterior positivity, scales with the motivational salience and subjective
+significance of outcomes and the allocation of attention to them [CITATION]. Because
+these components separate the rapid valence-coding and the later salience-weighting
+of feedback, they provide a principled window onto *how* individuals neurally
+evaluate gains and losses. If chronotype reflects differences in outcome
+evaluation, those differences should surface in the valence sensitivity of these
+feedback-locked components — most plausibly in the salience-weighting P300.
 
-Despite behavioural links between chronotype and risk, the feedback-locked
-neural signatures that distinguish morning and evening types during decision-
-making remain underexplored, and few studies combine event-related potentials
-with rigorous, interpretable machine learning to characterize chronotype. Here we
-test, in a single cohort, whether morning and evening chronotypes differ in
-feedback-related FRN and P300 responses and in behavioural adaptation to feedback
-during a risky-choice task. Our analytic approach is twofold and mutually
-validating: (i) an interpretable, leakage-aware machine-learning framework with
-nested cross-validation that classifies chronotype from combined behavioural and
-ERP features and exposes which features drive the prediction, and (ii) a classical
-group comparison of the same theory-driven features with the posterior P300 as the
-pre-specified neural hypothesis. The contribution is methodological as much as
-empirical: a transparent ML pipeline whose feature importance is interpreted
-against, and converges with, the univariate neural statistics. As a secondary
-question, we ask whether trial-level risky choice can be predicted from pre-choice
-value and choice history under a leakage-safe, participant-generalizing evaluation.
+Despite the behavioural links between chronotype and risk, the feedback-locked
+neural signatures that distinguish morning and evening types during decision-making
+are largely unknown, and existing individual-differences work rarely combines ERPs
+with rigorous, leakage-aware modelling of the *behaviour* those ERPs accompany.
+Characterizing a stable trait such as chronotype from neural and behavioural data
+is methodologically demanding in the modest samples typical of ERP studies:
+naive multivariate models readily overfit and leak information across the
+train/test boundary, inflating apparent effects. A convincing account therefore
+requires (i) theory-driven neural hypotheses tested with classical statistics,
+(ii) predictive models evaluated under strict, participant-generalizing,
+permutation-clean protocols, and (iii) an explicit test of whether behavioural and
+neural signals carry *convergent* or *redundant* information about the trait.
+
+Here we characterize chronotype during a feedback-based risky-choice task in a
+single cohort, integrating ERP, computational, and multimodal-fusion analyses under
+a uniformly leakage-safe, permutation-clean evaluation. We test three hypotheses.
+**H1 (neural):** morning and evening chronotypes differ in the feedback-locked
+posterior P300 response to outcome valence (loss versus gain), our pre-specified
+neural hypothesis, tested by classical group comparison with multiple-comparison
+control and corroborated against the continuous MEQ score. **H2 (behavioural):**
+chronotype is decodable from the *dynamics* of risky choice — how individuals adapt
+choices to feedback over time — captured by a causal recurrent model that learns
+temporal structure without hand-engineered history features. **H3 (convergence):**
+combining the behavioural dynamics with the validated ERP contrasts predicts
+chronotype *better than either modality alone*, which would indicate that the neural
+and behavioural expressions of chronotype carry partly independent information. To
+sharpen interpretation we further ask (a) whether an interpretable reinforcement-
+learning model can localise the behavioural difference to specific learning or
+choice-consistency parameters, (b) whether end-to-end deep learning recovers
+chronotype from single-trial EEG, and (c) whether the neural effect operates as a
+within-subject, single-trial coupling between feedback P300 and subsequent choice
+or as a between-subject trait. As a secondary question, we assess how far
+trial-level risky choice itself is predictable from pre-choice value and choice
+history under participant-generalizing evaluation.
 
 ---
 
