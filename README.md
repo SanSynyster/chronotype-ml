@@ -81,6 +81,16 @@ pip install -r requirements.txt
 
 This project was run with the local virtual environment at `env/`.
 
+Bayesian and hierarchical analyses use a separate Python 3.11 environment, not
+`env_dl/`:
+
+```bash
+python3.11 -m venv env_bayes
+source env_bayes/bin/activate
+pip install -r requirements-bayes.txt
+python -c "import pymc"
+```
+
 ## Workflow
 
 Rebuild from local raw data and build clean datasets:

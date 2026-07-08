@@ -46,3 +46,4 @@ archive/legacy/models_ml_baselines/
 archive/legacy/reports_*/
 archive/legacy/*.csv
 env_dl/
+env_bayes/
