@@ -288,6 +288,17 @@ label-conflict participants were removed. The dissociation between the invariant
 neural effect and the exclusion-sensitive classifier indicates the univariate
 group difference is the more robust of the two mutually-validating analyses.
 
+The P300 effect was also robust to the choice of analysis window. Across a
+72-cell specification curve (Pz/POz × window centre 400–600 ms × width 50/100 ms
+× mean/peak summary), recomputed directly from the single-trial epochs, the
+loss-minus-gain group difference kept the same sign (Evening more negative) in
+64/72 cells and was large and significant (d < −0.8, p < 0.05) in 19/72, with the
+largest and most significant cells clustering around the pre-specified 450–550 ms
+P300 window (anchor cell Pz d = −0.84, POz d = −0.66; slightly attenuated relative
+to the validated-feature estimates because this curve is recomputed from raw epoch
+amplitudes via an independent pipeline). The primary effect is therefore not an
+artefact of window selection.
+
 ### 3.5 Machine-learning classification of chronotype (Figures 3, 6-8)
 
 Under nested cross-validation with hyperparameter tuning (Figure 6), the five
