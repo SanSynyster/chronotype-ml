@@ -50,9 +50,11 @@ def _figure_block(figdir: Path) -> str:
 def _prepare_markdown(md: Path, figdir: Path, build_dir: Path) -> Path:
     build_dir.mkdir(parents=True, exist_ok=True)
     text = md.read_text(encoding="utf-8")
-    meta = "---\nnocite: '@*'\n---\n\n"
+    # The manuscript already contains a self-contained APA-7 "## References" list
+    # and plain author-year in-text citations, so we do NOT run citeproc (that would
+    # append a duplicate bibliography). Just render the markdown + figures to docx.
     tmp = build_dir / "paper_with_figures.md"
-    tmp.write_text(meta + text + _figure_block(figdir) + "\n# References\n\n", encoding="utf-8")
+    tmp.write_text(text + _figure_block(figdir), encoding="utf-8")
     return tmp
 
 
@@ -66,11 +68,6 @@ def _run_pandoc(src: Path, out: Path, bib: Path, csl: str) -> None:
         "markdown+pipe_tables+tex_math_dollars",
         "--to",
         "docx",
-        "--citeproc",
-        "--bibliography",
-        bib.as_posix(),
-        "--csl",
-        csl,
         "--resource-path",
         ".:docs:docs/figures",
         "--output",
