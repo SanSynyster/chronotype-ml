@@ -231,6 +231,77 @@ repeated excluding (a) participant 1013 (an EEG/trigger quality-control case),
 (b) the two label-conflict participants (1027, 1036), and (c) all three together
 (`scripts/sensitivity_matrix.py`).
 
+### 2.7 Recurrent sequence model of choice dynamics (GRU)
+
+To capture how participants adapt risk-taking over time, a causal (unidirectional)
+single-layer gated recurrent unit (GRU; hidden size 64) was trained to predict
+trial-level risky choice from the current pre-choice context plus the previous
+trial's outcome (20 features), with no hand-engineered rolling-history features so
+the network had to learn temporal structure itself. The recurrence is causal, so
+the prediction at trial *t* depends only on trials ≤ *t*. Training used
+binary cross-entropy over valid time steps (Adam, lr = 3×10⁻³, 40 epochs, seed 0)
+and was evaluated with participant-grouped 5-fold CV, standardizing features on
+training participants only. For each held-out participant, the GRU hidden state
+was averaged across trials to yield a 64-dimensional, out-of-fold, chronotype-
+agnostic **behavioural embedding** used downstream (`scripts/dl/risky_choice_seq.py`).
+
+### 2.8 Asymmetric reinforcement-learning model
+
+To obtain interpretable mechanistic parameters, a reward-learning model was fit to
+each participant's free-trial choices. Because the sign of each box was hidden and
+random, we modelled outcome-driven updating of risk preference rather than stimulus
+value: two options (safe = magnitude 5, risky = magnitude 25) with action values Q,
+choice rule P(risky) = logistic(β·(Q_risky − Q_safe) + bias), and chosen-option
+update Q ← Q + α·(r − Q) using separate learning rates for gains and losses
+(α_gain, α_loss), with r the signed chosen value scaled to [−1, 1]. Parameters
+(α_gain, α_loss, β, bias, and derived asymmetry α_loss − α_gain) were fit by
+maximum likelihood (L-BFGS-B, 8 restarts; `scripts/dl/rl_model.py`) and, as a
+robustness check, refit in a Bayesian **hierarchical partial-pooling** model with a
+chronotype group-level offset on each parameter, sampled with NUTS
+(`scripts/dl/rl_hierarchical.py`).
+
+### 2.9 EEG deep learning (EEGNet)
+
+EEGNet (Lawhern et al., 2018) [CITATION], a compact convolutional network, was
+applied to the cleaned single-trial epochs (64 × 251). It was trained cross-subject
+(GroupKFold over participants) to decode single-trial feedback **valence**
+(loss vs gain) — a chronotype-agnostic positive control — with per-channel z-scoring
+on training statistics (Adam, lr = 10⁻³, weight decay 10⁻³, 25 epochs). Penultimate-
+layer features were aggregated per participant (mean, and a loss-minus-gain contrast)
+to form learned EEG embeddings (`scripts/dl/eegnet.py`, `eeg_chronotype.py`).
+
+### 2.10 Chronotype-decoding evaluator, fusion, and continuous-MEQ prediction
+
+All embeddings (behavioural, EEG, RL, fused) were evaluated for chronotype
+prediction with one shared, permutation-clean procedure: a StandardScaler → PCA →
+L2-logistic pipeline under nested CV (inner 4-fold grid search over PCA components
+and logistic C; outer leave-one-participant-out), yielding one out-of-fold score per
+participant. Inference used a 1000-iteration label-permutation test with the *entire*
+nested procedure re-run per permutation; out-of-fold scores were also correlated with
+the continuous MEQ. Multimodal **fusion** concatenated the GRU behavioural embedding
+with the six validated ERP contrast features (behaviour-only and ERP-only evaluated
+identically). To avoid dichotomizing the trait, the continuous MEQ score was
+additionally predicted by nested leave-one-out Ridge regression (predicted-vs-observed
+Pearson r, 1000-permutation p). Robustness of the fused result was assessed by
+participant-level bootstrap CI, pre-defined exclusion scenarios, and leave-one-subject-
+out influence (`scripts/dl/multimodal_chronotype.py`, `continuous_meq.py`,
+`robustness.py`).
+
+### 2.11 Single-trial P300 → next-choice coupling
+
+To test whether the neural effect operates within-subject at the single-trial level,
+each trial *t* was paired to the following trial *t*+1 (leakage-safe: the feedback-
+locked P300 at *t* follows the *t* choice and precedes the *t*+1 choice). A
+per-participant logistic slope of next-trial risky choice on the within-participant
+z-scored trial-*t* P300 (overall, and a valence-resolved P300×loss interaction) was
+compared between chronotypes (two-stage Mann-Whitney + bootstrap d), with a
+confirmatory Binomial mixed model carrying a P300×chronotype interaction and random
+P300 slopes (`scripts/dl/p300_risk_coupling.py`).
+
+All deep-learning/computational analyses ran in a separate environment (PyTorch,
+MNE-Python, scikit-learn, PyMC), with fixed seed 0; see `docs/methodology_dl.md` for
+full detail.
+
 ---
 
 ## 3. Results
