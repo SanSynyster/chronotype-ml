@@ -142,8 +142,10 @@ def _insert_figures_inline(text: str) -> str:
 def main() -> None:
     BUILD.mkdir(parents=True, exist_ok=True)
     raw = MD.read_text(encoding="utf-8")
-    text = _remap_figures(raw)
-    body, title, authors = _strip_scaffolding(text)
+    # The working draft is already numbered with the final 5 main figures +
+    # Supplementary S-items, so no callout remapping is applied (running the old
+    # 1-10 -> 1-5 remap here would corrupt the already-correct numbering).
+    body, title, authors = _strip_scaffolding(raw)
     body = _insert_figures_inline(body)
 
     meta = f"---\ntitle: |\n  {title}\nauthor: |\n  {authors}\n---\n\n"

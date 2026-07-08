@@ -302,7 +302,7 @@ the Fz FRN error-minus-correct contrast had d = -0.60 and FDR p = 0.14. Bayes
 factors were most consistent with a null group difference at FCz (BF01 = 2.46) and
 Cz (BF01 = 3.17), while the Fz result remained inconclusive (BF01 = 0.82).
 Equivalence tests with bounds of ±0.5 SD did not establish formal equivalence (for
-example, Fz TOST p = 0.43). Thus, the FRN results do not support a chronotype
+example, Fz TOST p = 0.43; Supplementary Tables S7 and S8). Thus, the FRN results do not support a chronotype
 effect, but the sample is not large enough to rule out medium-sized FRN differences.
 
 ### 3.3 Continuous MEQ association (Figure 2)
@@ -321,13 +321,17 @@ direction, but the group contrast is estimated more precisely in this dataset.
 The posterior P300 group difference was stable across participant exclusions. In
 the full sample and in all three exclusion scenarios, the Pz loss-minus-gain effect
 remained close to d = -1.0 (range -1.00 to -1.07), with Welch p < 0.011 and a 95%
-confidence interval excluding zero in every case. POz showed the same pattern. The
-participant-level classifier was more sample-sensitive: its permutation p increased
-from 0.034 in the full sample to 0.38 when the two label-conflict participants were
-removed. The univariate P300 contrast is therefore the more stable result.
+confidence interval excluding zero in every case. POz showed the same pattern
+(Supplementary Table S3). By contrast, the participant-level classifier was more
+sample-sensitive: in the exclusion-sensitivity analysis its permutation p rose from
+0.034 in the full sample to 0.38 when the two label-conflict participants were
+removed (this is the exclusion-tracking permutation test, distinct from the primary
+nested-CV permutation test of the classifier reported in Section 3.5, p = 0.020).
+The univariate P300 contrast is therefore the more stable result.
 
 The P300 result was not dependent on one narrow analysis window. A 72-cell
-specification curve varied channel (Pz or POz), window centre (400-600 ms), window
+specification curve (Supplementary Table S1 and Figure S1) varied channel (Pz or
+POz), window centre (400-600 ms), window
 width (50 or 100 ms), and summary measure (mean or peak). The loss-minus-gain group
 difference had the expected sign in 64 of 72 cells. Nineteen cells had both a large
 effect (d < -0.8) and p < 0.05. The strongest cells clustered around the
@@ -340,21 +344,24 @@ slightly smaller than the validated-feature estimates (Pz d = -0.84, POz d =
 The theory-driven 12-feature set also predicted chronotype in nested
 cross-validation. Among the five classifiers, the pre-specified L2 logistic
 regression performed best on balanced accuracy (0.717 +/- 0.14), with accuracy =
-0.715, ROC AUC = 0.750, sensitivity = 0.695, and specificity = 0.738. The random
+0.715, ROC AUC = 0.750, and, averaged across outer folds, Morning sensitivity =
+0.695 and specificity = 0.738. The random
 forest had the highest AUC (0.772), but the primary model was retained as planned.
 Its selected regularization was strong (C = 0.01), consistent with the small sample.
 
 The primary model correctly labelled 28 of 39 participants when out-of-fold
-predictions were pooled (accuracy = 0.718; sensitivity = 0.75; specificity = 0.68;
-pooled ROC AUC = 0.79). A label-permutation test that re-fit the full nested
+predictions were pooled (pooled accuracy = 0.718; Morning sensitivity = 0.75;
+specificity = 0.68; pooled ROC AUC = 0.79; confusion matrix in Supplementary
+Table S5). The pooled sensitivity/specificity differ slightly from the fold-averaged
+values above because they are computed on the pooled out-of-fold predictions. A label-permutation test that re-fit the full nested
 pipeline on each permutation indicated above-chance performance (observed balanced
 accuracy = 0.717, null mean = 0.509, p = 0.020).
 
 The model's strongest standardized coefficient was Pz P300 loss-minus-gain (+0.34,
 predicting Morning), followed by loss-error risky rate (-0.31), gain-correct risky
 rate (-0.24), and POz P300 loss-minus-gain (+0.24). Held-out permutation importance
-showed the same ordering. Thus, the classifier relied most strongly on the same
-posterior P300 contrast identified in the univariate analysis.
+showed the same ordering (Supplementary Table S6). Thus, the classifier relied most
+strongly on the same posterior P300 contrast identified in the univariate analysis.
 
 The predictive result should be interpreted cautiously. No pre-specified feature
 pack survived FDR correction across the feature-pack family (best raw permutation p
@@ -367,7 +374,7 @@ multivariate check on the neural result, not a diagnostic model.
 ### 3.6 Secondary trial-level risky-choice prediction
 
 Participant-grouped models predicted trial-level risky choice modestly but above
-simple baselines. The best models reached balanced accuracy of approximately 0.587
+simple baselines (Supplementary Table S4). The best models reached balanced accuracy of approximately 0.587
 (ROC AUC approximately 0.62) across 10,669 free-choice trials. This exceeded the
 majority-class baseline (0.50) and the previous-choice-persistence baseline (0.554),
 and it approached the participant-mean oracle ceiling (0.604) without using data
@@ -435,9 +442,9 @@ divergences), but the α_gain group contrast collapsed to approximately zero
 1.28]). The only remaining tendency was weaker loss learning in Evening
 participants (α_loss contrast = -0.012, HDI [-0.032, 0.002]; learning-asymmetry
 P(contrast > 0) = 0.06). MLE and hierarchical subject-level estimates were weakly
-correlated (α_loss r = 0.02, β r = 0.13, α_gain r = 0.45). Given the limited number
-of free trials and the hidden, random signs of the boxes, these parameters were not
-identified well enough to support a mechanistic conclusion.
+correlated (α_loss r = 0.02, β r = 0.13, α_gain r = 0.45; Supplementary Table S2).
+Given the limited number of free trials and the hidden, random signs of the boxes,
+these parameters were not identified well enough to support a mechanistic conclusion.
 
 ### 3.11 EEGNet decoded feedback valence but not chronotype
 
@@ -448,7 +455,7 @@ information. The same learned representations did not predict chronotype. The
 mean-pooled EEG embedding had AUC = 0.426 (p = 0.61), and the loss-minus-gain
 contrast embedding had AUC = 0.389 (p = 0.71). A density-ratio Bayes factor based on
 the permutation null was weakly informative (BF01 approximately 1.2), partly because
-the observed AUCs were slightly below chance. The permutation tests are therefore
+the observed AUCs were slightly below chance (Supplementary Table S7). The permutation tests are therefore
 the clearest summary: learned EEG embeddings did not recover chronotype in this
 sample. The positive-control valence AUC of 0.64 comes from the canonical EEGNet run
 with 30 training epochs and 5-fold participant-grouped cross-validation; a separate
@@ -513,7 +520,7 @@ affect a later feedback-evaluation process indexed by P300, not the earlier
 valence- or prediction-error-related process indexed by the FRN (Holroyd & Coles,
 2002; Sambrook & Goslin, 2015).
 
-### 4.3 Combining Behavioural and Neural Evidence
+### 4.3 Combining behavioural and neural evidence
 
 The strongest support for the interpretation comes from combining behavioural and
 neural evidence. Chronotype was predicted from risky-choice dynamics alone (GRU AUC
