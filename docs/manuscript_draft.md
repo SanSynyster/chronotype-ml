@@ -254,7 +254,13 @@ rate d = 0.80; gain-correct risky rate d = 0.77; all Welch p < 0.025). These
 effects did not survive FDR correction, and their effect-size CIs included small
 effects, consistent with the study being underpowered for medium effects.
 Frontocentral FRN contrasts did not differ significantly between groups
-(e.g. Fz FRN error-minus-correct d = -0.60, FDR p = 0.14).
+(e.g. Fz FRN error-minus-correct d = -0.60, FDR p = 0.14). Bayes factors were
+consistent with the absence of an FRN group difference at central sites (FCz
+BF01 = 2.46, Cz BF01 = 3.17 — moderate evidence for the null) while remaining
+inconclusive frontally (Fz BF01 = 0.82). Equivalence tests (TOST, bounds ±0.5 SD)
+on the loss-minus-gain FRN contrasts could not formally establish equivalence
+(e.g. Fz TOST p = 0.43), consistent with the study being underpowered to bound
+medium effects rather than with a demonstrated null.
 
 ### 3.3 Continuous MEQ association (Figure 5)
 
@@ -400,8 +406,14 @@ AUC 0.389). At N = 39 a network cannot *learn* the subtle subject-level chronoty
 difference from single trials, even though a small set of theory-driven, FDR-
 validated ERP contrasts captures it (§3.8). We report this transparently: for
 small-sample individual-differences EEG, validated low-dimensional features can
-outperform end-to-end representation learning. [PENDING GPT: Bayes factor for the
-EEGNet-chronotype null (task G-B) to quantify evidence for chance-level decoding.]
+outperform end-to-end representation learning. Both learned embeddings decoded
+chronotype at chance under permutation (mean AUC 0.426, p = 0.61; contrast AUC
+0.389, p = 0.71); a permutation-null density-ratio Bayes factor was only weakly
+informative (BF01 ≈ 1.2), because the observed AUCs fell slightly below chance,
+so the non-significant permutation test is the clearer statement of the null.
+[AUTHOR INPUT: the Bayes-factor sanity run recomputed the positive-control
+valence AUC as 0.59 vs the pipeline's 0.64 — reconcile the two runs (seed/epoch
+subset) before submission; the manuscript reports the established 0.64.]
 
 ### 3.12 The chronotype effect is trait-level, not a single-trial coupling (Figure 10)
 
