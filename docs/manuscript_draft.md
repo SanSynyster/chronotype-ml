@@ -9,25 +9,24 @@ Target journal: **Psychophysiology**.
 ## Abstract
 
 Chronotype has been associated with reward sensitivity and risky decision-making,
-but little is known about how morning and evening types process decision feedback
-at the neural level. We recorded EEG from 39 participants (19 Evening, 20 Morning)
-during a risky decision-making task with gain and loss feedback. Chronotype was
-examined using feedback-locked event-related potentials, behavioural sequence
-models, and multimodal analyses with participant-generalizing validation. The
-clearest neural difference was in the posterior P300. The parietal loss-minus-gain
-contrast separated Morning and Evening groups with large effects (Pz Cohen's d =
--1.04, FDR p = 0.034; POz d = -0.92, FDR p = 0.045), remained stable across
-participant-exclusion analyses (d approximately -1.0, p < 0.011 throughout), and
-showed the same direction of association with continuous MEQ score. Behaviour carried
-convergent information: out-of-fold scores from a causal GRU model of risky-choice
-dynamics distinguished Morning and Evening participants without EEG (ROC AUC 0.713,
-permutation p = 0.027). Out-of-fold scores that combined the behavioural embedding
-with the validated ERP contrasts separated the groups more strongly (AUC 0.797, p =
-0.004; bootstrap 95% CI [0.64, 0.92]) and tracked the continuous MEQ score (r =
-0.34, p = 0.027), indicating that behavioural dynamics and feedback ERPs carry
-partly independent, rather than diagnostic, information about chronotype. That the
-same measures related to continuous MEQ score is consistent with a graded,
-dimensional trait rather than a strict dichotomy. An asymmetric
+and behavioural and FRN effects in the present cohort have been reported previously.
+Here we analysed the same 39-participant cohort (19 Evening, 20 Morning) as a
+computational and multivariate follow-up focused on posterior P300 contrasts,
+behavioural sequence models, and participant-generalizing validation. The clearest
+neural difference was in the posterior P300. The parietal loss-minus-gain contrast
+separated Morning and Evening groups with large effects (Pz Cohen's d = -1.04, FDR p
+= 0.034; POz d = -0.92, FDR p = 0.045), remained stable across participant-exclusion
+analyses (d approximately -1.0, p < 0.011 throughout), and showed the same direction
+of association with continuous MEQ score. Behaviour carried convergent information:
+out-of-fold scores from a causal GRU model of risky-choice dynamics distinguished
+Morning and Evening participants without EEG (ROC AUC 0.713, permutation p = 0.027).
+Out-of-fold scores that combined the behavioural embedding with the validated ERP
+contrasts separated the groups more strongly (AUC 0.797, p = 0.004; bootstrap 95% CI
+[0.64, 0.92]) and tracked the continuous MEQ score (r = 0.34, p = 0.027), indicating
+that behavioural dynamics and feedback ERPs carry partly independent, rather than
+diagnostic, information about chronotype. That the same measures related to
+continuous MEQ score is consistent with a graded, dimensional trait rather than a
+strict dichotomy. An asymmetric
 reinforcement-learning analysis suggested possible differences in outcome-specific
 learning and choice consistency, but these estimates were weak and did not survive
 hierarchical partial pooling. Two boundary analyses constrained the
@@ -62,6 +61,13 @@ less clear is whether these behavioural and trait-level differences are visible 
 the electrophysiology of feedback processing itself. [AUTHOR INPUT: the team may
 add or substitute preferred chronotype-reward empirical citations here.]
 
+This cohort has already been reported in a univariate ERP study by Hajiaboo et al.
+(2025), which established greater behavioural risk-taking in Evening than Morning
+participants, faster responding and post-error effects, and FRN-amplitude
+associations with chronotype. The present manuscript is therefore positioned as a
+computational and multivariate follow-up to that publication, not as an independent
+first report of the behavioural or FRN findings.
+
 Feedback during value-based decisions evokes several event-related potentials that
 index different stages of outcome evaluation. The feedback-related negativity
 (FRN), a frontocentral component peaking about 250-300 ms after feedback, is
@@ -88,16 +94,19 @@ participant-generalizing validation. If the neural and behavioural measures add 
 one another, they would suggest convergent but non-redundant expressions of the same
 trait.
 
-The present study examined these questions in a single cohort performing a
-feedback-based risky-choice task. We tested whether Morning and Evening chronotypes
-differed in the posterior P300 response to loss versus gain feedback. We then asked
-whether chronotype could be decoded from the dynamics of risky choice using a causal
-recurrent model, and whether combining behavioural dynamics with validated ERP
-features improved prediction beyond either source alone. Additional analyses tested
-whether an interpretable reinforcement-learning model could explain the behavioural
-difference, whether EEGNet could recover chronotype from single-trial EEG, and
-whether trial-to-trial P300 variation predicted subsequent risky choice differently
-by chronotype.
+The present study examined these questions in the same cohort performing the same
+feedback-based risky-choice task. The novel focus was a posterior P300
+loss-minus-gain contrast and a computational strand absent from the prior report:
+GRU behavioural decoding, brain-behaviour fusion, continuous-MEQ prediction,
+reinforcement-learning analysis, EEGNet, and leakage-safe/permutation-clean machine
+learning. We tested whether Morning and Evening chronotypes differed in the posterior
+P300 response to loss versus gain feedback. We then asked whether chronotype could be
+decoded from the dynamics of risky choice using a causal recurrent model, and whether
+combining behavioural dynamics with validated ERP features improved prediction
+beyond either source alone. Additional analyses tested whether an interpretable
+reinforcement-learning model could explain the behavioural difference, whether
+EEGNet could recover chronotype from single-trial EEG, and whether trial-to-trial
+P300 variation predicted subsequent risky choice differently by chronotype.
 
 ---
 
@@ -105,9 +114,19 @@ by chronotype.
 
 ### 2.1 Participants
 
-Thirty-nine participants were analysed (19 Evening, 20 Morning chronotype).
-[AUTHOR INPUT: recruitment, age/sex distribution, inclusion/exclusion criteria,
-ethics/IRB approval and consent statement.]
+Participants were recruited at the University of Tabriz, Iran, for the previously
+published ERP study of chronotype and risky decision-making (Hajiaboo et al., 2025)
+[confirm: same 39-participant subset]. Thirty-nine right-handed participants with
+normal or corrected-to-normal vision were analysed (19 Evening, 20 Morning
+chronotype), after exclusion of five participants from the EEG experiment sample
+(Hajiaboo et al., 2025) [confirm: same 39-participant subset]. Participants were
+aged 18-31 years. The published report implies a retained sex/gender split of 19
+female and 20 male participants overall (Morning: 11 female, 9 male; Evening: 8
+female, 11 male) after the reported artifact exclusions, but this should be confirmed
+against the exact 39-participant subset used here [confirm: sex/gender split and same
+39-participant subset]. The study was approved by the University of Tabriz ethics
+committee of Medical Sciences (IR.TABRIZU.REC.1403.130), and all participants
+provided written informed consent (Hajiaboo et al., 2025).
 
 ### 2.2 Sample and statistical power
 
@@ -131,15 +150,36 @@ with the higher revealed signed value had been chosen), producing four feedback
 conditions: Gain-Correct, Gain-Error, Loss-Correct, and Loss-Error. Valence
 (gain vs loss) therefore indexes the affective outcome of the choice, and
 correctness indexes whether that choice was, in hindsight, the better of the two
-options. [AUTHOR INPUT: number of trials/blocks, magnitudes used, stimulus and
-feedback timing, response mapping, and the free-versus-forced trial split.] EEG was recorded during the task, and feedback-locked
+options. Each trial began with a 500 ms fixation, followed by two options displaying
+magnitudes of 5 or 25. Participants responded with the F or J key to choose the left
+or right option. One second after the response, gain/loss signs were revealed and the
+chosen option was outlined in red or green for 1500 ms, followed by a 1000 ms
+inter-trial interval. The task comprised 16 blocks of 24 trials, for 384 trials in
+total (Hajiaboo et al., 2025) [confirm: same 39-participant subset]. Forced [5/5]
+and [25/25] trials were excluded from choice analyses, yielding approximately 289
+free-choice trials per participant (Hajiaboo et al., 2025) [confirm: same
+39-participant subset]. EEG was recorded during the task, and feedback-locked
 single-trial amplitudes were exported by channel and time window. EEG acquisition,
 preprocessing, and ERP measurement follow the reporting recommendations of Keil et
-al. (2014). [AUTHOR INPUT: EEG system, electrode montage, reference, sampling rate,
-filtering, artifact rejection, ERP windowing.]
+al. (2014). Sessions were run between 12:00 and 16:00. EEG was acquired with a
+64-channel waveguard cap (ANT Neuro, Enschede, Netherlands) configured according to
+the international 10-10 system, with ground at AFz, online band-pass filtering at
+0.3-100 Hz, 1 kHz sampling, and electrode impedances kept below 10 kΩ (Hajiaboo et
+al., 2025) [confirm: same 39-participant subset]. Preprocessing was conducted in
+MATLAB R2019b using EEGLAB v2024.0 and ERPLAB v12.00. Data were filtered offline at
+0.1-30 Hz, segmented from 200 ms before to 800 ms after feedback with a 200 ms
+pre-feedback baseline, and cleaned for movement and eye-related artifacts using ICA
+(Hajiaboo et al., 2025) [confirm: same 39-participant subset]. The present analyses
+used the exported single-trial features and retained the analysis windows specified
+for this manuscript: FRN, 360-430 ms; P300, 450-550 ms.
 
 ### 2.4 Chronotype labels and data linkage
 
+Chronotype was measured with the Morningness-Eveningness Questionnaire (MEQ; Horne &
+Ostberg, 1976) and the Munich ChronoType Questionnaire (MCTQ; Hajiaboo et al., 2025;
+Roenneberg et al., 2003). Following the published classification rule, MEQ scores <=
+41 were classified as Evening, MEQ scores >= 59 as Morning, and scores from 42 to 58
+as intermediate (Hajiaboo et al., 2025) [confirm: same 39-participant subset].
 Primary chronotype labels were Morning and Evening categories from study metadata.
 The metadata workbooks did not contain the same explicit participant identifier as
 the behavioural files, so metadata rows were linked to behavioural UserIDs by an
@@ -156,8 +196,8 @@ Horne-Ostberg direction (Evening mean 37.3; Morning mean 57.7; Horne & Ostberg,
 the intermediate MEQ band (42-58) were consistent with their binary label. The two
 raw-behaviour conflict cases had decisive MEQ scores supporting the primary label
 (1027 MEQ = 61, Morning; 1036 MEQ = 27, Evening). Twelve participants fell in the
-intermediate range, where a binary classification is less sharp.
-[AUTHOR INPUT: confirm the binary cutoff/median-split rule.]
+intermediate range, where a binary classification is less sharp. [confirm: same
+39-participant subset]
 
 ### 2.5 Feature engineering
 
@@ -320,20 +360,26 @@ feature family (FDR p = 0.034 and 0.045).
 
 ### 3.2 Supporting: behavioural risk-taking
 
-Evening participants tended to choose the risky option more often than Morning
-participants. The largest uncorrected effects were for loss-error risky rate (d =
-0.81), free risky rate (d = 0.80), and gain-correct risky rate (d = 0.77), with all
-Welch p-values below 0.025. These effects did not survive FDR correction, and their
-confidence intervals remained compatible with small effects. The behavioural group
-differences are therefore supportive rather than primary.
+Consistent with the previously reported behavioural difference in this cohort
+(Hajiaboo et al., 2025), Evening participants tended to choose the risky option more
+often than Morning participants. In the present feature set, the largest uncorrected
+effects were for loss-error risky rate (d = 0.81), free risky rate (d = 0.80), and
+gain-correct risky rate (d = 0.77), with all Welch p-values below 0.025. These
+effects did not survive FDR correction, and their confidence intervals remained
+compatible with small effects. The behavioural group differences are therefore
+supportive prior context rather than a primary novel finding of this manuscript.
 
-Frontocentral FRN contrasts did not show reliable group differences. For example,
-the Fz FRN error-minus-correct contrast had d = -0.60 and FDR p = 0.14. Bayes
-factors were most consistent with a null group difference at FCz (BF01 = 2.46) and
-Cz (BF01 = 3.17), while the Fz result remained inconclusive (BF01 = 0.82).
-Equivalence tests with bounds of ±0.5 SD did not establish formal equivalence (for
-example, Fz TOST p = 0.43; Supplementary Tables S7 and S8). Thus, the FRN results do not support a chronotype
-effect, but the sample is not large enough to rule out medium-sized FRN differences.
+Frontocentral FRN difference contrasts did not show reliable group differences in
+the present feature set. For example, the Fz FRN error-minus-correct contrast had d =
+-0.60 and FDR p = 0.14. Bayes factors were most consistent with a null group
+difference at FCz (BF01 = 2.46) and Cz (BF01 = 3.17), while the Fz result remained
+inconclusive (BF01 = 0.82). Equivalence tests with bounds of +/-0.5 SD did not
+establish formal equivalence (for example, Fz TOST p = 0.43; Supplementary Tables S7
+and S8). These contrast-level results should not be read as contradicting the
+published FRN-chronotype finding in the same cohort, which concerned FRN amplitudes
+and MEQ/MCTQ associations at Fz and FCz across feedback conditions (Hajiaboo et al.,
+2025). The present null is specific to our selected difference contrasts and remains
+underpowered for medium-sized FRN contrast effects.
 
 ### 3.3 Continuous MEQ association (Figure 2)
 
@@ -520,20 +566,25 @@ from P300 to the next choice.
 
 ## 4. Discussion
 
+[AUTHOR INPUT: senior-author confirmation of positioning relative to Hajiaboo et al.
+(2025) — Dr Heysiattalab is an author on both papers; the published paper spells the
+name as Heysieattalab.]
+
 ### 4.1 Overview
 
-In a single cohort of 39 participants, chronotype was related to both the neural and
-behavioural evaluation of decision feedback. Four findings anchor the account.
-First, Morning and Evening chronotypes differed in the feedback-locked posterior
-P300 to outcome valence. Second, chronotype could be predicted from risky-choice
-dynamics alone. Third, combining behavioural dynamics with validated ERP contrasts
-predicted chronotype better than either modality alone and also predicted continuous
-MEQ score. Fourth, two planned negative tests, end-to-end EEG decoding and
-within-subject single-trial coupling, placed the effect at the between-participant
-trait level rather than at the level of moment-to-moment neural control of choice.
-All predictive analyses used participant-generalizing cross-validation and
-permutation testing. The main evidentiary value is the agreement across distinct
-analyses, not the accuracy of any single model.
+This manuscript is a computational and multivariate follow-up to the prior
+univariate ERP report on the same cohort (Hajiaboo et al., 2025). In that context,
+four findings anchor the present account. First, Morning and Evening chronotypes
+differed in the feedback-locked posterior P300 loss-minus-gain contrast. Second,
+chronotype could be predicted from risky-choice dynamics alone. Third, combining
+behavioural dynamics with validated ERP contrasts predicted chronotype better than
+either modality alone and also predicted continuous MEQ score. Fourth, two planned
+negative tests, end-to-end EEG decoding and within-subject single-trial coupling,
+placed the effect at the between-participant trait level rather than at the level of
+moment-to-moment neural control of choice. All predictive analyses used
+participant-generalizing cross-validation and permutation testing. The main
+evidentiary value is the agreement across distinct analyses, not the accuracy of any
+single model.
 
 ### 4.2 The posterior P300 and the neural evaluation of feedback
 
@@ -541,8 +592,8 @@ The pre-specified neural hypothesis was supported. Evening participants showed a
 more negative loss-minus-gain P300 contrast at posterior sites, with a large effect
 (d approximately 1.0) that survived FDR correction. The effect was stable across
 participant-exclusion analyses and across the 72-cell specification curve, and it
-was directionally consistent with the continuous MEQ analysis. Because posterior
-P300 amplitude is linked to motivational salience and subjective outcome
+was directionally consistent, although weak, in the continuous MEQ analysis. Because
+posterior P300 amplitude is linked to motivational salience and subjective outcome
 significance (Polich, 2007; Yeung & Sanfey, 2004), this pattern suggests that
 chronotype is related to how losses and gains are weighted during feedback
 evaluation.
@@ -551,21 +602,23 @@ The direction of the effect fits prior work showing greater risk-taking,
 reward-sensitivity, and impulsivity in Evening types (Adan et al., 2010; Killgore,
 2007; Muro et al., 2012), as well as chronotype-related differences in reward brain
 function (Hasler et al., 2013; Hasler & Clark, 2013) and circadian modulation of
-reward motivation (Murray et al., 2009). A smaller posterior-P300 response to losses
-than gains in Evening participants is consistent with a profile in which losses
-carry less relative weight during feedback evaluation (cf. loss aversion; Kahneman &
-Tversky, 1979). [AUTHOR INPUT: the team may sharpen this direction-of-effect link
-to the specific prior findings it wishes to foreground.] The dissociation between the P300 and the FRN is theoretically informative rather
-than merely a pattern of one significant and one null test. The FRN, and its
-positive-going counterpart the reward positivity, indexes a fast, relatively
-automatic valence and reward-prediction-error evaluation of outcomes (Holroyd &
-Coles, 2002; Proudfit, 2015; Sambrook & Goslin, 2015), whereas the posterior P300
-indexes a later, more elaborative weighting of outcome salience and significance
-(Polich, 2007; Yeung & Sanfey, 2004). That chronotype was expressed in the P300 but
-not the FRN suggests the difference lies in how much motivational significance is
-assigned to gains relative to losses during this later appraisal stage, rather than
-in the initial registration of outcome valence — a more specific account than a
-general claim that chronotype affects feedback processing.
+reward motivation (Murray et al., 2009). It is also consistent with the behavioural
+risk-taking difference previously reported in this cohort (Hajiaboo et al., 2025). A
+smaller posterior-P300 response to losses than gains in Evening participants is
+consistent with a profile in which losses carry less relative weight during feedback
+evaluation (cf. loss aversion; Kahneman & Tversky, 1979). [AUTHOR INPUT: the team
+may sharpen this direction-of-effect link to the specific prior findings it wishes to
+foreground.]
+
+The prior FRN findings and the present P300 contrast address different quantities.
+Hajiaboo et al. (2025) reported chronotype-related FRN amplitude effects and
+MEQ/MCTQ-FRN associations at Fz and FCz, with MEQ models reaching R2 values of about
+0.38. The present manuscript did not retest that same amplitude-MEQ question as its
+primary neural feature; it evaluated FRN error-minus-correct and loss-minus-gain
+difference contrasts. A null or inconclusive result for those FRN contrasts is
+therefore not in tension with the published amplitude-MEQ association. The safer
+interpretation is that the novel group-separating feature isolated here was the
+posterior P300 loss-minus-gain contrast.
 
 ### 4.3 Combining behavioural and neural evidence
 
@@ -632,16 +685,31 @@ soft. The dimensional result indicates that the effect is not only a product of
 dichotomization. Future work should model continuous morningness-eveningness as the
 primary outcome.
 
+The P300 findings also need to be read against the prior paper. Hajiaboo et al.
+(2025) reported no chronotype main effect on P300 amplitude and no MEQ-P300
+correlation at Pz or Cz, but did report a Pz feedback-by-chronotype interaction (p =
+.043). That interaction is condition-dependent P300 modulation by chronotype, which
+is the pattern the present loss-minus-gain contrast was designed to isolate more
+directly. At the same time, our continuous MEQ association for the Pz contrast was
+weak (r = 0.29) and the POz association included zero, so the continuous analysis is
+consistent with their null MEQ-P300 correlations. The strongest P300 evidence in the
+present manuscript is specifically the binary group contrast on the posterior
+difference wave, not a strong continuous MEQ-P300 relationship.
+
 ### 4.7 Conclusion
 
-This single-cohort study provides preliminary evidence that chronotype is related to
-the neural evaluation of decision feedback, with the clearest effect in the
-posterior P300. Behavioural choice dynamics carried additional chronotype
-information, and combining behavioural and ERP features gave the strongest
-prediction of both categorical chronotype and continuous MEQ score. The findings
-are internally validated and require independent replication, but they show how
-carefully constrained ERP features and behavioural sequence models can be combined
-to study stable individual differences in modest samples.
+This single-cohort follow-up provides preliminary evidence that the posterior P300
+loss-minus-gain contrast is a group-separating feature of chronotype in these data,
+building on the behavioural and FRN findings already reported by Hajiaboo et al.
+(2025). Behavioural choice dynamics carried additional chronotype information, and
+combining behavioural and ERP features gave the strongest prediction of both
+categorical chronotype and continuous MEQ score. The novel contribution is the
+posterior-P300 contrast together with the computational strand: GRU behavioural
+decoding, brain-behaviour fusion, continuous-MEQ prediction, reinforcement-learning
+analysis, EEGNet, and leakage-safe/permutation-clean validation. The findings are
+internally validated and require independent replication, but they show how carefully
+constrained ERP features and behavioural sequence models can be combined to study
+stable individual differences in modest samples.
 
 ---
 
@@ -699,9 +767,10 @@ full pipeline rebuilds from raw with `python scripts/rebuild_from_raw.py
 ## References
 
 *APA-7 list, DOI-verified (source `references.bib` / `docs/references_apa7.md`;
-regenerated into `docs/paper.docx` by `scripts/build_paper.py`). One remaining
-`[AUTHOR INPUT]` marker in the text invites team-preferred chronotype-reward
-citations; Byrne & Murray (2017) was dropped as unverifiable.*
+regenerated into `docs/paper.docx` by `scripts/build_paper.py`). Remaining
+`[AUTHOR INPUT]` markers invite team confirmation of positioning, interpretation,
+data sharing, and submission details; Byrne & Murray (2017) was dropped as
+unverifiable.*
 
 Adan, A., Archer, S. N., Hidalgo, M. P., Di Milia, L., Natale, V., & Randler, C. (2012). Circadian typology: A comprehensive review. *Chronobiology International, 29*(9), 1153–1175. https://doi.org/10.3109/07420528.2012.719971
 
@@ -724,6 +793,8 @@ Gehring, W. J., & Willoughby, A. R. (2002). The medial frontal cortex and the ra
 Gershman, S. J. (2015). Do learning rates adapt to the distribution of rewards? *Psychonomic Bulletin & Review, 22*(5), 1320–1327. https://doi.org/10.3758/s13423-014-0790-3
 
 Hajcak, G., Moser, J. S., Holroyd, C. B., & Simons, R. F. (2007). It's worse than you thought: The feedback negativity and violations of reward prediction in gambling tasks. *Psychophysiology, 44*(6), 905–912. https://doi.org/10.1111/j.1469-8986.2007.00567.x
+
+Hajiaboo, M., Zarean, M., & Heysieattalab, S. (2025). The effect of chronotype in risky decision making: An ERP study. *International Journal of Psychophysiology, 217*, 113258. https://doi.org/10.1016/j.ijpsycho.2025.113258
 
 Hasler, B. P., & Clark, D. B. (2013). Circadian misalignment, reward-related brain function, and adolescent alcohol involvement. *Alcoholism: Clinical and Experimental Research, 37*(4), 558–565. https://doi.org/10.1111/acer.12003
 
