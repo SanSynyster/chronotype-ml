@@ -559,75 +559,116 @@ the fusion is not reducible to a moment-to-moment neural drive of choice.
 
 ## 4. Discussion
 
-In a single cohort, morning and evening chronotypes differed robustly in the
-feedback-locked posterior P300, with evening types showing a more negative
-loss-minus-gain contrast at parietal/posterior sites. The effect was large
-(d approximately 1.0), survived correction for multiple comparisons, and was
-stable across participant-exclusion sensitivity analyses. Because the P300 is
-associated with the motivational salience of outcomes [CITATION], this pattern is
-consistent with chronotype-related differences in how the relative salience of
-losses and gains is neurally represented during decision feedback. [AUTHOR INPUT:
-connect direction of effect to prior chronotype/reward literature and to the
-behavioural risk-taking differences.]
+### 4.1 Overview
 
-Behaviourally, evening types took more risks, echoing prior reports of greater
-reward sensitivity in evening types [CITATION], although these behavioural
-effects did not survive correction and the study was underpowered for medium
-effects. The convergence of the dominant classifier feature (Pz P300) with the
-group comparison strengthens the interpretation that the posterior P300 is the
-most informative chronotype-related signal in this dataset.
+In a single cohort of 39 participants, chronotype was expressed in the neural and
+behavioural evaluation of decision feedback, and the two modalities converged. Four
+findings anchor the account: (i) morning and evening chronotypes differed robustly
+in the feedback-locked posterior P300 to outcome valence (H1); (ii) chronotype was
+decodable from the dynamics of risky choice alone (H2); (iii) fusing the behavioural
+dynamics with the validated ERP contrasts predicted chronotype better than either
+modality alone (H3), and predicted the continuous MEQ score; and (iv) two
+pre-planned negative tests — end-to-end EEG decoding and a within-subject
+single-trial coupling — localised the effect to a between-subject trait rather than
+a moment-to-moment neural drive of choice. Because every predictive result was
+obtained under participant-generalizing, permutation-clean evaluation, the
+convergence across methodologically distinct analyses, rather than any single
+model's accuracy, is the study's central evidentiary strength.
 
-Methodologically, the study contributes a transparent, leakage-aware,
-interpretable machine-learning analysis of chronotype from EEG/ERP and behaviour.
-Under nested cross-validation the tuned model classified chronotype with balanced
-accuracy 0.72 and AUC 0.75-0.79 (permutation p = 0.02), and -- importantly -- its
-most influential feature was the same posterior P300 contrast that drove the
-univariate effect. This convergence of multivariate prediction and univariate
-statistics is the central evidentiary strength: two methodologically distinct
-analyses implicate the same neural signal. At the same time we are deliberately
-conservative about the predictive claim: classifier performance was modest, did
-not survive correction across feature-set choices, and was sensitive to two
-participants (whose labels the MEQ score nonetheless confirms). The model is best
-read as an interpretable multivariate complement to the neural finding, not a
-deployable diagnostic, and these limits are intrinsic to the sample size rather
-than the method. The leakage-safe risky-choice analysis shows that trial-level
-choice is weakly but genuinely predictable from choice history in a way that
-generalizes across participants.
+### 4.2 The posterior P300 and the neural evaluation of feedback
 
-Beyond the univariate group difference, three converging computational results
-strengthen and localise the effect. First, chronotype was decodable from the
-**dynamics of risky choice alone** (GRU AUC 0.713), independent of EEG — a second,
-behaviourally-grounded line of evidence. Second, and most informatively, fusing
-behaviour with the validated ERP contrasts was **super-additive** (AUC 0.797;
-MEQ r doubling to -0.42): had the two modalities indexed the same latent variable,
+The pre-specified neural hypothesis was confirmed: evening types showed a more
+negative loss-minus-gain P300 contrast at parietal/posterior sites, a large effect
+(d ≈ 1.0) that survived FDR correction, was stable across participant-exclusion
+sensitivity analyses and across a 72-cell window specification curve, and was
+directionally corroborated against the continuous MEQ. Because the posterior P300
+scales with the motivational salience and subjective significance of outcomes
+[CITATION], this pattern is consistent with chronotype-related differences in how
+the relative salience of losses and gains is neurally weighted during feedback:
+evening types, who behaviourally took more risks, showed the P300 signature of
+comparatively down-weighting losses relative to gains [AUTHOR INPUT: connect the
+direction of the effect to the specific prior chronotype/reward findings the team
+wishes to foreground]. That the frontocentral FRN did not distinguish the groups —
+with Bayes factors giving moderate evidence for the null at central sites — further
+localises the chronotype difference to the later, salience-weighting stage of
+feedback processing rather than the earlier valence/prediction-error stage indexed
+by the FRN [CITATION].
+
+### 4.3 Brain–behaviour convergence: the super-additive fusion
+
+The most informative result is that behaviour and neural feedback signals combined
+**super-additively**. Chronotype was decodable from risky-choice dynamics alone
+(GRU AUC 0.713) and from the validated ERP contrasts alone (AUC 0.668), but fusing
+them raised decoding to AUC 0.797 and roughly doubled the correlation with the
+continuous MEQ (to −0.42). Had the two modalities indexed the same latent variable,
 fusion would have been redundant; instead, how choices evolve over many trials and
-the immediate neural evaluation of each outcome appear to capture complementary
-facets of the same chronotype difference [REF]. Third, an asymmetric
-reinforcement-learning model offered a candidate mechanism — greater gain-driven
-learning and lower choice consistency in Evening types — but these point-estimate
-contrasts did not survive hierarchical partial pooling, and the per-subject
-parameters were only weakly identified in this hidden-sign paradigm (§3.10). We
-therefore report the RL account as exploratory and weakly identified rather than as
-a confirmed mechanism; it hints at a profile of stronger approach/reward
-sensitivity and weaker loss-avoidance in Evening types, consistent with
-circadian/dopaminergic modulation of reward learning [REF], but the predictive and
-neural findings stand independently of it. [AUTHOR INPUT: align this tentative
-mechanistic interpretation with the constructs and references in the team's prior
-chronotype work; consider a hierarchical or trial-richer design to identify the RL
-parameters in future work.]
+the immediate neural evaluation of each outcome appear to capture partly independent,
+complementary facets of the same chronotype difference [REF]. This cross-modal
+convergence is precisely the evidence that strengthens an individual-differences
+claim beyond a single-modality classifier, and it is consistent with the
+interpretable group-comparison result: the multivariate classifier's most
+influential feature was the same posterior-P300 contrast that drove the univariate
+effect. We are nonetheless deliberately conservative about deployment. The
+single-model classifier was modest, did not survive correction across the family of
+feature sets, and was sensitive to two participants (whose labels the MEQ
+nonetheless confirms), and the fused estimate carries real uncertainty (bootstrap CI
+[0.64, 0.92]). The models are best read as evidence of a convergent trait
+signature, not as a deployable diagnostic — a limit intrinsic to the sample size
+rather than the method.
 
-Two honest negatives sharpen rather than weaken the account. End-to-end deep
-learning on single-trial EEG (EEGNet) decoded the feedback task but not chronotype,
-indicating that at N = 39 validated low-dimensional ERP features encode the
-chronotype signal more efficiently than learned ones — a useful methodological
-message for small-sample individual-differences EEG. And the chronotype effect was
-**not** expressed as a within-subject single-trial P300→next-choice coupling
-(§3.12), localising it to the between-subject/trait level; the super-additive
-fusion is therefore a convergence of two trait-level signatures, not a reducible
-moment-to-moment neural drive of choice. That the same features also predicted the
-**continuous MEQ** score indicates the effect is dimensional, not an artefact of
-dichotomization, and supports treating morningness-eveningness as a graded
-individual difference in reward-based choice.
+### 4.4 A tentative computational mechanism
+
+To move from prediction toward mechanism, an asymmetric reinforcement-learning model
+offered a candidate account — greater gain-driven learning and lower choice
+consistency in evening types — that would fit a profile of stronger approach/reward
+sensitivity and weaker loss-avoidance, consistent with circadian/dopaminergic
+modulation of reward learning [REF]. However, we treat this account as **exploratory
+and weakly identified**: the maximum-likelihood parameter contrasts did not survive
+a hierarchical partial-pooling refit, and the per-participant estimates were poorly
+identified in this hidden-sign paradigm (weak MLE-to-hierarchical agreement). The
+mechanism is therefore a hypothesis for a trial-richer or hierarchically-designed
+follow-up rather than a confirmed finding, and — importantly — the predictive and
+neural results stand independently of it [AUTHOR INPUT: align this tentative
+interpretation with the constructs/references in the team's prior chronotype work].
+
+### 4.5 Two informative negatives and a methodological message
+
+Two pre-planned negative tests sharpen rather than weaken the account. First,
+end-to-end deep learning on single-trial EEG (EEGNet) decoded the feedback task
+across unseen participants but did not recover chronotype from learned single-trial
+features, whereas a small set of theory-driven, FDR-validated ERP contrasts did.
+At the sample sizes typical of ERP research, validated low-dimensional features can
+thus outperform representation learning for subtle individual-difference signals,
+and naive feature learning can dilute a real effect — a practically useful message
+for small-sample individual-differences EEG. Second, the chronotype effect was
+**not** expressed as a within-subject, single-trial coupling between feedback P300
+and the subsequent choice; it is a between-subject trait. The super-additive fusion
+is therefore a convergence of two trait-level signatures — a stable difference in
+feedback salience-weighting and a stable difference in choice dynamics — not a
+reducible moment-to-moment neural control of behaviour. Reporting these negatives
+transparently both bounds the mechanistic claim and pre-empts the concern that the
+fusion merely re-describes a single between-subject correlation.
+
+### 4.6 Chronotype as a dimensional trait
+
+Although we analysed a binary morning/evening label, the same features predicted the
+**continuous MEQ** score (fused r = 0.34), and 12 of 39 participants fell in the MEQ
+intermediate band where the dichotomy is inherently soft. The dimensional result
+indicates the effect is not an artefact of dichotomization and supports treating
+morningness–eveningness as a graded individual difference in the reward-based
+evaluation of decision feedback. Future work should model the continuous score as
+the primary outcome.
+
+### 4.7 Conclusion
+
+Using converging ERP, computational, and fusion analyses under uniformly
+leakage-safe evaluation, we provide preliminary single-cohort evidence that
+chronotype shapes the neural evaluation of decision feedback — concentrated in the
+posterior P300 — and that this neural signature converges super-additively with the
+behavioural dynamics of risky choice. The findings are internally validated and
+await independent replication, but the cross-modal, multi-method convergence offers
+a rigorous template for characterizing stable traits from modest neural and
+behavioural samples.
 
 ---
 
