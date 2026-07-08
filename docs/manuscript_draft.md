@@ -415,14 +415,18 @@ pre-specified 450-550 ms P300 window. The independently recomputed anchor cells 
 slightly smaller than the validated-feature estimates (Pz d = -0.84, POz d =
 -0.66), but they supported the same conclusion.
 
-Because sex and age were imbalanced across groups (Evening 68% male and about two
-years older than Morning), we re-tested the posterior-P300 contrast with sex and
-age as covariates. The Pz effect remained significant (adjusted Morning-vs-Evening
-b = 0.88, p = 0.041, partial d approximately 0.72), with neither sex (p = 0.24) nor
-age (p = 0.12) contributing. The POz effect attenuated to non-significance (adjusted
-p = 0.12), and age was a significant covariate there (p = 0.010). The primary Pz
-effect is therefore not attributable to the sex/age imbalance, whereas the POz
-effect is partly related to age and should be interpreted more cautiously.
+Because sex and age were imbalanced across groups (Evening participants were more
+often male and about two years older than Morning; §2.1), we re-tested the
+posterior-P300 contrast with sex and age as covariates. The Pz effect remained
+significant (adjusted Morning-vs-Evening b = 0.88, p = 0.041, partial d
+approximately 0.72), with neither sex (p = 0.24) nor age (p = 0.12) contributing.
+The POz effect attenuated to non-significance (adjusted p = 0.12), and age was a
+significant covariate there (p = 0.010). The primary Pz effect is therefore not
+attributable to the sex/age imbalance, whereas the POz effect is partly related to
+age and should be interpreted more cautiously. These adjustments used the current
+dataset sex coding, which is being reconciled against the published demographic
+record (§2.1 and Limitations); a discrepancy of about two participants would not
+change the qualitative conclusion.
 
 ### 3.5 Participant-level chronotype classification (Figure 5)
 
@@ -723,10 +727,14 @@ stable individual differences in modest samples.
   scored participants were consistent with the binary label, and both raw-behaviour
   conflict cases were MEQ-confirmed. However, 12 of 39 participants fell in the MEQ
   intermediate band, where the dichotomy is inherently soft.
-- Sex and age were imbalanced across chronotype groups (Evening 68% male and about
-  two years older than Morning). The primary Pz P300 effect survived adjustment for
-  both, but the POz effect attenuated to non-significance and was partly related to
-  age; the sample is too small to fully disentangle chronotype from these covariates.
+- Sex and age were imbalanced across chronotype groups (Evening participants more
+  often male and about two years older than Morning). The primary Pz P300 effect
+  survived adjustment for both, but the POz effect attenuated to non-significance and
+  was partly related to age; the sample is too small to fully disentangle chronotype
+  from these covariates. The per-group sex counts in our analysis dataset differ by
+  about two participants from the published record (Hajiaboo et al., 2025; overall
+  20 male / 19 female agrees); the exact demographic key is being reconciled, and the
+  covariate analysis will be re-verified once confirmed.
 - ERP features are window-level single-trial means and may miss peak-latency,
   time-frequency, or trial-quality effects.
 - Participant 1013 has a known EEG/trigger agreement issue after block 10.

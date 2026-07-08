@@ -58,14 +58,24 @@ These let us state clearly that our analyses differ from, rather than contradict
    produced from the **same EEGLAB/ERPLAB pipeline and epochs** as the 2025 paper?
 4. **Keep vs supplement:** how much of the behavioural/FRN material do you want kept
    as a short "prior-work / within-cohort" paragraph versus moved to the supplement?
+5. **Demographic reconciliation (please prioritise).** Our analysis dataset's sex ×
+   chronotype counts differ from the 2025 paper by ~2 participants per group:
+   - Our dataset: Evening 13 M / 6 F, Morning 7 M / 13 F.
+   - 2025 paper: Evening 11 M / 8 F, Morning 9 M / 11 F.
+   Overall (20 M / 19 F) and the direction (Evening more male) agree, but the exact
+   per-group counts do not. Please send the **authoritative per-participant key**
+   (ID, sex, age, MEQ, chronotype group) for the final 39 so we can reconcile our
+   pipeline against the published record. The manuscript currently reports the
+   paper's figures and flags this; the sex/age covariate analysis will be re-verified
+   once confirmed.
 
 ### From Dr Heysiattalab / Dr Zarean — confirmations
-5. Confirm the **repositioning** as a computational follow-up citing the 2025 paper.
-6. Confirm **author order** (middle two) and provide **CRediT** roles.
-7. **Funding/grants** and **conflicts of interest**.
+6. Confirm the **repositioning** as a computational follow-up citing the 2025 paper.
+7. Confirm **author order** (middle two) and provide **CRediT** roles.
+8. **Funding/grants** and **conflicts of interest**.
 
 ### From Sahab (self) — to action
-8. Locate and send the **OSF preregistration** link so the manuscript's
+9. Locate and send the **OSF preregistration** link so the manuscript's
    primary/confirmatory/exploratory labels can be aligned to what was preregistered,
    and the prereg cited. (Check whether the P300 was preregistered or whether the
    prereg covered the FRN/behavioural hypotheses of the 2025 paper.)
