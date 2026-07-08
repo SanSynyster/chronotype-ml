@@ -55,9 +55,10 @@ ROC AUC 0.713, permutation p = 0.027), independent of EEG. Third, and centrally,
 **super-additive** — chronotype decoding rose to AUC 0.797 (p = 0.004; bootstrap
 95% CI [0.64, 0.92]), exceeding either modality alone and predicting the
 continuous MEQ score (r = 0.34, p = 0.027) — indicating partly independent
-behavioural and neural information. An asymmetric reinforcement-learning model
-provided a mechanism: Evening types learned more from gains (higher α_gain,
-p = 0.040) and chose less consistently (lower β; MEQ r = 0.36). Two honest
+behavioural and neural information. An exploratory asymmetric reinforcement-learning
+analysis suggested chronotype differences in outcome-specific learning and choice
+consistency, but these were weakly identified and did not survive a hierarchical
+partial-pooling refit, so the mechanism is reported as tentative. Two honest
 negatives bound the claim: an end-to-end network (EEGNet) decoded single-trial
 feedback valence cross-subject (AUC 0.64) but did **not** recover chronotype from
 learned features at this sample size, and the chronotype effect was **not**
@@ -466,17 +467,29 @@ and confirming the effect does not depend on the Morning/Evening split.
 
 ### 3.10 A reinforcement-learning model localises the mechanism (Figure 9)
 
-Per-participant fits of an asymmetric reward-learning model yielded interpretable
-parameter differences: Evening types learned more strongly from gains (α_gain
-Evening 0.23 vs Morning 0.05; group p = 0.040; MEQ r = -0.32) and chose less
-consistently / more exploratorily (β; MEQ r = 0.36, p = 0.027), whereas Morning
-types showed a relative bias toward learning from losses (learning asymmetry trend
+Per-participant maximum-likelihood fits of an asymmetric reward-learning model
+gave exploratory point estimates suggesting Evening types learned more strongly
+from gains (α_gain Evening 0.23 vs Morning 0.05; group p = 0.040; MEQ r = -0.32)
+and chose less consistently (β; MEQ r = 0.36, p = 0.027), with Morning types
+showing a relative bias toward learning from losses (learning-asymmetry trend
 p = 0.072). The RL parameters jointly classified chronotype only weakly
-(AUC 0.532), so they are interpreted as a mechanistic, convergent account of *why*
-the behavioural signal exists rather than as a competing predictor. These five
-parameter comparisons are uncorrected and reported as exploratory/mechanistic.
-[PENDING GPT: hierarchical partial-pooling RL (task G-D) to confirm the α_gain/β
-contrasts survive shrinkage; report the Evening-minus-Morning posterior HDIs.]
+(AUC 0.532).
+
+However, these point-estimate contrasts **did not survive a Bayesian hierarchical
+partial-pooling refit** (NUTS, chronotype group-level offset per parameter; max
+R-hat 1.02, no divergences). Under partial pooling the α_gain contrast collapsed to
+essentially zero (Evening − Morning ≈ 0.00, 94% HDI [-0.010, 0.011],
+P(contrast>0) = 0.46) and the β contrast reversed sign and remained uncertain
+(+0.38, HDI [-0.53, 1.28]); the only tendency was weaker learning from losses in
+Evening types (α_loss contrast -0.012, HDI [-0.032, 0.002]; learning asymmetry
+P(contrast>0) = 0.06). Crucially, the subject-level MLE and hierarchical estimates
+were weakly correlated (α_loss r = 0.02, β r = 0.13, α_gain r = 0.45), showing the
+per-participant MLE parameters were poorly identified given ~270 free trials with
+hidden, random signs. We therefore treat the RL analysis as **weakly identified and
+exploratory**: it does not provide a confirmed mechanism, and — importantly — the
+predictive headline (the behaviour+ERP fusion, §3.8) does not depend on it. The
+five MLE comparisons are uncorrected; the hierarchical contrasts are reported with
+HDIs rather than as tests.
 
 ### 3.11 Honest negative: deep learning on single-trial EEG (Figure 9)
 
@@ -561,12 +574,18 @@ MEQ r doubling to -0.42): had the two modalities indexed the same latent variabl
 fusion would have been redundant; instead, how choices evolve over many trials and
 the immediate neural evaluation of each outcome appear to capture complementary
 facets of the same chronotype difference [REF]. Third, an asymmetric
-reinforcement-learning model gives the effect a mechanism — greater gain-driven
-learning and lower choice consistency in Evening types — consistent with a profile
-of stronger approach/reward sensitivity and weaker loss-avoidance, and with
-circadian/dopaminergic modulation of reward learning [REF]. [AUTHOR INPUT: align
-this mechanistic interpretation with the constructs and references in the team's
-prior chronotype work.]
+reinforcement-learning model offered a candidate mechanism — greater gain-driven
+learning and lower choice consistency in Evening types — but these point-estimate
+contrasts did not survive hierarchical partial pooling, and the per-subject
+parameters were only weakly identified in this hidden-sign paradigm (§3.10). We
+therefore report the RL account as exploratory and weakly identified rather than as
+a confirmed mechanism; it hints at a profile of stronger approach/reward
+sensitivity and weaker loss-avoidance in Evening types, consistent with
+circadian/dopaminergic modulation of reward learning [REF], but the predictive and
+neural findings stand independently of it. [AUTHOR INPUT: align this tentative
+mechanistic interpretation with the constructs and references in the team's prior
+chronotype work; consider a hierarchical or trial-richer design to identify the RL
+parameters in future work.]
 
 Two honest negatives sharpen rather than weaken the account. End-to-end deep
 learning on single-trial EEG (EEGNet) decoded the feedback task but not chronotype,
@@ -608,10 +627,12 @@ individual difference in reward-based choice.
   (bootstrap, exclusions, leave-one-subject-out) but not against a new dataset.
   Removing the most influential participant lowered the fused AUC from 0.80 to
   0.65, so the estimate carries real uncertainty (CI [0.64, 0.92]).
-- The reinforcement-learning parameter comparisons are uncorrected across the five
-  parameters and some fits approached the optimisation bounds (limited
-  identifiability at ~270 free trials/participant); they are mechanistic, not
-  confirmatory. [PENDING GPT: hierarchical partial-pooling refit (G-D).]
+- The reinforcement-learning parameters were weakly identified (limited to ~270
+  free trials/participant with hidden random signs): the MLE contrasts did not
+  survive a hierarchical partial-pooling refit and MLE-vs-hierarchical subject
+  estimates were weakly correlated. The RL account is therefore exploratory and
+  tentative, not a confirmed mechanism; the predictive and neural findings do not
+  depend on it.
 - Findings concern one feedback-based risky-choice paradigm with hidden signs;
   generalization to other reward/decision tasks is untested.
 - There is no external validation cohort.
@@ -644,8 +665,9 @@ full pipeline rebuilds from raw with `python scripts/rebuild_from_raw.py
 - [ ] Data-availability statement and any repository DOI.
 - [ ] Fold `methodology_dl.md` §5-8 into Methods 2.7-2.11 (GRU, RL, EEGNet,
       fusion/evaluator, single-trial coupling) — structural map at the top.
-- [ ] Integrate GPT-pending results when they land: Bayes factors (G-B),
-      equivalence tests (G-F), P300 specification curve (G-E), hierarchical RL
-      (G-D) — search the draft for `[PENDING GPT: …]`.
+- [x] Parallel-analysis results integrated: Bayes factors (G-B, §3.2/§3.11),
+      equivalence tests (G-F, §3.2), P300 specification curve (G-E, §3.4),
+      hierarchical RL (G-D, §3.10 — MLE mechanism did **not** survive pooling; RL
+      now framed as exploratory). No `[PENDING GPT]` markers remain.
 - [ ] Confirm mechanistic interpretation (RL / reward-sensitivity) against the
       team's prior chronotype constructs and references.
