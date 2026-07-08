@@ -24,6 +24,8 @@ Gershman, S. J. (2015). Do learning rates adapt to the distribution of rewards? 
 
 Hajcak, G., Moser, J. S., Holroyd, C. B., & Simons, R. F. (2007). It's worse than you thought: The feedback negativity and violations of reward prediction in gambling tasks. *Psychophysiology, 44*(6), 905-912. https://doi.org/10.1111/j.1469-8986.2007.00567.x
 
+Hajiaboo, M., Zarean, M., & Heysieattalab, S. (2025). The effect of chronotype in risky decision making: An ERP study. *International Journal of Psychophysiology, 217*, 113258. https://doi.org/10.1016/j.ijpsycho.2025.113258
+
 Hasler, B. P., & Clark, D. B. (2013). Circadian misalignment, reward-related brain function, and adolescent alcohol involvement. *Alcoholism: Clinical and Experimental Research, 37*(4), 558-565. https://doi.org/10.1111/acer.12003
 
 Hasler, B. P., Sitnick, S. L., Shaw, D. S., & Forbes, E. E. (2013). An altered neural response to reward may contribute to alcohol problems among late adolescents with an evening chronotype. *Psychiatry Research: Neuroimaging, 214*(3), 357-364. https://doi.org/10.1016/j.pscychresns.2013.08.005
