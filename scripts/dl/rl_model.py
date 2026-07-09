@@ -70,7 +70,9 @@ def fit_subject(actions, rewards, rng):
 def main() -> None:
     rng = np.random.default_rng(SEED)
     df = pd.read_csv(DATA)
-    df = df[df["forced and free risk trials"] == "free"].copy()
+    if "forced and free risk trials" in df.columns:
+        df = df[df["forced and free risk trials"] == "free"].copy()
+    df = df[pd.to_numeric(df["risky-choice"], errors="coerce").isin([0, 1])].copy()
     df = df.sort_values(["participant_id", "global_trial_index"])
     # signed reward = chosen box value, scaled to [-1, 1]
     chosen = np.where(df["ChoiceMade"] == 1, df["ActualValue1"], df["ActualValue2"])

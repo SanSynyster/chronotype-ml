@@ -1,0 +1,22 @@
+{
+  "key_rows": 56,
+  "key_chronotype_counts": {
+    "Morning": 21,
+    "Evening": 20,
+    "Intermediate": 15
+  },
+  "has_eeg_counts": {
+    "true": 52,
+    "false": 4
+  },
+  "analysis_sample_n": 39,
+  "analysis_sample_counts": {
+    "Morning": 20,
+    "Evening": 19
+  },
+  "behavior_rows": 19968,
+  "behavior_participants": 52,
+  "erp_participants": 52,
+  "integrity_conflicts": [],
+  "age_mismatch_warnings": 26
+}

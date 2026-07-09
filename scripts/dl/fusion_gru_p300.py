@@ -32,7 +32,7 @@ COMPACT = "data/clean/chronotype_compact_12.csv"
 ERP_FEATURES = [
     "Fz_FRN_error_minus_correct", "FCz_FRN_error_minus_correct",
     "Fz_FRN_loss_error_minus_gain_correct", "POz_P300_loss_minus_gain",
-    "Pz_P300_loss_minus_gain", "CPz_P300_error_minus_correct",
+    "Pz_P300_loss_minus_gain", "POz_P300_error_minus_correct",
 ]
 
 
@@ -42,11 +42,13 @@ def main() -> None:
     args = ap.parse_args()
 
     gru = pd.read_csv(GRU)
-    erp = pd.read_csv(COMPACT)[["participant_id"] + ERP_FEATURES]
+    compact = pd.read_csv(COMPACT)
+    features = [c for c in ERP_FEATURES if c in compact.columns]
+    erp = compact[["participant_id"] + features]
     fused = gru.merge(erp, on="participant_id")
 
     gru_only = fused[["participant_id"] + [c for c in gru.columns if c.startswith("gru_emb_")]]
-    erp_only = fused[["participant_id"] + ERP_FEATURES]
+    erp_only = fused[["participant_id"] + features]
 
     runs = {"gru_behavioral": gru_only, "erp_p300": erp_only, "fused": fused}
     results = {}

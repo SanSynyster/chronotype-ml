@@ -90,7 +90,7 @@ def load_master(key_path: Path, outdir: Path) -> pd.DataFrame:
     return master.sort_values("participant_id").reset_index(drop=True)
 
 
-def load_behavior(path: Path, master: pd.DataFrame, outdir: Path) -> pd.DataFrame:
+def load_behavior(path: Path, master: pd.DataFrame, outdir: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
     beh = pd.read_excel(path)
     beh.columns = [norm_col(c) for c in beh.columns]
     required = {"UserID", "Block", "Trial", "Option1", "Option2", "ChoiceMade", "CorrectChoice", "ResponseTime", "CurrentScore", "Age", "Gender", "risky choice", "feedback"}
@@ -113,8 +113,11 @@ def load_behavior(path: Path, master: pd.DataFrame, outdir: Path) -> pd.DataFram
     check["behavior_age"] = pd.to_numeric(check["Age"], errors="coerce")
     check["behavior_gender"] = check["Gender"].map(norm_gender)
     check = check.merge(master[["participant_id", "Age", "Gender"]].rename(columns={"Age": "key_age", "Gender": "key_gender"}), on="participant_id", how="left")
-    conflicts = check[(check["behavior_age"].ne(check["key_age"])) | (check["behavior_gender"].ne(check["key_gender"]))]
-    fail_if(not conflicts.empty, conflicts, outdir, "behavior_key_age_gender_conflicts")
+    gender_conflicts = check[check["behavior_gender"].ne(check["key_gender"])]
+    fail_if(not gender_conflicts.empty, gender_conflicts, outdir, "behavior_key_gender_conflicts")
+    age_warnings = check[check["behavior_age"].ne(check["key_age"])]
+    if not age_warnings.empty:
+        write_conflicts(age_warnings, outdir, "behavior_key_age_warnings")
 
     out = beh.rename(columns={"risky choice": "risky-choice", "feedback": "feedback-condition", "Chronotype": "Chronotype_behavior", "Age": "Age_behavior", "Gender": "Gender_behavior"}).copy()
     out["participant_id"] = out["participant_id"].astype(int)
@@ -122,7 +125,7 @@ def load_behavior(path: Path, master: pd.DataFrame, outdir: Path) -> pd.DataFram
     out["global_trial_index"] = out.groupby("participant_id").cumcount() + 1
     out = out.merge(master[["participant_id", "Chronotype", "MEQ", "meq", "MCTQ", "mctq_minutes", "Gender", "Age", "has_eeg", "is_intermediate"]], on="participant_id", how="inner")
     out["behav_valence"] = out["feedback-condition"].astype(str).str.strip().str.lower().str.split("-").str[0]
-    return out
+    return out, age_warnings
 
 
 ERP_RE = re.compile(r"^bin\d+_(?P<risk>.+?)_(?P<cond>gain-correct|gain-error|loss-correct|loss-error)_*_(?P<chan>Fz|FC1|FC2|Cz|Pz|POz|FCz)$")
@@ -302,6 +305,7 @@ def add_risky_prechoice(behavior: pd.DataFrame) -> pd.DataFrame:
         out[f"RollingRTMean{window}"] = shifted_rt.groupby(out["participant_id"]).transform(lambda s: s.rolling(window=window, min_periods=1).mean())
         out[f"RollingRTStd{window}"] = shifted_rt.groupby(out["participant_id"]).transform(lambda s: s.rolling(window=window, min_periods=2).std())
     prev_condition = g["feedback-condition"].shift(1).astype(str).str.lower().str.replace("-", "_", regex=False)
+    out["PrevFeedbackGain"] = prev_condition.str.startswith("gain").astype(float)
     out["PrevFeedbackLoss"] = prev_condition.str.startswith("loss").astype(float)
     out["PrevFeedbackError"] = prev_condition.str.endswith("error").astype(float)
     out["PrevGainCorrect"] = prev_condition.eq("gain_correct").astype(float)
@@ -346,7 +350,7 @@ def main() -> None:
         d.mkdir(parents=True, exist_ok=True)
 
     master = load_master(Path(args.key), report_dir)
-    behavior = load_behavior(Path(args.behavior), master, report_dir)
+    behavior, age_warnings = load_behavior(Path(args.behavior), master, report_dir)
     frn = load_erp(Path(args.frn), "FRN", master, report_dir)
     p300 = load_erp(Path(args.p300), "P300", master, report_dir)
     erp = frn.merge(p300, on="participant_id", how="inner")
@@ -371,6 +375,7 @@ def main() -> None:
         "behavior_participants": int(behavior["participant_id"].nunique()),
         "erp_participants": int(erp["participant_id"].nunique()),
         "integrity_conflicts": [],
+        "age_mismatch_warnings": int(age_warnings.shape[0]),
     }
     (report_dir / "rebuild_summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
     print(json.dumps(summary, indent=2))

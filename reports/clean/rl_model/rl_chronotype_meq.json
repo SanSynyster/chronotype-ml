@@ -1,0 +1,84 @@
+{
+  "n_evening": 19,
+  "n_morning": 20,
+  "parameters": {
+    "alpha_gain": {
+      "morning_mean": 0.0699,
+      "evening_mean": 0.1403,
+      "cohens_d_evening_minus_morning": 0.266,
+      "d_ci95": [
+        -0.355,
+        0.838
+      ],
+      "mannwhitney_p": 0.4846,
+      "meq_pearson_r": -0.064,
+      "meq_pearson_p": 0.6997,
+      "meq_spearman_rho": 0.067
+    },
+    "alpha_loss": {
+      "morning_mean": 0.2459,
+      "evening_mean": 0.2348,
+      "cohens_d_evening_minus_morning": -0.031,
+      "d_ci95": [
+        -0.636,
+        0.663
+      ],
+      "mannwhitney_p": 0.6401,
+      "meq_pearson_r": 0.032,
+      "meq_pearson_p": 0.8473,
+      "meq_spearman_rho": -0.069
+    },
+    "lr_asymmetry": {
+      "morning_mean": 0.176,
+      "evening_mean": 0.0945,
+      "cohens_d_evening_minus_morning": -0.207,
+      "d_ci95": [
+        -0.81,
+        0.44
+      ],
+      "mannwhitney_p": 0.9552,
+      "meq_pearson_r": 0.072,
+      "meq_pearson_p": 0.6647,
+      "meq_spearman_rho": -0.019
+    },
+    "beta": {
+      "morning_mean": 6.502,
+      "evening_mean": 5.5002,
+      "cohens_d_evening_minus_morning": -0.255,
+      "d_ci95": [
+        -0.949,
+        0.375
+      ],
+      "mannwhitney_p": 0.4785,
+      "meq_pearson_r": 0.035,
+      "meq_pearson_p": 0.8334,
+      "meq_spearman_rho": 0.052
+    },
+    "bias": {
+      "morning_mean": 1.2069,
+      "evening_mean": 1.6199,
+      "cohens_d_evening_minus_morning": 0.192,
+      "d_ci95": [
+        -0.434,
+        0.854
+      ],
+      "mannwhitney_p": 0.7137,
+      "meq_pearson_r": -0.045,
+      "meq_pearson_p": 0.787,
+      "meq_spearman_rho": -0.044
+    }
+  },
+  "predictive_chronotype": {
+    "label": "rl_params",
+    "n_participants": 39,
+    "n_features": 5,
+    "nested_loo_roc_auc": 0.4053,
+    "nested_loo_balanced_accuracy": 0.5105,
+    "permutations": 100,
+    "perm_p_value": 0.396,
+    "null_auc_mean": 0.3753,
+    "null_auc_95pct": 0.6613,
+    "meq_pearson_r": 0.2289,
+    "meq_pearson_p": 0.161
+  }
+}

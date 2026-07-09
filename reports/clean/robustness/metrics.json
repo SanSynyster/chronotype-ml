@@ -1,0 +1,49 @@
+{
+  "full": {
+    "n": 39,
+    "nested_loo_roc_auc": 0.2895,
+    "perm_p_value": 0.901,
+    "bootstrap_auc_95ci": [
+      0.131,
+      0.468
+    ],
+    "bootstrap_auc_mean": 0.287
+  },
+  "exclusions": {
+    "exclude_1013": {
+      "n": 38,
+      "n_evening": 18,
+      "n_morning": 20,
+      "nested_loo_roc_auc": 0.356,
+      "balanced_accuracy": 0.392
+    },
+    "exclude_label_conflicts": {
+      "n": 37,
+      "n_evening": 18,
+      "n_morning": 19,
+      "nested_loo_roc_auc": 0.26,
+      "balanced_accuracy": 0.325
+    },
+    "exclude_all_flagged": {
+      "n": 36,
+      "n_evening": 17,
+      "n_morning": 19,
+      "nested_loo_roc_auc": 0.276,
+      "balanced_accuracy": 0.384
+    },
+    "exclude_meq_intermediate": {
+      "n": 27,
+      "n_evening": 11,
+      "n_morning": 16,
+      "nested_loo_roc_auc": 0.273,
+      "balanced_accuracy": 0.355
+    }
+  },
+  "loo_influence": {
+    "auc_min": 0.18,
+    "auc_max": 0.493,
+    "auc_range": 0.313,
+    "most_influential_participant": 1054,
+    "auc_without_most_influential": 0.18
+  }
+}

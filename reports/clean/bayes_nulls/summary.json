@@ -5,65 +5,38 @@
       "contrast": "Fz_FRN_error_minus_correct",
       "n_evening": 19,
       "n_morning": 20,
-      "evening_mean": -2.8945,
-      "morning_mean": -2.0229,
-      "welch_t": -1.879,
-      "welch_p": 0.0681,
-      "bf10_group_difference": 1.2227,
-      "bf01_null": 0.8178
+      "evening_mean": -2.5515,
+      "morning_mean": -1.6496,
+      "welch_t": -2.0405,
+      "welch_p": 0.0485,
+      "bf10_group_difference": 1.5499,
+      "bf01_null": 0.6452
     },
     {
       "contrast": "FCz_FRN_error_minus_correct",
       "n_evening": 19,
       "n_morning": 20,
-      "evening_mean": -2.9119,
-      "morning_mean": -2.4817,
-      "welch_t": -0.8168,
-      "welch_p": 0.4193,
-      "bf10_group_difference": 0.4062,
-      "bf01_null": 2.4621
+      "evening_mean": -2.7499,
+      "morning_mean": -2.045,
+      "welch_t": -1.5733,
+      "welch_p": 0.1242,
+      "bf10_group_difference": 0.8192,
+      "bf01_null": 1.2207
     },
     {
       "contrast": "Cz_FRN_error_minus_correct",
       "n_evening": 19,
       "n_morning": 20,
-      "evening_mean": -2.0618,
-      "morning_mean": -2.1496,
-      "welch_t": 0.1713,
-      "welch_p": 0.8649,
-      "bf10_group_difference": 0.3156,
-      "bf01_null": 3.1684
+      "evening_mean": -2.5289,
+      "morning_mean": -1.7958,
+      "welch_t": -1.9993,
+      "welch_p": 0.0535,
+      "bf10_group_difference": 1.4566,
+      "bf01_null": 0.6865
     }
   ],
   "eegnet_chronotype": {
-    "chronotype_embeddings": {
-      "mean": {
-        "observed_auc": 0.4263,
-        "null_auc_mean": 0.461,
-        "null_auc_sd": 0.128,
-        "auc_prior_sd_h1": 0.1,
-        "bf01_density_ratio": 1.2515,
-        "h0_density_at_observed": 3.004755,
-        "h1_density_at_observed": 2.400894,
-        "permutation_p_value": 0.6074
-      },
-      "contrast": {
-        "observed_auc": 0.3895,
-        "null_auc_mean": 0.4595,
-        "null_auc_sd": 0.1327,
-        "auc_prior_sd_h1": 0.1,
-        "bf01_density_ratio": 1.1906,
-        "h0_density_at_observed": 2.616088,
-        "h1_density_at_observed": 2.197221,
-        "permutation_p_value": 0.7113
-      }
-    },
-    "positive_control_feedback_valence": {
-      "source": "reports/clean/eegnet_feedback/metrics.json",
-      "roc_auc": 0.5938,
-      "balanced_accuracy": 0.5552,
-      "note": "Positive-control EEGNet valence decoding is reported for context, not converted to BF01 for the chronotype null."
-    }
+    "reason": "single-trial EEGNet outputs are absent; data/raw/shifted_set/*.set is unavailable in this workspace"
   },
   "method_notes": {
     "frn": "Independent-group Welch t statistic converted with pingouin.bayesfactor_ttest; BF01 = 1 / BF10.",

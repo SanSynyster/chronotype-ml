@@ -6,12 +6,12 @@ Effect direction: Evening minus Morning.
 
 | Contrast | Difference | d | Raw lower | Raw upper | TOST p | Equivalent? |
 |---|---:|---:|---:|---:|---:|---|
-| Fz_FRN_loss_minus_gain | -0.4640 | -0.4417 | -0.5251 | 0.5251 | 0.4283 | no |
-| FCz_FRN_loss_minus_gain | -0.2398 | -0.2078 | -0.5771 | 0.5771 | 0.1831 | no |
-| Cz_FRN_loss_minus_gain | -0.2346 | -0.2406 | -0.4874 | 0.4874 | 0.2115 | no |
-| Fz_FRN_error_minus_correct | -0.8716 | -0.6010 | -0.7251 | 0.7251 | 0.6230 | no |
-| FCz_FRN_error_minus_correct | -0.4302 | -0.2616 | -0.8221 | 0.8221 | 0.2307 | no |
-| Cz_FRN_error_minus_correct | 0.0879 | 0.0547 | -0.8029 | 0.8029 | 0.0859 | no |
-| Fz_FRN_loss_error_minus_gain_correct | -0.5973 | -0.3848 | -0.7761 | 0.7761 | 0.3605 | no |
-| FCz_FRN_loss_error_minus_gain_correct | -0.1466 | -0.0846 | -0.8669 | 0.8669 | 0.1012 | no |
-| Cz_FRN_loss_error_minus_gain_correct | 0.0274 | 0.0178 | -0.7701 | 0.7701 | 0.0694 | no |
+| Fz_FRN_loss_minus_gain | 0.3632 | 0.2319 | -0.7832 | 0.7832 | 0.2021 | no |
+| FCz_FRN_loss_minus_gain | 0.0364 | 0.0295 | -0.6167 | 0.6167 | 0.0759 | no |
+| Cz_FRN_loss_minus_gain | -0.1038 | -0.0972 | -0.5336 | 0.5336 | 0.1082 | no |
+| Fz_FRN_error_minus_correct | -0.9019 | -0.6538 | -0.6897 | 0.6897 | 0.6830 | no |
+| FCz_FRN_error_minus_correct | -0.7049 | -0.5047 | -0.6983 | 0.6983 | 0.5058 | no |
+| Cz_FRN_error_minus_correct | -0.7331 | -0.6442 | -0.5690 | 0.5690 | 0.6714 | no |
+| Fz_FRN_loss_error_minus_gain_correct | -0.5387 | -0.3876 | -0.6949 | 0.6949 | 0.3640 | no |
+| FCz_FRN_loss_error_minus_gain_correct | -0.6685 | -0.4049 | -0.8256 | 0.8256 | 0.3838 | no |
+| Cz_FRN_loss_error_minus_gain_correct | -0.8369 | -0.5707 | -0.7331 | 0.7331 | 0.5868 | no |

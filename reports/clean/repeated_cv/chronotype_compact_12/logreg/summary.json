@@ -1,0 +1,36 @@
+{
+  "data": "data/clean/chronotype_compact_12.csv",
+  "target": "Chronotype",
+  "model": "logreg",
+  "rows": 39,
+  "n_features": 12,
+  "splits": 5,
+  "repeats": 100,
+  "n_folds": 500,
+  "metrics": {
+    "accuracy": {
+      "mean": 0.47121428571428564,
+      "std": 0.15208849324896725,
+      "ci95_low": 0.14285714285714285,
+      "ci95_high": 0.75
+    },
+    "balanced_accuracy": {
+      "mean": 0.4720833333333333,
+      "std": 0.15279795569267626,
+      "ci95_low": 0.16666666666666666,
+      "ci95_high": 0.75
+    },
+    "macro_f1": {
+      "mean": 0.4511971861471861,
+      "std": 0.15943986992947218,
+      "ci95_low": 0.125,
+      "ci95_high": 0.75
+    },
+    "roc_auc": {
+      "mean": 0.5000833333333333,
+      "std": 0.19364106428935415,
+      "ci95_low": 0.125,
+      "ci95_high": 0.875
+    }
+  }
+}

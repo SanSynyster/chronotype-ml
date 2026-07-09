@@ -1,0 +1,41 @@
+{
+  "gru_behavioral": {
+    "label": "gru_behavioral",
+    "n_participants": 39,
+    "n_features": 64,
+    "nested_loo_roc_auc": 0.1895,
+    "nested_loo_balanced_accuracy": 0.2816,
+    "permutations": 100,
+    "perm_p_value": 0.9703,
+    "null_auc_mean": 0.4523,
+    "null_auc_95pct": 0.6453,
+    "meq_pearson_r": 0.4295,
+    "meq_pearson_p": 0.0064
+  },
+  "erp_p300": {
+    "label": "erp_p300",
+    "n_participants": 39,
+    "n_features": 6,
+    "nested_loo_roc_auc": 0.4526,
+    "nested_loo_balanced_accuracy": 0.4868,
+    "permutations": 100,
+    "perm_p_value": 0.4455,
+    "null_auc_mean": 0.4044,
+    "null_auc_95pct": 0.6321,
+    "meq_pearson_r": 0.2798,
+    "meq_pearson_p": 0.0845
+  },
+  "fused": {
+    "label": "fused",
+    "n_participants": 39,
+    "n_features": 70,
+    "nested_loo_roc_auc": 0.2895,
+    "nested_loo_balanced_accuracy": 0.3605,
+    "permutations": 100,
+    "perm_p_value": 0.901,
+    "null_auc_mean": 0.4514,
+    "null_auc_95pct": 0.6267,
+    "meq_pearson_r": 0.2598,
+    "meq_pearson_p": 0.1102
+  }
+}

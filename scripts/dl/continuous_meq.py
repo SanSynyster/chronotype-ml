@@ -32,7 +32,7 @@ COMPACT = "data/clean/chronotype_compact_12.csv"
 RL = "reports/clean/rl_model/participant_rl_params.csv"
 ERP_FEATURES = ["Fz_FRN_error_minus_correct", "FCz_FRN_error_minus_correct",
                 "Fz_FRN_loss_error_minus_gain_correct", "POz_P300_loss_minus_gain",
-                "Pz_P300_loss_minus_gain", "CPz_P300_error_minus_correct"]
+                "Pz_P300_loss_minus_gain", "POz_P300_error_minus_correct"]
 RL_PARAMS = ["alpha_gain", "alpha_loss", "lr_asymmetry", "beta", "bias"]
 OUTDIR = Path("reports/clean/continuous_meq")
 SEED = 0
@@ -70,7 +70,9 @@ def main() -> None:
 
     meq = pd.read_csv(MEQ)[["UserID", "meq"]].rename(columns={"UserID": "participant_id"})
     gru = pd.read_csv(GRU)
-    erp = pd.read_csv(COMPACT)[["participant_id"] + ERP_FEATURES]
+    compact = pd.read_csv(COMPACT)
+    erp_features = [c for c in ERP_FEATURES if c in compact.columns]
+    erp = compact[["participant_id"] + erp_features]
     rl = pd.read_csv(RL)[["participant_id"] + RL_PARAMS]
 
     base = meq.merge(gru, on="participant_id").merge(erp, on="participant_id").merge(
@@ -80,9 +82,9 @@ def main() -> None:
 
     sets = {
         "behavioral_gru": gru_cols,
-        "erp_p300": ERP_FEATURES,
+        "erp_p300": erp_features,
         "rl_params": RL_PARAMS,
-        "fused_gru_erp": gru_cols + ERP_FEATURES,
+        "fused_gru_erp": gru_cols + erp_features,
     }
     results = {"n_with_meq": int(len(y))}
     print(f"predicting continuous MEQ (n={len(y)})")

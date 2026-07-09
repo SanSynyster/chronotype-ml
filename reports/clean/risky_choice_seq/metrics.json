@@ -1,0 +1,36 @@
+{
+  "model": "causal_GRU",
+  "n_trials": 11286,
+  "n_participants": 39,
+  "features_used": [
+    "Option1",
+    "Option2",
+    "OptionDiff",
+    "AbsOptionDiff",
+    "ValueSum",
+    "ValueMax",
+    "ValueMin",
+    "OptionRatio",
+    "AbsOptionRatio",
+    "IsMixedSigns",
+    "BothPositive",
+    "BothNegative",
+    "TrialProgress",
+    "PrevRisky",
+    "PrevFeedbackGain",
+    "PrevFeedbackLoss",
+    "PrevFeedbackError",
+    "PrevGainCorrect",
+    "PrevRTLog",
+    "PrevScoreDelta"
+  ],
+  "note": "Rolling* history features deliberately excluded; GRU learns history.",
+  "out_of_fold": {
+    "balanced_accuracy": 0.6021,
+    "roc_auc": 0.6522
+  },
+  "reference_baseline": {
+    "balanced_accuracy": 0.587,
+    "roc_auc": 0.62
+  }
+}

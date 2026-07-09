@@ -1,0 +1,27 @@
+{
+  "n_with_meq": 39,
+  "behavioral_gru": {
+    "loo_pred_actual_r": -0.1423,
+    "perm_p_value": 0.5545,
+    "null_r_mean": -0.1138,
+    "null_r_95pct": 0.2229
+  },
+  "erp_p300": {
+    "loo_pred_actual_r": -0.3221,
+    "perm_p_value": 0.5941,
+    "null_r_mean": -0.24,
+    "null_r_95pct": 0.1609
+  },
+  "rl_params": {
+    "loo_pred_actual_r": -0.7513,
+    "perm_p_value": 0.9406,
+    "null_r_mean": -0.2661,
+    "null_r_95pct": 0.2872
+  },
+  "fused_gru_erp": {
+    "loo_pred_actual_r": -0.2115,
+    "perm_p_value": 0.703,
+    "null_r_mean": -0.1,
+    "null_r_95pct": 0.2272
+  }
+}

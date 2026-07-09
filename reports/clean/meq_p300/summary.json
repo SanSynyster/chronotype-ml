@@ -1,0 +1,26 @@
+[
+  {
+    "feature": "Pz_P300_loss_minus_gain",
+    "n": 39,
+    "pearson_r": -0.0517,
+    "pearson_ci95_low": -0.4103,
+    "pearson_ci95_high": 0.2938,
+    "pearson_p": 0.7544,
+    "spearman_rho": -0.0997,
+    "spearman_p": 0.5458,
+    "ols_slope_per_meq_point": -0.00507,
+    "ols_slope_se": 0.01608
+  },
+  {
+    "feature": "POz_P300_loss_minus_gain",
+    "n": 39,
+    "pearson_r": 0.1448,
+    "pearson_ci95_low": -0.2049,
+    "pearson_ci95_high": 0.5199,
+    "pearson_p": 0.3791,
+    "spearman_rho": 0.2556,
+    "spearman_p": 0.1163,
+    "ols_slope_per_meq_point": 0.0142,
+    "ols_slope_se": 0.01595
+  }
+]

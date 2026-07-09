@@ -142,19 +142,24 @@ def write_markdown(summary: dict, path: Path) -> None:
         "| Embedding | Observed AUC | Null mean | Null SD | Permutation p | BF01 |",
         "|---|---:|---:|---:|---:|---:|",
     ]
-    for name, row in summary["eegnet_chronotype"]["chronotype_embeddings"].items():
-        lines.append(
-            f"| {name} | {row['observed_auc']:.4f} | {row['null_auc_mean']:.4f} | "
-            f"{row['null_auc_sd']:.4f} | {row['permutation_p_value']:.4f} | "
-            f"{row['bf01_density_ratio']:.4f} |"
-        )
-    pc = summary["eegnet_chronotype"]["positive_control_feedback_valence"]
-    lines += [
-        "",
-        "## Positive Control",
-        "",
-        f"EEGNet feedback-valence AUC = {pc['roc_auc']:.4f}; balanced accuracy = {pc['balanced_accuracy']:.4f}.",
-    ]
+    eegnet = summary["eegnet_chronotype"]
+    if "chronotype_embeddings" in eegnet:
+        for name, row in eegnet["chronotype_embeddings"].items():
+            lines.append(
+                f"| {name} | {row['observed_auc']:.4f} | {row['null_auc_mean']:.4f} | "
+                f"{row['null_auc_sd']:.4f} | {row['permutation_p_value']:.4f} | "
+                f"{row['bf01_density_ratio']:.4f} |"
+            )
+        pc = eegnet["positive_control_feedback_valence"]
+        lines += [
+            "",
+            "## Positive Control",
+            "",
+            f"EEGNet feedback-valence AUC = {pc['roc_auc']:.4f}; balanced accuracy = {pc['balanced_accuracy']:.4f}.",
+        ]
+    else:
+        lines.append(f"| unavailable |  |  |  |  |  |")
+        lines += ["", f"EEGNet Bayes factors unavailable: {eegnet['reason']}."]
     path.write_text("\n".join(lines) + "\n")
 
 
@@ -172,7 +177,11 @@ def main() -> None:
     summary = {
         "seed": SEED,
         "frn_group_difference": frn_bayes_factors(args.frn_csv),
-        "eegnet_chronotype": eegnet_bayes_factors(args.eeg_dir, args.feedback_metrics, args.auc_prior_sd),
+        "eegnet_chronotype": (
+            eegnet_bayes_factors(args.eeg_dir, args.feedback_metrics, args.auc_prior_sd)
+            if (args.eeg_dir / "metrics.json").exists() and args.feedback_metrics.exists()
+            else {"reason": "single-trial EEGNet outputs are absent; data/raw/shifted_set/*.set is unavailable in this workspace"}
+        ),
         "method_notes": {
             "frn": "Independent-group Welch t statistic converted with pingouin.bayesfactor_ttest; BF01 = 1 / BF10.",
             "eegnet": "Permutation-null density-ratio BF01 for chance-level chronotype decoding; H1 prior SD over AUC displacement set by auc_prior_sd.",

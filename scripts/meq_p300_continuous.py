@@ -53,8 +53,11 @@ def main() -> None:
     args = parser.parse_args()
 
     part = pd.read_csv(args.participant)
-    meq = pd.read_csv(args.meq)[["UserID", "meq"]]
-    df = part.merge(meq, left_on="participant_id", right_on="UserID", how="inner")
+    if "meq" in part.columns:
+        df = part.copy()
+    else:
+        meq = pd.read_csv(args.meq)[["UserID", "meq"]]
+        df = part.merge(meq, left_on="participant_id", right_on="UserID", how="inner")
 
     rows = []
     for feat in FEATURES:

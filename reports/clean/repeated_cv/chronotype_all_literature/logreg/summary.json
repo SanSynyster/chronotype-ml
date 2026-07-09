@@ -1,0 +1,36 @@
+{
+  "data": "data/clean/chronotype_all_literature.csv",
+  "target": "Chronotype",
+  "model": "logreg",
+  "rows": 39,
+  "n_features": 156,
+  "splits": 5,
+  "repeats": 100,
+  "n_folds": 500,
+  "metrics": {
+    "accuracy": {
+      "mean": 0.8637857142857143,
+      "std": 0.14907131090844314,
+      "ci95_low": 0.5,
+      "ci95_high": 1.0
+    },
+    "balanced_accuracy": {
+      "mean": 0.8655833333333334,
+      "std": 0.14657949203028575,
+      "ci95_low": 0.5,
+      "ci95_high": 1.0
+    },
+    "macro_f1": {
+      "mean": 0.8592154401154402,
+      "std": 0.15581971491686497,
+      "ci95_low": 0.4666666666666667,
+      "ci95_high": 1.0
+    },
+    "roc_auc": {
+      "mean": 0.9127083333333332,
+      "std": 0.13063103565623257,
+      "ci95_low": 0.5833333333333334,
+      "ci95_high": 1.0
+    }
+  }
+}

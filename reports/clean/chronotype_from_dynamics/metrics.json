@@ -1,0 +1,32 @@
+{
+  "design": "GRU embeddings (chronotype-agnostic) -> nested-LOO logistic; model selection inside permutation, so p needs no extra correction.",
+  "n_participants": 39,
+  "n_evening": 19,
+  "n_morning": 20,
+  "param_grid": {
+    "pca__n_components": [
+      5,
+      10,
+      20
+    ],
+    "clf__C": [
+      0.1,
+      0.5,
+      1.0
+    ]
+  },
+  "primary": {
+    "nested_loo_roc_auc": 0.1895,
+    "nested_loo_balanced_accuracy": 0.2816,
+    "permutations": 100,
+    "perm_p_value": 0.9703,
+    "null_auc_mean": 0.4523,
+    "null_auc_95pct": 0.6453
+  },
+  "secondary_meq": {
+    "n_with_meq": 39,
+    "pearson_r_score_vs_meq": 0.4295,
+    "pearson_p": 0.0064,
+    "expected_sign": "negative (evening-positive score <-> lower MEQ)"
+  }
+}

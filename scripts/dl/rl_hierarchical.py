@@ -37,7 +37,9 @@ SEED = 0
 
 def load_sequences():
     df = pd.read_csv(DATA)
-    df = df[df["forced and free risk trials"] == "free"].copy()
+    if "forced and free risk trials" in df.columns:
+        df = df[df["forced and free risk trials"] == "free"].copy()
+    df = df[pd.to_numeric(df["risky-choice"], errors="coerce").isin([0, 1])].copy()
     df = df.sort_values(["participant_id", "global_trial_index"])
     chosen = np.where(df["ChoiceMade"] == 1, df["ActualValue1"], df["ActualValue2"])
     df["reward"] = chosen / 25.0
