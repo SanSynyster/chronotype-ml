@@ -1,0 +1,6 @@
+{
+  "method": "mean-field ADVI",
+  "iterations": 30000,
+  "final_elbo_loss": 9936.926900006338,
+  "n_subjects": 52
+}

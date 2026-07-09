@@ -13,7 +13,6 @@ loss = {70,80}.
 """
 from __future__ import annotations
 
-import glob
 import re
 from pathlib import Path
 
@@ -70,9 +69,8 @@ def load_all(tmin: float = -0.2, tmax: float = 0.8, labeled_only: bool = False):
       meq, age, sex, has_eeg from participant_master.csv
       ch_names, times
     """
-    paths = sorted(glob.glob(str(SET_DIR / "*.set")))
     master = pd.read_csv(MASTER).set_index("pid")
-    master = master[master["has_eeg"].astype(bool)]
+    master = master[master["has_eeg"].astype(bool) & master["has_behaviour"].astype(bool)]
     chrono = master["chrono_binary"].map({"Morning": 0, "Evening": 1}).to_dict()
     meq = master["meq"].to_dict()
     age = master["age"].to_dict()
@@ -80,13 +78,13 @@ def load_all(tmin: float = -0.2, tmax: float = 0.8, labeled_only: bool = False):
 
     ref_chs = None
     Xs, codes, subj = [], [], []
-    for p in paths:
-        sid = _subject_id(p)
-        if sid not in master.index:
+    for sid in sorted(master.index.astype(int)):
+        p = SET_DIR / f"Epochs_Extracted_{sid}_updated_trialinfo_shifted.set"
+        if not p.exists():
             continue
         if labeled_only and sid not in chrono:
             continue
-        Xi, ci, ch, times = load_subject(p, tmin, tmax, ref_chs)
+        Xi, ci, ch, times = load_subject(str(p), tmin, tmax, ref_chs)
         if ref_chs is None:
             ref_chs, ref_times = ch, times
         Xs.append(Xi)

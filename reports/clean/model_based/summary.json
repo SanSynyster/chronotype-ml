@@ -1,0 +1,238 @@
+{
+  "seed": 0,
+  "n_subjects": 52,
+  "n_trials": 13502,
+  "features": {
+    "frn": {
+      "without_outcome_covariates": {
+        "signed_rpe": {
+          "beta": 0.20279731183758898,
+          "p": 1.9590743324607655e-34
+        },
+        "abs_rpe": {
+          "beta": 0.29880168339147933,
+          "p": 3.980129976652648e-21
+        },
+        "model": "participant_fixed_effects_cluster_robust",
+        "converged": false,
+        "fallback": "MixedLM did not converge"
+      },
+      "with_outcome_covariates": {
+        "signed_rpe": {
+          "beta": 0.19733884299386723,
+          "p": 1.328941144026144e-15,
+          "fdr_q": 3.986823432078432e-15
+        },
+        "abs_rpe": {
+          "beta": 0.06486099303194257,
+          "p": 0.12494221247270897
+        },
+        "model": "participant_fixed_effects_cluster_robust",
+        "converged": false,
+        "fallback": "MixedLM did not converge"
+      },
+      "two_stage_signed_rpe": {
+        "mean_slope": 0.1890838133214571,
+        "wilcoxon_p": 8.63492345177473e-09,
+        "bootstrap_ci95": [
+          0.14506399836039574,
+          0.23423756509886584
+        ],
+        "permutation_p": 0.000999000999000999,
+        "n_subjects": 52
+      }
+    },
+    "p300": {
+      "without_outcome_covariates": {
+        "signed_rpe": {
+          "beta": 0.016382807353814526,
+          "p": 0.2812337881044462
+        },
+        "abs_rpe": {
+          "beta": -0.04168317101792249,
+          "p": 0.12839637117975428
+        },
+        "model": "participant_fixed_effects_cluster_robust",
+        "converged": false,
+        "fallback": "MixedLM did not converge"
+      },
+      "with_outcome_covariates": {
+        "signed_rpe": {
+          "beta": 0.025014968029222595,
+          "p": 0.3044012830510352,
+          "fdr_q": 0.3044012830510352
+        },
+        "abs_rpe": {
+          "beta": 0.05611663511392527,
+          "p": 0.21759513234042172
+        },
+        "model": "participant_fixed_effects_cluster_robust",
+        "converged": false,
+        "fallback": "MixedLM did not converge"
+      },
+      "two_stage_signed_rpe": {
+        "mean_slope": 0.003922996650436846,
+        "wilcoxon_p": 0.8913440116875622,
+        "bootstrap_ci95": [
+          -0.042454224974817587,
+          0.05161231717323578
+        ],
+        "permutation_p": 0.7352647352647352,
+        "n_subjects": 52
+      }
+    },
+    "theta": {
+      "without_outcome_covariates": {
+        "signed_rpe": {
+          "beta": -0.10570772443069437,
+          "p": 6.000845134478151e-10
+        },
+        "abs_rpe": {
+          "beta": 0.06420890060382406,
+          "p": 0.006130990149463489
+        },
+        "model": "participant_fixed_effects_cluster_robust",
+        "converged": false,
+        "fallback": "MixedLM did not converge"
+      },
+      "with_outcome_covariates": {
+        "signed_rpe": {
+          "beta": -0.12040666447402286,
+          "p": 2.5027747494190436e-05,
+          "fdr_q": 3.7541621241285654e-05
+        },
+        "abs_rpe": {
+          "beta": 0.03207564083555713,
+          "p": 0.46434419828824935
+        },
+        "model": "participant_fixed_effects_cluster_robust",
+        "converged": false,
+        "fallback": "MixedLM did not converge"
+      },
+      "two_stage_signed_rpe": {
+        "mean_slope": -0.1334968211189781,
+        "wilcoxon_p": 1.7198529453211376e-05,
+        "bootstrap_ci95": [
+          -0.18288586318208758,
+          -0.08432945544717997
+        ],
+        "permutation_p": 0.000999000999000999,
+        "n_subjects": 52
+      }
+    }
+  },
+  "behavior_next_choice": {
+    "grouped_cv_auc": {
+      "behavior_rl": 0.655691855648141,
+      "behavior_rl_eeg": 0.6553801660767683,
+      "behavior_rl_eeg_rpe_outcome_residuals": 0.6553816954879776
+    },
+    "frn": {
+      "mean_subject_logit_coef": -0.01525627071252533,
+      "wilcoxon_p": 0.41764391009723467,
+      "n_subjects": 52,
+      "rpe_outcome_residual_mean_subject_logit_coef": -0.014843726143482016,
+      "rpe_outcome_residual_wilcoxon_p": 0.4124313406210265
+    },
+    "p300": {
+      "mean_subject_logit_coef": 0.013975229062247269,
+      "wilcoxon_p": 0.4442828563925917,
+      "n_subjects": 52,
+      "rpe_outcome_residual_mean_subject_logit_coef": 0.01411835758218824,
+      "rpe_outcome_residual_wilcoxon_p": 0.4335127061990187
+    },
+    "theta": {
+      "mean_subject_logit_coef": 0.002796114928629482,
+      "wilcoxon_p": 0.9564240756932026,
+      "n_subjects": 52,
+      "rpe_outcome_residual_mean_subject_logit_coef": 0.002554396139945102,
+      "rpe_outcome_residual_wilcoxon_p": 0.9491705519433523
+    }
+  },
+  "robustness": {
+    "mle": {
+      "frn": {
+        "signed_rpe_beta": 0.15588395735471108,
+        "signed_rpe_p": 2.9407618319979805e-16,
+        "abs_rpe_beta": 0.06523411329362062,
+        "abs_rpe_p": 0.002663099142268355
+      },
+      "p300": {
+        "signed_rpe_beta": 0.020536796847371832,
+        "signed_rpe_p": 0.31162250676323056,
+        "abs_rpe_beta": -0.014292832544790517,
+        "abs_rpe_p": 0.550754406154693
+      },
+      "theta": {
+        "signed_rpe_beta": -0.04957789282782352,
+        "signed_rpe_p": 0.06323009864160702,
+        "abs_rpe_beta": -0.021847304790142637,
+        "abs_rpe_p": 0.2685386824418845
+      }
+    },
+    "hier_exclude_extreme_abs_rpe_top1pct": {
+      "frn": {
+        "signed_rpe_beta": 0.20051355069578006,
+        "signed_rpe_p": 4.637648945924324e-16,
+        "abs_rpe_beta": 0.05874352564602085,
+        "abs_rpe_p": 0.17587934506567182
+      },
+      "p300": {
+        "signed_rpe_beta": 0.029644856617861346,
+        "signed_rpe_p": 0.2352813330516591,
+        "abs_rpe_beta": 0.045824308623154814,
+        "abs_rpe_p": 0.3254853639512072
+      },
+      "theta": {
+        "signed_rpe_beta": -0.11951143673539061,
+        "signed_rpe_p": 3.7123249508662975e-05,
+        "abs_rpe_beta": 0.027226487978992638,
+        "abs_rpe_p": 0.5717044407069725
+      }
+    },
+    "theta_beyond_erp": {
+      "signed_rpe_beta": -0.1237317877791111,
+      "signed_rpe_p": 9.77472854321244e-06,
+      "abs_rpe_beta": 0.031154664728278936,
+      "abs_rpe_p": 0.47678880634239085
+    },
+    "alternative_windows": {
+      "frn_200_300": {
+        "signed_rpe_beta": 0.16213564575408979,
+        "signed_rpe_p": 3.9115638674102406e-10,
+        "abs_rpe_beta": 0.027158567414192883,
+        "abs_rpe_p": 0.5437200982372983
+      },
+      "frn_300_400": {
+        "signed_rpe_beta": 0.10683689731586152,
+        "signed_rpe_p": 2.308956245196662e-05,
+        "abs_rpe_beta": 0.11829138821481491,
+        "abs_rpe_p": 0.002792254979960305
+      },
+      "p300_300_400": {
+        "signed_rpe_beta": 0.03512022879586724,
+        "signed_rpe_p": 0.16316919402789432,
+        "abs_rpe_beta": 0.004065033720548693,
+        "abs_rpe_p": 0.9243833437445564
+      },
+      "p300_400_500": {
+        "signed_rpe_beta": -0.03818480245906924,
+        "signed_rpe_p": 0.12583773821715064,
+        "abs_rpe_beta": 0.09988971757968304,
+        "abs_rpe_p": 0.03455760189878168
+      },
+      "theta_150_450": {
+        "signed_rpe_beta": -0.10229048914238603,
+        "signed_rpe_p": 0.0003495955782858401,
+        "abs_rpe_beta": 0.024383958549910673,
+        "abs_rpe_p": 0.5735710326989214
+      },
+      "theta_250_550": {
+        "signed_rpe_beta": -0.12676568015167416,
+        "signed_rpe_p": 6.860450237323158e-06,
+        "abs_rpe_beta": 0.03405698575001132,
+        "abs_rpe_p": 0.43895407577933143
+      }
+    }
+  }
+}
