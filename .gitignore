@@ -47,3 +47,7 @@ archive/legacy/reports_*/
 archive/legacy/*.csv
 env_dl/
 env_bayes/
+
+# Downloaded reference papers / PDFs at repo root (copyright — never commit)
+/*.pdf
+1-s2.0-*.pdf
