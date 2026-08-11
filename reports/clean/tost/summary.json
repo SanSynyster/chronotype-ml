@@ -1,0 +1,234 @@
+{
+  "seed": 0,
+  "source": "data/clean/chronotype_frn_core.csv",
+  "alpha": 0.05,
+  "bound_sd": 0.5,
+  "method": "Independent-groups Welch TOST; effect is Evening minus Morning; bounds are +/- bound_sd times pooled SD for each contrast.",
+  "contrasts": [
+    {
+      "n_evening": 19,
+      "n_morning": 20,
+      "evening_mean": -1.9877,
+      "morning_mean": -1.5237,
+      "mean_difference_evening_minus_morning": -0.464,
+      "pooled_sd": 1.0503,
+      "cohens_d_evening_minus_morning": -0.4417,
+      "equivalence_bounds_raw": [
+        -0.5251,
+        0.5251
+      ],
+      "equivalence_bounds_sd": [
+        -0.5,
+        0.5
+      ],
+      "welch_df": 36.9938,
+      "t_lower_diff_gt_lower": 0.182,
+      "p_lower_diff_gt_lower": 0.4283,
+      "t_upper_diff_lt_upper": -2.9427,
+      "p_upper_diff_lt_upper": 0.0028,
+      "tost_p": 0.4283,
+      "equivalent_at_alpha": false,
+      "contrast": "Fz_FRN_loss_minus_gain"
+    },
+    {
+      "n_evening": 19,
+      "n_morning": 20,
+      "evening_mean": -2.2616,
+      "morning_mean": -2.0218,
+      "mean_difference_evening_minus_morning": -0.2398,
+      "pooled_sd": 1.1541,
+      "cohens_d_evening_minus_morning": -0.2078,
+      "equivalence_bounds_raw": [
+        -0.5771,
+        0.5771
+      ],
+      "equivalence_bounds_sd": [
+        -0.5,
+        0.5
+      ],
+      "welch_df": 36.8711,
+      "t_lower_diff_gt_lower": 0.9148,
+      "p_lower_diff_gt_lower": 0.1831,
+      "t_upper_diff_lt_upper": -2.2159,
+      "p_upper_diff_lt_upper": 0.0165,
+      "tost_p": 0.1831,
+      "equivalent_at_alpha": false,
+      "contrast": "FCz_FRN_loss_minus_gain"
+    },
+    {
+      "n_evening": 19,
+      "n_morning": 20,
+      "evening_mean": -1.7964,
+      "morning_mean": -1.5618,
+      "mean_difference_evening_minus_morning": -0.2346,
+      "pooled_sd": 0.9749,
+      "cohens_d_evening_minus_morning": -0.2406,
+      "equivalence_bounds_raw": [
+        -0.4874,
+        0.4874
+      ],
+      "equivalence_bounds_sd": [
+        -0.5,
+        0.5
+      ],
+      "welch_df": 36.9784,
+      "t_lower_diff_gt_lower": 0.8102,
+      "p_lower_diff_gt_lower": 0.2115,
+      "t_upper_diff_lt_upper": -2.3136,
+      "p_upper_diff_lt_upper": 0.0132,
+      "tost_p": 0.2115,
+      "equivalent_at_alpha": false,
+      "contrast": "Cz_FRN_loss_minus_gain"
+    },
+    {
+      "n_evening": 19,
+      "n_morning": 20,
+      "evening_mean": -2.8945,
+      "morning_mean": -2.0229,
+      "mean_difference_evening_minus_morning": -0.8716,
+      "pooled_sd": 1.4502,
+      "cohens_d_evening_minus_morning": -0.601,
+      "equivalence_bounds_raw": [
+        -0.7251,
+        0.7251
+      ],
+      "equivalence_bounds_sd": [
+        -0.5,
+        0.5
+      ],
+      "welch_df": 36.9973,
+      "t_lower_diff_gt_lower": -0.3158,
+      "p_lower_diff_gt_lower": 0.623,
+      "t_upper_diff_lt_upper": -3.4423,
+      "p_upper_diff_lt_upper": 0.0007,
+      "tost_p": 0.623,
+      "equivalent_at_alpha": false,
+      "contrast": "Fz_FRN_error_minus_correct"
+    },
+    {
+      "n_evening": 19,
+      "n_morning": 20,
+      "evening_mean": -2.9119,
+      "morning_mean": -2.4817,
+      "mean_difference_evening_minus_morning": -0.4302,
+      "pooled_sd": 1.6443,
+      "cohens_d_evening_minus_morning": -0.2616,
+      "equivalence_bounds_raw": [
+        -0.8221,
+        0.8221
+      ],
+      "equivalence_bounds_sd": [
+        -0.5,
+        0.5
+      ],
+      "welch_df": 36.9209,
+      "t_lower_diff_gt_lower": 0.7442,
+      "p_lower_diff_gt_lower": 0.2307,
+      "t_upper_diff_lt_upper": -2.3778,
+      "p_upper_diff_lt_upper": 0.0114,
+      "tost_p": 0.2307,
+      "equivalent_at_alpha": false,
+      "contrast": "FCz_FRN_error_minus_correct"
+    },
+    {
+      "n_evening": 19,
+      "n_morning": 20,
+      "evening_mean": -2.0618,
+      "morning_mean": -2.1496,
+      "mean_difference_evening_minus_morning": 0.0879,
+      "pooled_sd": 1.6058,
+      "cohens_d_evening_minus_morning": 0.0547,
+      "equivalence_bounds_raw": [
+        -0.8029,
+        0.8029
+      ],
+      "equivalence_bounds_sd": [
+        -0.5,
+        0.5
+      ],
+      "welch_df": 36.9134,
+      "t_lower_diff_gt_lower": 1.7362,
+      "p_lower_diff_gt_lower": 0.0454,
+      "t_upper_diff_lt_upper": -1.3936,
+      "p_upper_diff_lt_upper": 0.0859,
+      "tost_p": 0.0859,
+      "equivalent_at_alpha": false,
+      "contrast": "Cz_FRN_error_minus_correct"
+    },
+    {
+      "n_evening": 19,
+      "n_morning": 20,
+      "evening_mean": -3.1835,
+      "morning_mean": -2.5862,
+      "mean_difference_evening_minus_morning": -0.5973,
+      "pooled_sd": 1.5522,
+      "cohens_d_evening_minus_morning": -0.3848,
+      "equivalence_bounds_raw": [
+        -0.7761,
+        0.7761
+      ],
+      "equivalence_bounds_sd": [
+        -0.5,
+        0.5
+      ],
+      "welch_df": 36.9984,
+      "t_lower_diff_gt_lower": 0.36,
+      "p_lower_diff_gt_lower": 0.3605,
+      "t_upper_diff_lt_upper": -2.7653,
+      "p_upper_diff_lt_upper": 0.0044,
+      "tost_p": 0.3605,
+      "equivalent_at_alpha": false,
+      "contrast": "Fz_FRN_loss_error_minus_gain_correct"
+    },
+    {
+      "n_evening": 19,
+      "n_morning": 20,
+      "evening_mean": -3.4618,
+      "morning_mean": -3.3152,
+      "mean_difference_evening_minus_morning": -0.1466,
+      "pooled_sd": 1.7338,
+      "cohens_d_evening_minus_morning": -0.0846,
+      "equivalence_bounds_raw": [
+        -0.8669,
+        0.8669
+      ],
+      "equivalence_bounds_sd": [
+        -0.5,
+        0.5
+      ],
+      "welch_df": 36.9679,
+      "t_lower_diff_gt_lower": 1.2976,
+      "p_lower_diff_gt_lower": 0.1012,
+      "t_upper_diff_lt_upper": -1.8258,
+      "p_upper_diff_lt_upper": 0.038,
+      "tost_p": 0.1012,
+      "equivalent_at_alpha": false,
+      "contrast": "FCz_FRN_loss_error_minus_gain_correct"
+    },
+    {
+      "n_evening": 19,
+      "n_morning": 20,
+      "evening_mean": -2.6394,
+      "morning_mean": -2.6669,
+      "mean_difference_evening_minus_morning": 0.0274,
+      "pooled_sd": 1.5402,
+      "cohens_d_evening_minus_morning": 0.0178,
+      "equivalence_bounds_raw": [
+        -0.7701,
+        0.7701
+      ],
+      "equivalence_bounds_sd": [
+        -0.5,
+        0.5
+      ],
+      "welch_df": 36.1071,
+      "t_lower_diff_gt_lower": 1.6252,
+      "p_lower_diff_gt_lower": 0.0564,
+      "t_upper_diff_lt_upper": -1.5135,
+      "p_upper_diff_lt_upper": 0.0694,
+      "tost_p": 0.0694,
+      "equivalent_at_alpha": false,
+      "contrast": "Cz_FRN_loss_error_minus_gain_correct"
+    }
+  ]
+}

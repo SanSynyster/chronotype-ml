@@ -1,81 +1,112 @@
 #!/usr/bin/env python3
-"""Render the manuscript markdown into a single self-contained paper.html.
+"""Build the manuscript DOCX with Pandoc, APA-7 CSL, references, and figures.
 
-The output embeds the figures as base64 so the file is fully portable: it opens
-directly in Word (File > Open) and imports into Google Docs, where co-authors can
-revise with tracked changes and comments. No external assets or network needed.
+Make-style one-liner: `env/bin/python scripts/build_paper.py --format docx`.
+
+Dependencies: Python standard library plus Pandoc 3.10 on PATH. The default CSL is
+the Zotero APA style URL; pass `--csl path/to/style.csl` for fully offline builds.
+The manuscript source is read-only to this script; a temporary markdown file with
+figure links and bibliography metadata is generated under `docs/.build/`.
 """
 
 from __future__ import annotations
 
 import argparse
 import base64
+import shutil
+import subprocess
 from pathlib import Path
 
-import markdown
 
-FIGURES = [
-    ("fig1_p300_by_chronotype.png", "Figure 1. Posterior P300 loss-minus-gain by chronotype (primary finding)."),
-    ("fig2_sensitivity_forest.png", "Figure 2. Robustness across participant exclusions: neural effect stable, classifier fragile."),
-    ("fig3_feature_importance.png", "Figure 3. Held-out permutation importance for the compact_12 classifier."),
-    ("fig4_risky_choice_baselines.png", "Figure 4. Risky-choice balanced accuracy vs naive baselines."),
-    ("fig5_meq_continuous_p300.png", "Figure 5. Posterior P300 vs the continuous MEQ score (intermediate band shaded)."),
-    ("fig6_ml_pipeline.png", "Figure 6. Leakage-aware nested cross-validation machine-learning pipeline."),
-    ("fig7_roc.png", "Figure 7. Chronotype classification ROC (out-of-fold, nested CV)."),
-    ("fig8_confusion_matrix.png", "Figure 8. Out-of-fold confusion matrix for the primary classifier."),
+APA_CSL = "https://www.zotero.org/styles/apa"
+
+MAIN_FIGURES = [
+    ("fig_main_1_p300_spec.png", "Figure 1. Posterior P300 by chronotype and specification curve."),
+    ("fig_main_2_continuous_meq.png", "Figure 2. Continuous MEQ associations."),
+    ("fig_main_3_fusion.png", "Figure 3. Behaviour and ERP fusion."),
+    ("fig_main_4_single_trial_coupling.png", "Figure 4. Single-trial P300 to next-choice coupling."),
+    ("fig_main_5_roc_pipeline.png", "Figure 5. ROC and leakage-safe analysis pipeline."),
 ]
 
-STYLE = """
-body { font-family: Georgia, 'Times New Roman', serif; max-width: 820px;
-  margin: 40px auto; line-height: 1.55; color: #1a1a1a; padding: 0 24px; }
-h1 { font-size: 1.7em; line-height: 1.25; }
-h2 { font-size: 1.25em; margin-top: 1.8em; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
-h3 { font-size: 1.08em; margin-top: 1.4em; }
-table { border-collapse: collapse; width: 100%; margin: 1em 0; font-size: 0.92em; }
-th, td { border: 1px solid #bbb; padding: 5px 9px; text-align: left; }
-th { background: #f2f2f2; }
-blockquote { background: #fff8e1; border-left: 4px solid #e0b400; margin: 1.2em 0;
-  padding: 10px 16px; font-family: -apple-system, Arial, sans-serif; font-size: 0.92em; }
-code { background: #f0f0f0; padding: 1px 4px; border-radius: 3px; font-size: 0.9em; }
-figure { margin: 1.6em 0; text-align: center; }
-figure img { max-width: 100%; border: 1px solid #e0e0e0; }
-figcaption { font-size: 0.9em; color: #444; margin-top: 6px; font-family: -apple-system, Arial, sans-serif; }
-"""
+FALLBACK_FIGURES = [
+    ("fig1_p300_by_chronotype.png", "Figure 1. Posterior P300 loss-minus-gain by chronotype."),
+    ("fig5_meq_continuous_p300.png", "Figure 2. Posterior P300 versus continuous MEQ."),
+    ("fig9_chronotype_from_dynamics.png", "Figure 3. Chronotype decoding from behaviour and fusion."),
+    ("fig10_p300_risk_coupling.png", "Figure 4. Single-trial P300 to next-choice coupling."),
+    ("fig7_roc.png", "Figure 5. Chronotype classifier ROC."),
+]
+
+
+def _figure_block(figdir: Path) -> str:
+    figures = MAIN_FIGURES if all((figdir / name).exists() for name, _ in MAIN_FIGURES) else FALLBACK_FIGURES
+    blocks = ["", "# Figures", ""]
+    for name, caption in figures:
+        path = figdir / name
+        if path.exists():
+            blocks += [f"![{caption}]({path.as_posix()})", ""]
+    return "\n".join(blocks)
+
+
+def _prepare_markdown(md: Path, figdir: Path, build_dir: Path) -> Path:
+    build_dir.mkdir(parents=True, exist_ok=True)
+    text = md.read_text(encoding="utf-8")
+    # The manuscript already contains a self-contained APA-7 "## References" list
+    # and plain author-year in-text citations, so we do NOT run citeproc (that would
+    # append a duplicate bibliography). Just render the markdown + figures to docx.
+    tmp = build_dir / "paper_with_figures.md"
+    tmp.write_text(text + _figure_block(figdir), encoding="utf-8")
+    return tmp
+
+
+def _run_pandoc(src: Path, out: Path, bib: Path, csl: str) -> None:
+    if shutil.which("pandoc") is None:
+        raise SystemExit("pandoc is not on PATH; install Pandoc 3.10 or pass through the correct environment.")
+    cmd = [
+        "pandoc",
+        src.as_posix(),
+        "--from",
+        "markdown+pipe_tables+tex_math_dollars",
+        "--to",
+        "docx",
+        "--resource-path",
+        ".:docs:docs/figures",
+        "--output",
+        out.as_posix(),
+    ]
+    subprocess.run(cmd, check=True)
+
+
+def _build_html(md: Path, figdir: Path, out: Path) -> None:
+    text = md.read_text(encoding="utf-8")
+    figures = []
+    for name, caption in FALLBACK_FIGURES:
+        path = figdir / name
+        if not path.exists():
+            continue
+        b64 = base64.b64encode(path.read_bytes()).decode("ascii")
+        figures.append(f'<figure><img src="data:image/png;base64,{b64}" alt="{caption}"><figcaption>{caption}</figcaption></figure>')
+    html = "<html><body><pre>" + text.replace("&", "&amp;").replace("<", "&lt;") + "</pre>" + "\n".join(figures) + "</body></html>"
+    out.write_text(html, encoding="utf-8")
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Build a self-contained paper.html from the manuscript markdown.")
-    parser.add_argument("--md", default="docs/manuscript_draft.md")
-    parser.add_argument("--figdir", default="docs/figures")
-    parser.add_argument("--out", default="docs/paper.html")
+    parser = argparse.ArgumentParser(description="Build docs/paper.docx from docs/manuscript_draft.md.")
+    parser.add_argument("--md", type=Path, default=Path("docs/manuscript_draft.md"))
+    parser.add_argument("--figdir", type=Path, default=Path("docs/figures"))
+    parser.add_argument("--bib", type=Path, default=Path("references.bib"))
+    parser.add_argument("--csl", default=APA_CSL)
+    parser.add_argument("--out", type=Path, default=Path("docs/paper.docx"))
+    parser.add_argument("--format", choices=["docx", "html"], default="docx")
     args = parser.parse_args()
 
-    text = Path(args.md).read_text(encoding="utf-8")
-    body = markdown.markdown(text, extensions=["tables", "fenced_code", "sane_lists"])
+    if args.format == "html":
+        _build_html(args.md, args.figdir, args.out.with_suffix(".html"))
+        print(f"Wrote {args.out.with_suffix('.html')}")
+        return
 
-    figdir = Path(args.figdir)
-    fig_html = ["<h2>Figures</h2>"]
-    for fname, caption in FIGURES:
-        fpath = figdir / fname
-        if not fpath.exists():
-            continue
-        b64 = base64.b64encode(fpath.read_bytes()).decode("ascii")
-        fig_html.append(
-            f'<figure><img src="data:image/png;base64,{b64}" alt="{caption}">'
-            f"<figcaption>{caption}</figcaption></figure>"
-        )
-
-    html = (
-        "<!DOCTYPE html><html lang='en'><head><meta charset='utf-8'>"
-        "<title>Chronotype and Feedback Processing</title>"
-        f"<style>{STYLE}</style></head><body>"
-        f"{body}\n{''.join(fig_html)}"
-        "</body></html>"
-    )
-    out = Path(args.out)
-    out.write_text(html, encoding="utf-8")
-    kb = out.stat().st_size / 1024
-    print(f"Wrote {out} ({kb:.0f} KB, {len(FIGURES)} figures embedded)")
+    tmp = _prepare_markdown(args.md, args.figdir, Path("docs/.build"))
+    _run_pandoc(tmp, args.out, args.bib, args.csl)
+    print(f"Wrote {args.out}")
 
 
 if __name__ == "__main__":

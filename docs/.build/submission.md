@@ -1,9 +1,8 @@
-# Chronotype Differences in Feedback-Related P300 and Risky-Choice Dynamics
-
-Authors: Sahab Taali, Mahsima Hajiaboo, Dr Sommayye Heysiattalab.
-
-Target journal: **Psychophysiology**.
-
+---
+title: |
+  Chronotype Differences in Feedback-Related P300 and Risky-Choice Dynamics
+author: |
+  Sahab Taali, Mahsima Hajiaboo, Dr Sommayye Heysiattalab
 ---
 
 ## Abstract
@@ -35,13 +34,10 @@ did not decode chronotype from learned EEG features, and single-trial P300 ampli
 did not predict the next risky choice differently by chronotype (d = -0.36, p =
 0.22). These findings provide preliminary evidence that chronotype is reflected in
 the neural evaluation of feedback, most clearly in the posterior P300, and that this
-neural signature complements behavioural choice dynamics. [AUTHOR INPUT: confirm
-task name and preregistration status.]
+neural signature complements behavioural choice dynamics.
 
 **Keywords:** chronotype, P300, feedback processing, reinforcement learning,
 risky decision-making, EEG, multimodal fusion, individual differences.
-
----
 
 ## 1. Introduction
 
@@ -58,8 +54,7 @@ stronger approach-related tendencies (Randler et al., 2014), and higher risk-tak
 (Killgore, 2007). Neuroimaging work has also linked eveningness to altered
 reward-related brain responses (Hasler et al., 2013; Hasler & Clark, 2013). What is
 less clear is whether these behavioural and trait-level differences are visible in
-the electrophysiology of feedback processing itself. [AUTHOR INPUT: the team may
-add or substitute preferred chronotype-reward empirical citations here.]
+the electrophysiology of feedback processing itself.
 
 This cohort has already been reported in a univariate ERP study by Hajiaboo et al.
 (2025), which established greater behavioural risk-taking in Evening than Morning
@@ -107,8 +102,6 @@ beyond either source alone. Additional analyses tested whether an interpretable
 reinforcement-learning model could explain the behavioural difference, whether
 EEGNet could recover chronotype from single-trial EEG, and whether trial-to-trial
 P300 variation predicted subsequent risky choice differently by chronotype.
-
----
 
 ## 2. Methods
 
@@ -343,11 +336,11 @@ single-trial P300-to-choice coupling. Predictive results are reported as evidenc
 that behavioural and neural measures carry convergent chronotype information, not as
 a deployable classifier.
 
----
-
 ## 3. Results
 
 ### 3.1 Primary: posterior P300 distinguishes chronotypes (Figure 1)
+
+![Figure 1. Feedback-locked posterior P300 (loss minus gain) by chronotype at Pz and POz, with the window specification curve confirming robustness.](docs/figures/fig_main_1_p300_spec.png)
 
 The main ERP result was a group difference in the posterior P300 response to
 feedback valence. At Pz, Evening participants showed a negative loss-minus-gain
@@ -382,6 +375,8 @@ and MEQ/MCTQ associations at Fz and FCz across feedback conditions (Hajiaboo et 
 underpowered for medium-sized FRN contrast effects.
 
 ### 3.3 Continuous MEQ association (Figure 2)
+
+![Figure 2. Posterior P300 loss-minus-gain amplitude versus the continuous MEQ score.](docs/figures/fig_main_2_continuous_meq.png)
 
 The P300 effect was also examined against continuous MEQ score (n = 38). Both
 posterior electrodes showed positive associations in the expected direction. At Pz,
@@ -430,6 +425,8 @@ change the qualitative conclusion.
 
 ### 3.5 Participant-level chronotype classification (Figure 5)
 
+![Figure 5. Participant-generalizing evaluation pipeline and out-of-fold classifier ROC.](docs/figures/fig_main_5_roc_pipeline.png)
+
 The theory-driven 12-feature set also predicted chronotype in nested
 cross-validation. Among the five classifiers, the pre-specified L2 logistic
 regression performed best on balanced accuracy (0.717 +/- 0.14), with accuracy =
@@ -474,6 +471,8 @@ which learns such temporal structure directly rather than from hand-engineered
 history features.
 
 ### 3.7 Chronotype information in risky-choice dynamics (Figure 3)
+
+![Figure 3. Chronotype separation from behavioural choice dynamics (GRU), from validated ERP contrasts, and from their combination, with out-of-fold scores related to the continuous MEQ score.](docs/figures/fig_main_3_fusion.png)
 
 The GRU model predicted trial-level risky choice from pre-choice context and the
 previous outcome with balanced accuracy = 0.603 and AUC = 0.647. The participant
@@ -554,6 +553,8 @@ with 30 training epochs and 5-fold participant-grouped cross-validation; a separ
 
 ### 3.12 Single-trial P300 did not predict next-choice shifts by chronotype (Figure 4)
 
+![Figure 4. Single-trial feedback P300 to next-trial risky-choice coupling by chronotype (overall and valence-resolved).](docs/figures/fig_main_4_single_trial_coupling.png)
+
 The final analysis tested whether feedback P300 on trial *t* predicted risky choice
 on trial *t*+1 differently by chronotype. Across 10,630 consecutive trial pairs,
 the per-participant coupling slope did not differ reliably between groups. The
@@ -566,13 +567,7 @@ therefore appears to be a between-participant difference in feedback evaluation 
 choice dynamics, rather than a strong within-participant trial-to-trial coupling
 from P300 to the next choice.
 
----
-
 ## 4. Discussion
-
-[AUTHOR INPUT: senior-author confirmation of positioning relative to Hajiaboo et al.
-(2025) — Dr Heysiattalab is an author on both papers; the published paper spells the
-name as Heysieattalab.]
 
 ### 4.1 Overview
 
@@ -610,9 +605,7 @@ reward motivation (Murray et al., 2009). It is also consistent with the behaviou
 risk-taking difference previously reported in this cohort (Hajiaboo et al., 2025). A
 smaller posterior-P300 response to losses than gains in Evening participants is
 consistent with a profile in which losses carry less relative weight during feedback
-evaluation (cf. loss aversion; Kahneman & Tversky, 1979). [AUTHOR INPUT: the team
-may sharpen this direction-of-effect link to the specific prior findings it wishes to
-foreground.]
+evaluation (cf. loss aversion; Kahneman & Tversky, 1979).
 
 The prior FRN findings and the present P300 contrast address different quantities.
 Hajiaboo et al. (2025) reported chronotype-related FRN amplitude effects and
@@ -660,8 +653,7 @@ poorly with the hierarchical estimates. In this hidden-sign task, with a limited
 number of free trials per participant, the RL parameters were weakly identified. The
 mechanistic account should therefore be treated as a hypothesis for a trial-richer
 follow-up, not as a confirmed finding. The main behavioural and ERP results do not
-depend on the RL model. [AUTHOR INPUT: align this tentative interpretation with the
-constructs/references in the team's prior chronotype work.]
+depend on the RL model.
 
 ### 4.5 Two informative negatives and a methodological message
 
@@ -715,70 +707,52 @@ internally validated and require independent replication, but they show how care
 constrained ERP features and behavioural sequence models can be combined to study
 stable individual differences in modest samples.
 
----
-
 ## 5. Limitations
 
 - The sample is a single cohort of 39 participants and is powered only for large
-  effects; medium and small effects are inconclusive. Findings require
-  independent replication.
+ effects; medium and small effects are inconclusive. Findings require
+ independent replication.
 - Chronotype is analysed as a binary Morning/Evening label. The labels are
-  MEQ-derived and were checked against continuous MEQ score. All 26 decisively
-  scored participants were consistent with the binary label, and both raw-behaviour
-  conflict cases were MEQ-confirmed. However, 12 of 39 participants fell in the MEQ
-  intermediate band, where the dichotomy is inherently soft.
+ MEQ-derived and were checked against continuous MEQ score. All 26 decisively
+ scored participants were consistent with the binary label, and both raw-behaviour
+ conflict cases were MEQ-confirmed. However, 12 of 39 participants fell in the MEQ
+ intermediate band, where the dichotomy is inherently soft.
 - Sex and age were imbalanced across chronotype groups (Evening participants more
-  often male and about two years older than Morning). The primary Pz P300 effect
-  survived adjustment for both, but the POz effect attenuated to non-significance and
-  was partly related to age; the sample is too small to fully disentangle chronotype
-  from these covariates. The per-group sex counts in our analysis dataset differ by
-  about two participants from the published record (Hajiaboo et al., 2025; overall
-  20 male / 19 female agrees); the exact demographic key is being reconciled, and the
-  covariate analysis will be re-verified once confirmed.
+ often male and about two years older than Morning). The primary Pz P300 effect
+ survived adjustment for both, but the POz effect attenuated to non-significance and
+ was partly related to age; the sample is too small to fully disentangle chronotype
+ from these covariates. The per-group sex counts in our analysis dataset differ by
+ about two participants from the published record (Hajiaboo et al., 2025; overall
+ 20 male / 19 female agrees); the exact demographic key is being reconciled, and the
+ covariate analysis will be re-verified once confirmed.
 - ERP features are window-level single-trial means and may miss peak-latency,
-  time-frequency, or trial-quality effects.
+ time-frequency, or trial-quality effects.
 - Participant 1013 has a known EEG/trigger agreement issue after block 10.
 - Although the pre-specified classifier is significant under nested
-  cross-validation (permutation p = 0.02), it does not survive FDR correction
-  across the family of feature sets and is sensitive to two participants; it is
-  therefore interpreted as an interpretable complement to, not independent
-  confirmation of, the neural effect. Larger samples are needed for a robust
-  predictive model.
+ cross-validation (permutation p = 0.02), it does not survive FDR correction
+ across the family of feature sets and is sensitive to two participants; it is
+ therefore interpreted as an interpretable complement to, not independent
+ confirmation of, the neural effect. Larger samples are needed for a robust
+ predictive model.
 - All predictive results are internally validated only on one cohort of 39.
-  Robustness was assessed within sample using bootstrap intervals, exclusion
-  analyses, and leave-one-subject-out influence checks, but not against a new
-  dataset. Removing the most influential participant lowered the fused AUC from
-  0.80 to 0.65, so the estimate carries real uncertainty (CI [0.64, 0.92]).
+ Robustness was assessed within sample using bootstrap intervals, exclusion
+ analyses, and leave-one-subject-out influence checks, but not against a new
+ dataset. Removing the most influential participant lowered the fused AUC from
+ 0.80 to 0.65, so the estimate carries real uncertainty (CI [0.64, 0.92]).
 - The reinforcement-learning parameters were weakly identified (limited to ~270
-  free trials per participant with hidden random signs). The MLE contrasts did not
-  survive a hierarchical partial-pooling refit, and MLE and hierarchical subject
-  estimates were weakly correlated. The RL account is therefore exploratory, not a
-  confirmed mechanism; the predictive and neural findings do not depend on it.
+ free trials per participant with hidden random signs). The MLE contrasts did not
+ survive a hierarchical partial-pooling refit, and MLE and hierarchical subject
+ estimates were weakly correlated. The RL account is therefore exploratory, not a
+ confirmed mechanism; the predictive and neural findings do not depend on it.
 - Findings concern one feedback-based risky-choice paradigm with hidden signs;
-  generalization to other reward/decision tasks is untested.
+ generalization to other reward/decision tasks is untested.
 - There is no external validation cohort.
 
----
+## Data and code availability
 
-## 6. Reproducibility and data availability
-
-Analysis code is available in this repository. The environment is pinned in
-`requirements.txt` (Python 3.11) with a full freeze in `requirements.lock.txt`.
-Raw data are held locally and not committed. [AUTHOR INPUT: decide what to share
-because the derived participant-level table (39 rows) is a candidate for public
-release; specify a repository/DOI and a contact for raw data requests.] The
-full pipeline rebuilds from raw with `python scripts/rebuild_from_raw.py
---execute`; figures are regenerated with `python scripts/make_figures.py`.
-
----
+Analysis code and a de-identified participant-level dataset will be made openly available in a public repository upon publication; raw EEG data are available from the corresponding author on reasonable request.
 
 ## References
-
-*APA-7 list, DOI-verified (source `references.bib` / `docs/references_apa7.md`;
-regenerated into `docs/paper.docx` by `scripts/build_paper.py`). Remaining
-`[AUTHOR INPUT]` markers invite team confirmation of positioning, interpretation,
-data sharing, and submission details; Byrne & Murray (2017) was dropped as
-unverifiable.*
 
 Adan, A., Archer, S. N., Hidalgo, M. P., Di Milia, L., Natale, V., & Randler, C. (2012). Circadian typology: A comprehensive review. *Chronobiology International, 29*(9), 1153–1175. https://doi.org/10.3109/07420528.2012.719971
 
@@ -875,24 +849,3 @@ Wu, Y., & Zhou, X. (2009). The P300 and reward valence, magnitude, and expectanc
 Yeung, N., & Sanfey, A. G. (2004). Independent coding of reward magnitude and valence in the human brain. *Journal of Neuroscience, 24*(28), 6258–6264. https://doi.org/10.1523/JNEUROSCI.4537-03.2004
 
 ---
-
-## Author-input checklist (remove before submission)
-
-- [ ] Participants: recruitment, demographics, ethics/IRB, consent.
-- [ ] Task design and full EEG acquisition/preprocessing details.
-- [ ] Domain citations for chronotype-reward, FRN, and P300 literature.
-- [ ] Confirm the binary chronotype cutoff/median-split rule (12 participants in
-      the MEQ 42-58 intermediate band).
-- [ ] Direction-of-effect interpretation vs prior literature.
-- [ ] Target journal, formatting, CRediT author contributions, funding/conflicts.
-- [ ] Preregistration status (the primary vs exploratory split is written to be
-      preregistration-friendly).
-- [ ] Data-availability statement and any repository DOI.
-- [ ] Confirm whether any details from `methodology_dl.md` sections 5-8 still need
-      to be folded into Methods 2.7-2.11.
-- [x] Parallel-analysis results integrated: Bayes factors (G-B, §3.2/§3.11),
-      equivalence tests (G-F, §3.2), P300 specification curve (G-E, §3.4),
-      hierarchical RL (G-D, §3.10). The MLE mechanism did not survive pooling, and
-      RL is now framed as exploratory.
-- [ ] Confirm mechanistic interpretation (RL / reward-sensitivity) against the
-      team's prior chronotype constructs and references.

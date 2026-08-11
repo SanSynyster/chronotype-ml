@@ -896,3 +896,15 @@ Yeung, N., & Sanfey, A. G. (2004). Independent coding of reward magnitude and va
       RL is now framed as exploratory.
 - [ ] Confirm mechanistic interpretation (RL / reward-sensitivity) against the
       team's prior chronotype constructs and references.
+
+# Figures
+
+![Figure 1. Posterior P300 by chronotype and specification curve.](docs/figures/fig_main_1_p300_spec.png)
+
+![Figure 2. Continuous MEQ associations.](docs/figures/fig_main_2_continuous_meq.png)
+
+![Figure 3. Behaviour and ERP fusion.](docs/figures/fig_main_3_fusion.png)
+
+![Figure 4. Single-trial P300 to next-choice coupling.](docs/figures/fig_main_4_single_trial_coupling.png)
+
+![Figure 5. ROC and leakage-safe analysis pipeline.](docs/figures/fig_main_5_roc_pipeline.png)
